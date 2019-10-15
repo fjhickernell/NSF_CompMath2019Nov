@@ -307,7 +307,7 @@
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
 
-\centerline{\Large \textbf{Project Description}}
+\centerline{\Large \textbf{Adaptive Sampling---Project Description}}
 \vspace{-2ex}
 
 \setcounter{tocdepth}{1}
@@ -318,7 +318,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate, e.g., the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\{\bx_1, \bx_2, \ldots\} \in \Omega^{\naturals}$, i.e., the data sites where $f$ is to be evaluated.  Ideally, choice of the design should be \emph{adaptive}, i.e., the sampled function values should inform the next choice of the next data site: 
+\begin{equation} \label{adaptsite}
+    \bx_{i+1} = \phi_{i+1}(\mX_{1:i},\by_{1:i}), \qquad \mX_{1:i} := (\bx_1, \ldots, \bx_i)^T, \quad  \by := (f(\bx_1), \ldots, f(\bx_i))^T,
+\end{equation}
+where $\phi_{i+1} : \reals^{i \times d} \times \reals^i \to \Omega$ is some carefully chosen function that depends on underlying assumptions about $f$.  Roughly speaking, the function is highly variable in one portion of the domain, then one should sample more densely there. 
 
+Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are that
+\begin{itemize}
+    \item For some adaptive sampling schemes, $\phi_{i+1}(\mX_{1:i},\by_{1:i})$ does not depend on the sampled function values, $\by_{1:i}$, at all, but only on the placement of the data sites, $\mX_{1:i}$.
+    
+    \item Adaptive sampling schemes that do depend on the sampled function values are heuristic; they lack a theoretical basis.
+\end{itemize}
+\emph{The PIs propose to develop theoretically adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}, and include data-driven error bounds that can be used to stop the algorithms when the desired error tolerance is reached.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Illustrative Example} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Consider the function 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
