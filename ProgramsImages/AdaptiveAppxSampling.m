@@ -27,7 +27,7 @@ fAppPlot = KPlotData*coeff;
 figure(2)
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-legend(h([1 3]),{'\(f(x)\)','APP\((f)(x)\)'})
+legend(h([1 3]),{'\(f(x)\)','APP\((f,n)(x)\)'})
 legend('boxoff')
 axis([0 1 -0.2 0.4])
 print('-depsc','fandDataAndAppx.eps')
@@ -43,12 +43,12 @@ figure(3)
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot, ...
    xPlot,fAppPlot + [-1,1].*RMSPE);
 hold on
-h = [h; scatter(xBad,fBad,150,MATLABPurple,'filled','d')];
+h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1 3 4 6]),{'\(f(x)\)','APP\((f)(x)\)', ...
-   'APP\((f)(x) \pm \)RMSPE\((x)\)', ...
-   '\((x_{\textrm{bad}},f(x_{\textrm{bad}})\)'})
+lgd = legend(h([1 3 4 6]),{'\(f(x)\)','APP\((f,n)(x)\)', ...
+   'APP\((f,n)(x) \pm \)ERR\((x)\)', ...
+   '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
 legend('boxoff')
 axis([0 1 -0.2 0.4])
 print('-depsc','fandDataAndAppxAndRMSPE.eps')
