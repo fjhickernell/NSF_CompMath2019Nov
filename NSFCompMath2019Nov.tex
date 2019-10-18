@@ -75,6 +75,7 @@
 \DeclareMathOperator{\size}{wd}
 \DeclareMathOperator{\GP}{\mathcal{G} \! \mathcal{P}}
 \DeclareMathOperator{\erf}{erf}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 
 \newcommand{\reals}{{\mathbb{R}}}
@@ -82,8 +83,8 @@
 \newcommand{\natzero}{{\mathbb{N}_0}}
 \newcommand{\integers}{{\mathbb{Z}}}
 \def\expect{{\mathbb{E}}}
-\def\il{\left<}
-\def\ir{\right>}
+\def\il{\left \langle}
+\def\ir{\right \rangle}
 \def\e{\varepsilon}
 \def\g{\gamma}
 \def\l{\lambda}
@@ -259,7 +260,12 @@
 
 %\newtheorem{resproblem}{Research Problem}
 %\newtheorem{research}{Research Objectives}
-
+%\newtheorem{keyidea}{Key Idea}
+\newcounter{keyideabean}[section]
+\newenvironment{keyidea}{\refstepcounter{keyideabean}\par\bigskip
+   \noindent\begin{itshape}%
+   Key Idea~\thekeyideabean.\ignorespaces}%
+   {\end{itshape}\ignorespacesafterend}
 
 
 %\setcounter{page}{1}
@@ -333,27 +339,63 @@ Adaptive sampling has been studied for decades.  The shortcomings of existing ad
 \emph{The PIs propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}, and include data-driven error bounds that can be used to stop the algorithms when the desired error tolerance is reached.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Illustrative Example} 
+\subsection{Illustrative Univariate Example} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 To illustrate the challenges of adaptive sampling, consider the univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, defined on $[0,1]$, which is plotted in Fig.\ \ref{fig:sampleFun}. The $n=10$ point design is $\{x_i\}_{i=1}^n = \{0, 0.1, \ldots, 0.6, 0.8, 0.9, 1\}$.  An approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by the Mat\'ern reproducing kernel,
 \begin{equation}
     K(t,x) = (1 - \theta \abs{t-x}) \exp(-\theta\abs{t-x}),
 \end{equation}
 with $\theta = 1$.  See \cite{} for .  The approximation is given by
-\begin{equation*}
-    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \qquad \text{where } \bc = \mK^{-1} \by, \; \mK = \mK(\mX_{1:n}) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n, \; \by = \by_{1:n}.
-\end{equation*}
-Fig.\ 1 also shows $\APP(f,n)$.  Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.
+\begin{equation} \label{appxExOne}
+    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \quad \text{where } \bc = \mK^{-1} \by, \; \mK = \mK(\mX_{1:n}) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n, \; \by = \by_{1:n}.
+\end{equation}
+Fig.\ \ref{fig:sampleFun} also shows $\APP(f,n)$.  
+
+\begin{keyidea} \label{keyideainitial}
+The initial design must be cover the domain well enough to detect variation in the function.
+\end{keyidea}
+In this example, $\APP(f,n)$ captures the peak on the left because the data sites are dense enough in where the peak occurs.  If the design consisted only of $\{0, 0.4,  0.6, 1\}$, then $\APP(f,n)$ would not capture the peak, and the user might wrongly believe that the function was well approximated.  The number of data sites required for the initial design depends on how many one can afford and how narrow a peak one is willing to miss.
+
+Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Therefore, by intuition one might expect that adding the next data site in the design on the left would give the greatest improvement.  Unfortunately, this is not the case for a typical adaptive scheme.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 5cm]{ProgramsImages/fandDataAndAppx.eps} \qquad \qquad
     \includegraphics[width = 5cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
-    \caption{Left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation. Right plot also includes an approximate prediction error bound and the location of the largest prediction error, $x_{\textup{bad}}$. The largest error actually occurs far away from $x_{\textup{bad}}$.}
+    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation. The right plot also includes an approximate prediction error bound and the location of the largest prediction error, $x_{\textup{bad}}$. The largest error actually occurs far away from $x_{\textup{bad}}$.}
     \label{fig:sampleFun}
 \end{figure}
 
-The approximation error can be 
+It is known that the approximation error has the following upper bound
+\begin{gather}
+\label{RKHSErrBd}
+    \abs{f(x) - \APP(f,n)(x)} \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)}, \\
+    \nonumber
+    \text{where} \qquad \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
+\end{gather}
+Choosing the next data site in the design where the approximation error is maximized corresponds to 
+\begin{equation} \label{minprederr}
+    x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX_{1:n}),
+\end{equation}
+which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
+
+\begin{keyidea}\label{keyideafunction}
+The choice of the next data site should depend on function data, not only on the location of the other sites.
+\end{keyidea}
+The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  A good adaptive sampling algorithm should choose the next data site on the left for the example in Fig.\ \ref{fig:sampleFun}, where it will improve upon $\APP(f,n)$ the most.
+
+is for the sampling criterion to detect the large fluctuation in $f$ via the function data.  
+
+Since the criterion of minimizing the approximation error 
+
+The first term on the right in \eqref{RKHSErrBd} depends on $x$, but the second term does not.  The value of $x$ where the approximation error bound is maximized is
+\begin{equation}
+    x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x),
+\end{equation}
+which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Note that $x_{\textup{bad}}$ does not coincide with where actual approximation error is greatest, 
+
+A parallel approach, which arises from Bayesian numerical analysis \cite{}, is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data is the same $\APP(f,n)$ as in \eqref{appxExOne},
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
