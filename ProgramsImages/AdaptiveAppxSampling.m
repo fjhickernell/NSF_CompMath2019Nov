@@ -38,22 +38,42 @@ pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1), pos(2), 1.3*pos(3), 1.3*pos(4)])
 print('-depsc','fandDataAndAppx.eps')
 
+%% Compute and plot approximation also using small design
+xSmallData = [0 0.4 0.6 1]';
+fSmallData = f(xSmallData);
+KSmallDataData = kernel(dist(xSmallData,xSmallData),s,theta);
+coeffSmall = KSmallDataData\fSmallData;
+KPlotSmallData = kernel(dist(xPlot,xSmallData),s,theta);
+fAppPlotSmall = KPlotSmallData*coeffSmall;
+figure;
+h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot,xPlot,fAppPlotSmall);
+xlabel('\(x\)')
+legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', 'APP\((f,4)(x)\)'})
+legend('boxoff')
+axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1), pos(2), 1.3*pos(3), 1.3*pos(4)])
+print('-depsc','fandDataAndAppxSmall.eps')
+
+
 %% Next data point based on prediction error
+A = 1.3;
 normf = sqrt(coeff'*fData);
 RMSPE = real(sqrt(kernel(0,s,theta) - ...
    sum(KPlotData.*(KDataData\KPlotData')',2))) .* normf;
 [~,whBad] = max(RMSPE);
 xBad = xPlot(whBad);
 fBad = f(xBad);
-figure(3)
+figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot, ...
-   xPlot,fAppPlot + [-1,1].*RMSPE);
+   xPlot,fAppPlot + A*[-1,1].*RMSPE);
 hold on
 h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)', ...
-   'APP\((f,n)(x) \pm \)ERR\((x)\)', ...
+lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
+   'APP\((f,10)(x) \pm \)ERR\((x)\)', ...
    '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
