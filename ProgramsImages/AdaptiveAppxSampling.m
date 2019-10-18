@@ -13,6 +13,9 @@ plot(xPlot,fPlot,xData,fData,'.')
 xlabel('\(x\)')
 ylabel('\(f(x)\)')
 axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1), pos(2), 1.3*pos(3), 1.3*pos(4)])
 print('-depsc','fandData.eps')
 
 %% Compute and plot approximation
@@ -27,9 +30,12 @@ fAppPlot = KPlotData*coeff;
 figure(2)
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-legend(h([1 3]),{'\(f(x)\)','APP\((f,n)(x)\)'})
+legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
 legend('boxoff')
 axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1), pos(2), 1.3*pos(3), 1.3*pos(4)])
 print('-depsc','fandDataAndAppx.eps')
 
 %% Next data point based on prediction error
@@ -46,11 +52,15 @@ hold on
 h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1 3 4 6]),{'\(f(x)\)','APP\((f,n)(x)\)', ...
+lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)', ...
    'APP\((f,n)(x) \pm \)ERR\((x)\)', ...
    '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
+lgd.NumColumns = 2;
 legend('boxoff')
 axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1), pos(2), 1.3*pos(3), 1.3*pos(4)])
 print('-depsc','fandDataAndAppxAndRMSPE.eps')
 
 
