@@ -2,7 +2,7 @@
 % GitHub: https://github.com/fjhickernell/NSF_CompMath2018Nov
 % Overleaf: https://www.overleaf.com/9576964687whkhbmrrvhsd
 \documentclass[11pt]{NSFamsart}
-\usepackage{latexsym,amsfonts,amsmath,epsfig,extdash,multirow}
+\usepackage{latexsym,amsfonts,amsmath,amsthm,epsfig,extdash,multirow}
 \usepackage{stackrel,tabularx,mathtools,enumitem,xspace}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[numbers]{natbib}
@@ -54,6 +54,8 @@
 \setlength{\evensidemargin}{0in}
 \textheight8.9in
 %\textheight9.1in
+
+\newtheorem{theorem}{theorem}
 
 
 \providecommand{\FJHickernell}{Hickernell}
@@ -326,15 +328,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate, e.g., the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n}$, i.e., a set of data sites where $f$ is to be evaluated.  Ideally, choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
+Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate, e.g., the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
     \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
 \end{equation}
-where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  Roughly speaking, if the function is detected to be highly variable in one portion of the domain, then one should sample more densely there. 
+where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  If the function is detected to be highly variable in one portion of the domain, $\Omega$, then one should place more data sites there. 
 
-Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are that
+Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are twofold:
 \begin{itemize}
-    \item For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n})$ does not depend on the sampled function values, $\by_{1:n}$, at all, but only on the placement of the data sites, $\mX_{1:n}$.
+    \item For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that there is no dependence on the sampled function values, $\by_{1:n}$, at all, but only on the placement of the previous data sites, $\mX_{1:n}$.
     
     \item Adaptive sampling schemes that do depend on the sampled function values are heuristic; they lack a theoretical basis.
 \end{itemize}
@@ -343,33 +345,32 @@ Adaptive sampling has been studied for decades.  The shortcomings of existing ad
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Illustrative Univariate Example} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by the Mat\'ern reproducing kernel,
+The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
 \begin{equation}
     K(t,x) = (1 - \theta \abs{t-x}) \exp(-\theta\abs{t-x}),
 \end{equation}
-with $\theta = 1$.  See \cite{} for .  The approximation is given by
+with $\theta = 1$.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of optimal function approximation in reproducing kernel Hilbert spaces.  The approximation is given by
 \begin{equation} \label{appxExOne}
-    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \quad \text{where } \bc = \mK^{-1} \by, \; \mK = \mK(\mX_{1:n}) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n, \; \by = \by_{1:n}.
+    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \quad \text{where } \bc = \mK^{-1} \by_{1:n}, \quad \mK = \mK(\mX_{1:n}) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n.
 \end{equation}
 Fig.\ \ref{fig:sampleFun} also shows $\APP(f,n)$.  
 
 \begin{keyidea} \label{keyideainitial}
-The initial design must be cover the domain well enough to detect variation in the function.
+The initial design must be fill the domain well enough to detect variation in the function.
 \end{keyidea}
-In this example, $\APP(f,n)$ captures the peak on the left because the data sites are dense enough in where the peak occurs.  If the design used to construct the approximation consisted only of four data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,n)$ would not capture the peak.  The user might wrongly believe that the function was well approximated.  There is a substantial literature on space filling designs \cite{}. The number of data sites required for the initial design depends on how many one can afford and how narrow a peak one is willing to miss.
-
+Here, $\APP(f,n)$ captures the peak on the left because the data sites are dense enough where the peak occurs.  If the design consisted only of the $n=4$ data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,n)$ would not capture the peak.  The user might wrongly believe that the function was well approximated.  There is a substantial literature on space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 5cm]{ProgramsImages/fandDataAndAppx.eps} \qquad \qquad
-    \includegraphics[width = 5cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppx.eps} \qquad \qquad
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
     \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation. The right plot also includes an approximate prediction error bound and the location of the largest prediction error, $x_{\textup{bad}}$. The largest error actually occurs far away from $x_{\textup{bad}}$.}
     \label{fig:sampleFun}
 \end{figure}
 
-Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Therefore, by intuition one might expect that adding the next data site in the design on the left would give the greatest improvement.  Unfortunately, this is not the case for a typical adaptive scheme.
+Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Intuitively, one might expect that adding the next data site in the design on the left would give the greatest improvement.  Unfortunately, typical adaptive schemes do not necessarily work this way.
 
-It is known that the approximation error has the following upper bound
+The approximation error has the following upper bound:
 \begin{gather}
 \label{RKHSErrBd}
     \abs{f(x) - \APP(f,n)(x)} \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)}, \\
@@ -385,17 +386,23 @@ which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\te
 \begin{keyidea}\label{keyideafunction}
 The choice of the next data site should depend on function data, not only on the location of the other sites.
 \end{keyidea}
-The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  A good adaptive sampling algorithm should choose the next data site on the left for the example in Fig.\ \ref{fig:sampleFun}, where it will improve upon $\APP(f,n)$ the most.
+The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One way to achieve this is to have the reproducing kernel, $K$, inferred from the function data, $\by_{1:n}$, in a meaningful way.  Another is to way to achieve a successful adaptive criterion is for the approximation error to be determined locally, by the nearby function data.  These approaches are elaborated in ???
 
-is for the sampling criterion to detect the large fluctuation in $f$ via the function data.  
-
-Since the criterion of minimizing the approximation error 
-
-The first term on the right in \eqref{RKHSErrBd} depends on $x$, but the second term does not.  The value of $x$ where the approximation error bound is maximized is
+As it stands, approximation error bound \eqref{RKHSErrBd} cannot be used as a stopping criterion for an adaptive function approximation algorithm because $\norm[\calf]{f - \APP(f,n)}$ is typically unknown.  However, if $n$ is large enough, we might hypothesize that our $f$ belongs to the cone
 \begin{equation}
-    x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x),
+    \calc := \{f \in \calf : \norm[\calf]{f - \APP(f,n)} \le A_n \norm[\calf]{\APP(f,n)} \},
 \end{equation}
-which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Note that $x_{\textup{bad}}$ does not coincide with where actual approximation error is greatest, 
+where $A_n$ is positive, and fixed in advance.  This set is a cone because any multiple of an element of $\calc$ is also in $\calc$.  This $\calc$ may be interpreted as the set of functions in $\calf$ hypothesis may be interpreted as a set of functions that are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by_{1:n} \mK^{-1} \by_{1:n}}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
+\begin{equation}
+\label{DataErrBd}
+    \norm[\infty]{f - \APP(f,n)} \le A_n \sqrt{\norm[\infty]{K(\cdot,\cdot) - \bk^T(\cdot) \mK^{-1} \bk(\cdot)} \, [\by_{1:n} \mK^{-1} \by_{1:n}] } \qquad \forall f \in \calc.
+\end{equation}
+Given method for choosing data sites adaptively, an adaptive function approximation algorithm proceeds by increasing $n$ until the right hand side of \eqref{DataErrBd} does not exceed the prescribed error tolerance, $\varepsilon$.  Then the algorithm returns $\APP(f)$.
+
+\begin{keyidea} \label{keyideacone}
+Adaptive approximation algorithms are constructed for cones of functions that can be understood via a modest number of observations.
+\end{keyidea}
+One may
 
 A parallel approach, which arises from Bayesian numerical analysis \cite{}, is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data is the same $\APP(f,n)$ as in \eqref{appxExOne},
 
