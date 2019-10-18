@@ -313,7 +313,9 @@
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
 
-\centerline{\Large \textbf{Adaptive Sampling---Project Description}}
+\begin{center}
+\Large \textbf{Adaptive Sampling and Function Approximation \\ Project Description}
+\end{center}
 \vspace{-2ex}
 
 \setcounter{tocdepth}{1}
@@ -324,11 +326,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate, e.g., the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\{\bx_1, \bx_2, \ldots\} \in \Omega^{\naturals}$, i.e., the data sites where $f$ is to be evaluated.  Ideally, choice of the design should be \emph{adaptive}, i.e., the sampled function values should inform the choice of the next data site: 
+Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate, e.g., the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n}$, i.e., a set of data sites where $f$ is to be evaluated.  Ideally, choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
-    \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \qquad \mX_{1:n} := (\bx_1, \ldots, \bx_n)^T, \quad  \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T,
+    \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
 \end{equation}
-where $\phi_{n+1} : \reals^{n \times d} \times \reals^n \to \Omega$ is some carefully chosen function that depends on underlying assumptions about $f$.  Roughly speaking, if the function is highly variable in one portion of the domain, then one should sample more densely there. 
+where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  Roughly speaking, if the function is detected to be highly variable in one portion of the domain, then one should sample more densely there. 
 
 Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are that
 \begin{itemize}
@@ -341,7 +343,7 @@ Adaptive sampling has been studied for decades.  The shortcomings of existing ad
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Illustrative Univariate Example} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-To illustrate the challenges of adaptive sampling, consider the univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, defined on $[0,1]$, which is plotted in Fig.\ \ref{fig:sampleFun}. The $n=10$ point design is $\{x_i\}_{i=1}^n = \{0, 0.1, \ldots, 0.6, 0.8, 0.9, 1\}$.  An approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by the Mat\'ern reproducing kernel,
+The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by the Mat\'ern reproducing kernel,
 \begin{equation}
     K(t,x) = (1 - \theta \abs{t-x}) \exp(-\theta\abs{t-x}),
 \end{equation}
@@ -354,9 +356,8 @@ Fig.\ \ref{fig:sampleFun} also shows $\APP(f,n)$.
 \begin{keyidea} \label{keyideainitial}
 The initial design must be cover the domain well enough to detect variation in the function.
 \end{keyidea}
-In this example, $\APP(f,n)$ captures the peak on the left because the data sites are dense enough in where the peak occurs.  If the design consisted only of $\{0, 0.4,  0.6, 1\}$, then $\APP(f,n)$ would not capture the peak, and the user might wrongly believe that the function was well approximated.  The number of data sites required for the initial design depends on how many one can afford and how narrow a peak one is willing to miss.
+In this example, $\APP(f,n)$ captures the peak on the left because the data sites are dense enough in where the peak occurs.  If the design used to construct the approximation consisted only of four data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,n)$ would not capture the peak.  The user might wrongly believe that the function was well approximated.  There is a substantial literature on space filling designs \cite{}. The number of data sites required for the initial design depends on how many one can afford and how narrow a peak one is willing to miss.
 
-Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Therefore, by intuition one might expect that adding the next data site in the design on the left would give the greatest improvement.  Unfortunately, this is not the case for a typical adaptive scheme.
 
 \begin{figure}[H]
     \centering
@@ -365,6 +366,8 @@ Not surprisingly, the error of the approximation is greatest on the left side of
     \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation. The right plot also includes an approximate prediction error bound and the location of the largest prediction error, $x_{\textup{bad}}$. The largest error actually occurs far away from $x_{\textup{bad}}$.}
     \label{fig:sampleFun}
 \end{figure}
+
+Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Therefore, by intuition one might expect that adding the next data site in the design on the left would give the greatest improvement.  Unfortunately, this is not the case for a typical adaptive scheme.
 
 It is known that the approximation error has the following upper bound
 \begin{gather}
