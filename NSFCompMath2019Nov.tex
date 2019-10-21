@@ -264,7 +264,7 @@
 %\newtheorem{research}{Research Objectives}
 %\newtheorem{keyidea}{Key Idea}
 \newcounter{keyideabean}[section]
-\newenvironment{keyidea}{\refstepcounter{keyideabean}\par\bigskip
+\newenvironment{keyidea}{\refstepcounter{keyideabean}\par \smallskip
    \noindent\begin{itshape}%
    Key Idea~\thekeyideabean.\ignorespaces}%
    {\end{itshape}\ignorespacesafterend}
@@ -310,7 +310,20 @@
 \newcommand{\FJHNote}[1]{{\color{blue}Fred: #1}}
 \newcommand{\JMHNote}[1]{{\color{green}Mac: #1}}
 
+\newcommand{\keyideainitialtext}{The initial design must be fill the domain well enough to detect significant fluctuations in the function.}
+\newcommand{\keyideafunctiontext}{The choice of the next data site should depend on function data, not only on the location of the other sites.}
+\newcommand{\keyideaBayesiantext}{An alternative to deterministic numerical analysis is Bayesian numerical analysis.  The two perspectives produce similar outcomes.  The Bayesian perspective permits inference.}
+\newcommand{\keyideaconetext}{Adaptive approximation algorithms are constructed for cones of functions that are roughly approximated via a modest number of observations.}
+\newcommand{\keyidealowdimtext}{Avoiding the curse of dimensionality requires the function being approximated to have a low dimensional structure.}
 
+
+\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that there is no dependence on the sampled function values, $\by_{1:n}$, at all, but only on the placement of the previous data sites, $\mX_{1:n}$.}
+
+\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on the sampled function values are heuristic; they lack a theoretical basis.}
+
+
+\newcommand{\repeatkeyidea}[2]{\begin{itshape}Key Idea \ref{#1}. #2\end{itshape}}
+\newcommand{\repeatshort}[2]{Shortcoming\ref{#1}. #2}
 
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
@@ -325,9 +338,9 @@
 
 \vspace{-6ex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
     \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
@@ -335,16 +348,27 @@ Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d 
 where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  If $f$ is detected to be highly variable in one portion of the domain, $\Omega$, then more data sites should be placed there. 
 
 Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are twofold:
-\begin{itemize}
-    \item For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that there is no dependence on the sampled function values, $\by_{1:n}$, at all, but only on the placement of the previous data sites, $\mX_{1:n}$.
+\begin{enumerate}[widest = Shortcomingj, leftmargin =*]
+\renewcommand{\labelenumi}{Shortcoming \arabic{enumi}.}
+    \item \shortnoy \label{shortcomenoy}
     
-    \item Adaptive sampling schemes that do depend on the sampled function values are heuristic; they lack a theoretical basis.
-\end{itemize}
-\emph{The PIs propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}, and include data-driven error bounds that can be used to stop the algorithms when the desired error tolerance is reached.}
+    \item \shortheuristic
+    
+\end{enumerate}
+\emph{The PIs, Fred J Hickernell (FJH) and Mac Hyman (MH), propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}, and include data-driven error bounds that can be used to stop the algorithms when the desired error tolerance is reached.}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+There are several key ideas that arise in the proposed research.  We list them here, illustrate them by example in this section, and then refer to them later in the proposal where the details of our proposed research is explained.
+\begin{keyidea}\label{keyideainitial} \keyideainitialtext \end{keyidea}
+\begin{keyidea}\label{keyideafunction} \keyideafunctiontext \end{keyidea}
+\begin{keyidea}\label{keyideaBayesian} \keyideaBayesiantext \end{keyidea} 
+\begin{keyidea} \label{keyideacone} \keyideaconetext \end{keyidea}
+\begin{keyidea} \label{keyidealowdim} \keyidealowdimtext \end{keyidea} 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Illustrative Univariate Example} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
 \begin{equation} \label{MatKer}
     K(t,x) = (1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}),
@@ -355,9 +379,7 @@ with $\theta = 1$.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, Sc
 \end{equation}
 Fig.\ \ref{fig:sampleFun} also shows $\APP(f,10)$.  
 
-\begin{keyidea} \label{keyideainitial}
-The initial design must be fill the domain well enough to detect significant fluctuations in the function.
-\end{keyidea}
+\repeatkeyidea{keyideainitial}{\keyideainitialtext}
 Here, $\APP(f,10)$ captures the peak on the left because the data sites are dense enough where the peak occurs.  If the design consists only of the $n=4$ sparse data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,4)$ does not capture the peak, as shown in Fig.\ \ref{fig:sampleFun}.  There is a substantial literature on space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
 \begin{figure}[H]
@@ -383,16 +405,12 @@ Choosing the next data site where the approximation error is maximized correspon
 \end{equation}
 which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
 
-\begin{keyidea}\label{keyideafunction}
-The choice of the next data site should depend on function data, not only on the location of the other sites.
-\end{keyidea}
+\repeatkeyidea{keyideafunction}{\keyideafunctiontext}
 The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by_{1:n}$, in a meaningful way.  Another approach is to compute the approximation error only on the basis of nearby function data.  These approaches are elaborated in ???
 
 An alternative perspective to assuming that the function to be approximated is a deterministic object in a Hilbert or Banach space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\APP(f,n)$ as in \eqref{appxExOne}.
 
-\begin{keyidea} \label{keyideaBayesian}
-In addition to a deterministic numerical analysis, one may employ a Bayesian numerical analysis.  The two perspectives are similar.  The latter allows one to perform inference.
-\end{keyidea} 
+\repeatkeyidea{keyideaBayesian}{\keyideaBayesiantext}
 In ??? we will appeal to the Bayesian perspective.
 
 As it stands, approximation error bound \eqref{RKHSErrBd} cannot be used as a stopping criterion for an adaptive function approximation algorithm because $\norm[\calf]{f - \APP(f,n)}$ is typically unknown.  However, if $n$ is large enough, we might hypothesize that our $f$ belongs to the cone of functions,
@@ -409,9 +427,7 @@ where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because a
 \end{subequations}
 Given method for choosing data sites adaptively, an adaptive function approximation algorithm proceeds by increasing $n$ until the right hand side of \eqref{DataErrBd} does not exceed the prescribed error tolerance, $\varepsilon$.  Then the algorithm returns $\APP(f)$.
 
-\begin{keyidea} \label{keyideacone}
-Adaptive approximation algorithms are constructed for cones of functions that can be roughly approximated via a modest number of observations.
-\end{keyidea}
+\repeatkeyidea{keyideacone}{\keyideaconetext}
 The intuition is \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea.
 
 The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,n)(x) \pm \ERR(n,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
@@ -419,12 +435,22 @@ The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have thei
 \subsection{An Illustrative Multivariate Example}
 Although many of the key ideas that arise in the proposed research can be illustrated by univariate function approximation, there are some ideas that only make sense in a multivariate setting.  We consider such a setting here.
 
-Let $\calf$, be a finite dimensional Banach space of multi-linear functions:
+Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
+\begin{subequations} \label{ex:multilin}
+\begin{gather}
+    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) \bx_{\bk} \right \}, 
+    \\ 
+    \bx_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
+    \norm[\calf]{f} : = \norm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
+\end{gather}
+\end{subequations}
+for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose ordering, $\lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots \ge \lambda_{\bk_{2^d}}$, implies an ordering of the $\bk$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf(\bk)$.  In this case, the optimal approximation in the $\calg$-norm is $\APP(f,n) = \sum_{i=1}^n \hf(\bk_i) \bx_{\bk_i}$, and the error of this approximation is 
 \begin{equation}
-    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\fraku \subseteq 1:d} \hf_{\fraku} \prod_{j \in \fraku}x_j \right \}, \qquad \norm[\calf]{f} : = \norm[\infty]{(\hf_\fraku/\gamma_\fraku)_{\fraku \subseteq 1:d}}
+    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\sum_{i = n+1}^{\infty} \hf(\bk_i)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
 \end{equation}
-for some prescribed set of weights, $(\gamma_\fraku)_{\fraku \subseteq 1:d}$, where $1:d := \{1, \ldots, d\}$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf_\fraku$, so in this case, $\APP(f,n) = \sum_{i=1}^n \hf_{\fraku_i} \prod_{j \in \fraku_i}x_j$, and the design is $\{\fraku_1, \ldots, \fraku_n\}$.
 
+\repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
+If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if multilinear not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$ decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in ???
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
