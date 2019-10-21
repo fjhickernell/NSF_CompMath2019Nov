@@ -6,7 +6,7 @@ f = @(x) exp(-10*x).*sin(8*x);
 %% Plot function
 xData = [0:0.1:0.6 0.8:0.1:1]';
 fData = f(xData);
-xPlot = (0:0.005:1)';
+xPlot = (0:0.002:1)';
 fPlot = f(xPlot);
 figure(1);
 plot(xPlot,fPlot,xData,fData,'.')
@@ -82,6 +82,10 @@ set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
 print('-depsc','fandDataAndAppxAndRMSPE.eps')
+
+whMiss = find((fPlot > fAppPlot + A*RMSPE + 1000*eps) | ...
+   (fPlot < fAppPlot - A*RMSPE - 1000*eps))
+Miss = [xPlot(whMiss) fPlot(whMiss) fAppPlot(whMiss) + A*[-1 1].*RMSPE(whMiss)]
 
 
 
