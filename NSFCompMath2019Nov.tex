@@ -508,7 +508,7 @@ include
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for integration, function approximation, and optimization \cite{ChoEtal17a, Din15a, HicEtal14b, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to guarantee that the error tolerance is met.
+FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to guarantee that the error tolerance is met.
 
 However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are locally adaptive, meaning that the sampling density is non-uniform and influenced by the function data (Key Idea \ref{keyideafunction}).  The cone of functions for which these algorithms are guaranteed to succeed (Key Idea \ref{keyideacone}) consists of functions where the maximum of the second derivative in a sub-interval is not much drastically smaller than it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
 $\norm[\infty]{f''}$ for peaky functions.
@@ -523,18 +523,11 @@ $\norm[\infty]{f''}$ for peaky functions.
 	function approximation in \cite{ChoEtal17a}.  The sample is denser where $\abs{f''}$ is larger. \label{localadaptfig}}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, LlAJR, DL, and JR
-developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ basd on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and Sobol' sequences \cite{DicEtal14a} commonly 
-choose the 
-sequence of nodes, $\{\bx_i\}_{i=1}^\infty$, to be an integration lattice node sequence  or a digital
-sequence, in particular, the Sobol' sequence.  \QMC cubature is superior to 
-independent and identically distributed Monte Carlo (\hypertarget{IIDMClink}{IID MC}) cubature 
-because the nodes are more 
-evenly spread throughout the domain.   Fig.\ \ref{PtsFig} illustrates this evenness.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ basd on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are based on integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not as space-filling.
 
 \begin{figure}[h] % MATLAB Driver: PlotPoints.m
 	\centering
@@ -542,30 +535,12 @@ evenly spread throughout the domain.   Fig.\ \ref{PtsFig} illustrates this evenn
 	\includegraphics[width = 0.31\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \quad
 	\includegraphics[width = 0.31\textwidth]{ProgramsImages/SSobolPoints.eps} 
 	
-	\caption{IID nodes contrasted with nodes used for QMC cubature.\label{PtsFig}}
+	\caption{IID nodes contrasted with two common families of space filling nodes.\label{PtsFig}}
 \end{figure}
 
-For the \QMC sampling considered here, $n$ is 
-commonly a power of two.  The well-known theoretical error bound for 
-\QMC cubature can be expressed in terms of some of the Fourier coefficients of the 
-integrand \cite{DicEtal14a, DicPil10a, HicJim16a,JimHic16a, Nie92, SloJoe94}:
-\begin{gather}
-\nonumber
-f(\bx) = \sum_{\bk \in \bbK} \hf(\bk) \phi_{\bk} (\bx),  \qquad \text{where } \hf(\bk) := \int_{[0,1]^d} 
-f(\bx) \, \overline{\phi}_{\bk}(\bx) \quad \forall \bk \in \bbK, \\
-\label{multiInt} \APP(f,n) = \frac 1n \sum_{i=1}^{n} f(\bx_i), \qquad
-\abs{\SOL(f) - \APP(f,n)} \le \sum_{\bk \in P^\perp_n \setminus\{\bzero\}} \abs{\hf(\bk)} \\
-\nonumber
-\text{Dual set: }P_n^\perp : = \{\bk \in \bbK \, \vert \, \phi_{\bk}(\bx_i) = \phi_{\bk}(\bx_1) \text{ for } 
-i=1, \ldots, n \}.
-\end{gather}
-For lattice nodes, $\bbK = \integers^d$ and the $\phi_{\bk}$ are complex exponentials.  For digital sequence nodes,  $\bbK = \natzero^d$ and the $\phi_{\bk}$ are Walsh functions.
+The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier bases \{complex exponential/Walsh functions\} are chosen to match the designs \{lattices/digital sequences\}, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
 
-FJH and LlAJR in \cite{HicJim16a,JimHic16a} defined a cone integrands, $\cc$, 
-whose Fourier coefficients decay steadily, but  not necessarily monotonically.  The definition is technical, but Fig.\ \ref{GoodBadWalshFig} 
-illustrates two functions and their Fourier 
-(Walsh) coefficients, one inside the cone and one outside.  Here and in the error bound below, $\{\bk(\kappa)\}_{\kappa = 1}^\infty$ 
-denotes an ordering of the $d$-dimensional wavenumbers in $\bbK$.
+The cones, $\calc$ of integrands for which these adaptive cubatures are guaranteed (Key Idea \ref{keyideacone})  are those for which the magnitudes of the Fourier coefficients, $\bigabs{\hf(\bk(\kappa))}$ decay steadily, but not monitonically.  Fig.\ \ref{GoodBadWalshFig} displays a typical function inside $\calc$ and one outside $\calc$. Here $\bk(0), \bk(1), \ldots$ is a natural ordering of the $d$-dimensional wavenumbers.  The function lying outside the cone appears to have high frequency noise. 
 
 \begin{figure}[h]
 	\centering
@@ -577,72 +552,22 @@ denotes an ordering of the $d$-dimensional wavenumbers in $\bbK$.
 	{ProgramsImages/FilteredFunctionWalshFourierCoeffDecay.eps} \ \ 
 	\includegraphics[width = 0.23\textwidth] 
 	{ProgramsImages/WalshFourierCoeffDecayFilter.eps}
-	\caption{A function inside $\cc$ and another with high frequency noise outside $\cc$
-		%and their Fourier coefficients 
+	\caption{A function inside $\cc$ for which the adaptive algorithms are guaranteed and another function with high frequency noise lying outside $\cc$.
 	\label{GoodBadWalshFig}}
 \end{figure}
 
-This definition  of $\cc$ allowed us to derive a data-driven bound on the cubature error above in \eqref{multiInt} in terms of the \emph{discrete} Fourier coefficients: 
-\begin{equation*}
-\ERR(\dataN,n) = \fC(n) \sum_{\kappa = n/(2n_1) + 1}^{n/n_1} \abs{\tf_n(\bk(\kappa))}, \qquad \text{where } \tf_n(\bk)  = \frac{1}n \sum_{i=1}^{n} f(\bx_i) \overline{\phi}_{\bk}(\bx_i).
-\end{equation*}
-Here $\fC(n)$ is an inflation factor.  The data driven error bound depends on moderate-sized wavenumbers because they best emulate the error---which comes from large wavenumbers---but their discrete Fourier coefficients are not contaminated by aliasing. This data-driven error bound is used to construct guaranteed adaptive \QMC cubature 
-algorithms: $n$ is increased by doubling until $\ERR(\dataN,n^*) \le \varepsilon$.  Then choosing 
-$\ALG(f,\varepsilon) = \APP(f,n^*)$ satisfies 
-\eqref{AlgErr}.  As in the cases of the univariate algorithms in Sect.\ \ref{sec:localadpat}, necessary conditions for $f$ to lie in $\calc$ arise from the cone definition.  Moreover, this algorithm automatically senses the speed at which the Fourier coefficients and converges accordingly; it is smoothness adaptable.
+FJH and JR assumed that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $K:[0,1]^d \times [0,1]^d \to \reals$ (Key Idea \ref{keyideaBayesian}).  The same space-filling designs are used as are pictured in Fig.\ \ref{PtsFig}.  A $99\%$ credible interval for the integral is constructed.  The sample size, $n$, is increased until the half-width is no greater than the error tolerance, $\varepsilon$, the algorithm terminates.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $C$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}. 
 
-Using a fast transform to compute the discrete Fourier coefficients, the total cost is $\Order\bigl(\$_d(f)n^* + n^* \log(n^*)\bigr)$.  So, the cost of manipulating the function data is not much worse than the computational cost of collecting the function data, a concern raised in Sect.\ \ref{sec:CompEff}.
+The major contribution of FJH and JR is to speed up the computational cost required by this Bayesian cubature.  Ordinarily, Bayesian cubature requires operations
+involving the Gram matrix $\mC = \bigl(C(\bx_i,\bx_j)\bigr)_{i,j=1}^n$ that have a cost of
+$\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the space-filling designs and reduced the computational cost $\Order(n 
+\log(n))$, making Bayesian cubature practical.
 
-FJH, LlAJR, and DL generalized the adaptive \QMC rules to accommodate control variates \cite{HicEtal17a}.  We also extended adaptive cubatures to a more general error criterion.  Bayesian inference \cite{GelEtal13} and computing Sobol' indices \cite{Sal02a} involve a function of \emph{more than one} integral. We vectorized the solution operator, $\SOL : \calf^p \to \reals^p$, defined the answer as some function of this vector of integrals, $\Ans: \reals^p \to \reals$, allowed a relative error tolerance, $\reltol$, and constructed an $\ALG$ satisfying
-\begin{multline}
-\label{generrorcrit} \tag{G-ALG-CRIT}
-\abs{\Ans(\SOL(\vf)) - \ALG(\vf,\varepsilon, \reltol) } \le \max(\varepsilon, \reltol \abs{\Ans(\SOL(\vf))} ) \\
-\forall \vf \in \cc^p, \ \varepsilon > 0, \ 0 < \reltol < 1 .
-\end{multline}
-JL derived a similar generalization for an adaptive trapezoidal rule \cite{Liu17a}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Adaptive Bayesian Cubature}  \label{sec:Bayes} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The research above assumes a deterministic integrand, but recent research by FJH and JR assumes that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $C:[0,1]^d \times [0,1]^d \to \reals$, i.e., 
-$f \sim \GP (m,C)$.  This \href{http://www.probabilistic-numerics.org}{probabilistic numerics} approach dates back at least thirty years \cite{Dia88a, OHa91a, RasGha03a, Rit00a} and has generated recent interest. One constructs a credible interval in the Bayesian sense, $\Prob\bigl[\abs{\SOL(f) 
-- \APP(f,n)} \le \ErrN \bigr] = 99\%$, where $\APP(f,n)$ is the posterior mean.  By increasing $n$ until the width of the credible interval is no greater than the error tolerance, one has an adaptive Bayesian cubature.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $C$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}.  Although similar computations can done assuming $C$ to be a reproducing kernel for a Hilbert space, the Gaussian process approach facilitates data-driven error bounds.
-
-A longstanding drawback of Bayesian cubature has been the computational cost of operations
-involving the Gram matrix $\mC = \bigl(C(\bx_i,\bx_j)\bigr)_{i,j=1}^n$, which is ordinarily
-$\Order(n^3)$.  Attempts to overcome this cost include \cite{AniCheSte16a, ParEtal17a}.  FJH and JR chose shift-invariant covariance kernels, which matched the lattice nodes used for sampling the integrand \cite{RatHic19a}. This yields Gram matrices $\mC$ for which the necessary vector-matrix operations can be accomplished by fast transforms with computational cost $\Order(n 
-\log(n))$, making Bayesian cubature practical.  We also found a way to avoid the round-off error that often plagues these Gaussian process methods for large $n$.
-
-The following table shows the performance of our adaptive cubatures in approximating the integral corresponding to the price of Asian arithmetic mean call option where the price is $\$13.12$ and $d=12$.  The cubatures were run under different scramblings of the nodes.
-\[
-\begin{array}{cccccr@{.}l}
-    \text{Error} & & \text{Median} & & \text{Worst }10\% & \multicolumn{2}{c}{\text{Worst }10\%}\\
-    \text{Tolerance} & \text{Method} & \text{Error} & \text{Success} & n & \multicolumn{2}{c}{\text{Time (sec)}} \\
-    \toprule
-     1\text{E}-2& \text{IID Monte Carlo \cite{HicEtal14a}} & 2\text{E}-3 & 100\% & 6.1\text{E}7 & 33\\
-     1\text{E}-2&  \text{Lattice Nodes \cite{JimHic16a}} & 1\text{E}-3 & 100\% & 1.6\text{E}4 & 0&041\\
-     1\text{E}-2& \text{Sobol' Nodes \cite{HicJim16a}} & 1\text{E}-3 & 100\% & 1.6\text{E}4 & 0&040\\
-     1\text{E}-2&  \text{Sobol' Nodes w/ Control Variates \cite{HicEtal18a}} & 2\text{E}-3 & 100\% & 4.1\text{E}3 & 0&019\\
-     1\text{E}-2& \text{Bayesian w/ Lattice Nodes \cite{RatHic19a}} & 2\text{E}-3 & 99\% & 1.6\text{E}4 & 0&051\\
-\end{array}
-\]
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Multivariate Function Approximation} \label{sec:PrevFunAppx}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-GEF has led the effort in accurate, well-conditioned function approximation and solution of 
-differential equations using reproducing kernel Hilbert space methods.  Much of his effort has been 
-developing truncated Hilbert-Schmidt decomposition of the reproducing kernels using appropriate 
-eigenfunctions.  For example, an expansion of the squared exponential (Gaussian) kernel using 
-Chebyshev polynomials instead of Hermite polynomials has been used for the numerical solution of 
-nonlinear unsteady 
-convection-diffusion-reaction equations.  GEF and his collaborators extended
-decompositions of the Matern kernels on the half line to the entire real line, the first such analytical 
-derivations.
-
-FJH, YD, and LlAJR investigated the solution of general linear operators, $\SOL$, when series coefficients are available \cite{DinHic20a}.  Suppose that 
+FJH, YD, and LlAJR and collaborators investigated the solution of general linear problems where series coefficients are available \cite{DinHic20a}.  Suppose that 
 \begin{subequations} \label{serForm}
 \begin{gather}
     \calf := \left \{ \sum_{\bk \in \caln} \hf(\bk) u_{\bk} : \norm[\calf]{f} := \norm[r]{\left(\frac{\bigabs{\hf(\bk)}}{\lambda_{\bk}} \right)_{\bk \in \caln}} \right \},  \quad
