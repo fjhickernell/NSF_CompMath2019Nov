@@ -338,9 +338,9 @@
 
 \vspace{-6ex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
     \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
@@ -365,9 +365,9 @@ There are several key ideas that arise in the proposed research.  We list them h
 \begin{keyidea} \label{keyidealowdim} \keyidealowdimtext \end{keyidea} 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Illustrative Univariate Example} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
 \begin{equation} \label{MatKer}
@@ -432,7 +432,9 @@ The intuition is \emph{what you cannot see is not much worse than what you can s
 
 The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,n)(x) \pm \ERR(n,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{An Illustrative Multivariate Example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Although many of the key ideas that arise in the proposed research can be illustrated by univariate function approximation, there are some ideas that only make sense in a multivariate setting.  We consider such a setting here.
 
 Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
@@ -452,20 +454,18 @@ for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose o
 \repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
 If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if multilinear not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$ decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in ???
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
 NSF-DMS-1522687\except{toc}{, \\ \emph{Stable, Efficient, Adaptive Algorithms for 
 Approximation and 
 Integration}, \\
 \$270,000, August 2015 -- July 2018}} \label{sec:Previous}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FJHNote{This is copied from my old proposal.  Must be revised.}
 
-Gregory E.\ Fasshauer (GEF, co-PI) and FJH (PI) led this project.  GEF left Illinois Tech in 2016 and continued as a sub-contractor.  
-SCTC contributed as senior personnel.  Other major contributors were FJH's research students Yuhan Ding (YD, PhD 2015), Lan Jiang (LJ, PhD 2016), 
+Gregory E.\ Fasshauer (GEF, co-PI) and FJH (PI) led this project, and Sou-Cheng Terrya Choi (SCTC) contributed as senior personnel.  Other major contributors were FJH's research students Yuhan Ding (YD, PhD 2015), Lan Jiang (LJ, PhD 2016), 
 Llu\'is Antoni Jim\'enez Rugama (LlAJR, PhD 2016), Da Li (DL, MS 2016), Jiazhen Liu (JL, MS 2018), Jagadeeswaran Rathinavel (JR, 
-PhD student), Xin Tong (XT, MS 2014, PhD student, University of Illinois at Chicago), Kan Zhang (KZ, PhD 
-student), Yizhi Zhang (YZ, PhD 2018), and Xuan Zhou (XZ, PhD 2015).  Articles, theses,  
+PhD student), Xin Tong (XT, MS 2014, PhD student, University of Illinois at Chicago), Kan Zhang (KZ, PhD student), Yizhi Zhang (YZ, PhD 2018), and Xuan Zhou (XZ, PhD 2015).  Articles, theses,  
 software, and preprints supported in 
 part by this 
 grant 
@@ -500,49 +500,35 @@ include
 	Zho15a,
 	ZhoHic15a}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Intellectual Merit from Previous NSF Funding}
 \label{previousmeritsubsec}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In \cite{HicEtal14b}, FJH, YD, YZ, and collaborators developed an adaptive trapezoidal rule, i.e., $\SOL(f) = \int_a^b f(x) \, \dif x$.  In his PhD thesis \cite{Zha18a}, YZ constructed an improved adaptive trapezoidal rule for all integrands whose first derivatives have total variation not much greater than the total variation of their linear spline interpolant:
-\[
-\cc: = \left \{ f : \Var(f') \le \inflate(\size(\{x_i\}_{i=0}^n)) \Var(f'_{\textup{int},n}) \ \ \forall n \in \naturals, \ \{x_i\}_{i=0}^n), \ \size(\{x_i\}_{i=0}^n)) \le \hcut \right\}.
-\]
-In defining $\cc$ the nodes are arbitrary and independent of the algorithm, $\size(\cdot)$ denotes the maximum distance between adjacent nodes, $f_{\textup{int},n}$ denotes the linear spline based on $n$ nodes, and $\inflate(h) = \inflate(0) \hcut/(\hcut - h)$.  The $\ALG$ constructed by YZ  increases $n$ until the data-driven error bound does not exceed the error tolerance, following Algorithm \ref{ConeAlg}.  It satisfies  $\cost(\ALG,\cc,\varepsilon, \rho) =  \Order(\sqrt{\rho/\varepsilon})$, and is essentially optimal.  YZ also constructed an adaptive Simpson's rule.  In this case, the $f \in \cc$ have $\Var(f''')$ not much greater than the total variation of a piece-wise cubic polynomial interpolant.  Moreover,  $\cost(\ALG,\cc,\varepsilon, \rho) =  \Order([\rho/\varepsilon]^{1/4})$ and is optimal.  There is a necessary condition for $f$ to lie in $\cc$: all lower bounds on $\Var(f')$ given by $\Var(f'_{\textup{int},n})$ for various $n$ must not exceed all upper bounds on $\Var(f')$ as specified by the cone definition.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for integration, function approximation, and optimization \cite{ChoEtal17a, Din15a, HicEtal14b, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to guarantee that the error tolerance is met.
 
-YZ's algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced nodes).  However, \emph{locally adaptive} methods (unequally spaced nodes) may perform better for univariate problems.  FJH, SCTC, YD, and XT extended the globally adaptive algorithms in \cite{HicEtal14b,Ton14a} for univariate function approximation, $\SOL(f) = f$, and minimization, $\SOL(f) = \min_{a \le x \le b} f(x)$, to locally adaptive algorithms \cite{ChoEtal17a}.  The cone $\cc$ requires $f''$ to change mildly over small intervals.  Finite differences are used to locally bound the error of the linear spline in approximating a function or seeking its minimum. Fig.\ 
-\ref{localadaptfig} depicts the function data required for function approximation and minimization.  Here, $f$ is 
-sampled sparsely where $|f''(x)|$ is small. For function minimization, $f$ is also sampled sparsely when $f(x)$ is significantly bigger than the observed minimum.
+However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are locally adaptive, meaning that the sampling density is non-uniform and influenced by the function data (Key Idea \ref{keyideafunction}).  The cone of functions for which these algorithms are guaranteed to succeed (Key Idea \ref{keyideacone}) consists of functions where the maximum of the second derivative in a sub-interval is not much drastically smaller than it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
+$\norm[\infty]{f''}$ for peaky functions.
 
 \begin{figure}[h]
 	\centering
 	\vspace{-1ex}
 	\includegraphics[width = 0.48\textwidth]{ProgramsImages/sampling-funappxg.png}
-	\includegraphics[width = 0.48\textwidth]{ProgramsImages/sampling-funming.png}
-	
+
 	\vspace{-2ex}
-	\caption{The function data ({\color{MATLABOrange}$\bullet$}) for  locally adaptive 
-	function approximation  (left) and locally adaptive optimization (right) \label{localadaptfig}}
+	\caption{The function data ({\color{MATLABOrange}$\bullet$}) for the locally adaptive 
+	function approximation in \cite{ChoEtal17a}.  The sample is denser where $\abs{f''}$ is larger. \label{localadaptfig}}
 \end{figure}
 
-
-For locally adaptive function approximation algorithm 
-$\cost(\ALG,f,\varepsilon) = \Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$ \cite{ChoEtal17a}.  This is essentially optimal. In contrast, 
-our older globally adaptive function approximation algorithm in \cite{HicEtal14b} has a 
-computational cost of $\Order\left(\sqrt{\norm[\infty]{f''}/\varepsilon} \right)$.  The local adaption algorithm may require significantly less effort because $\norm[1/2]{f''}$ may be much smaller than 
-$\norm[\infty]{f''}$.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection[QMCsec]{Globally  Adaptive Quasi-Monte Carlo (QMC) 
-Cubature} \hypertarget{QMClink}{}
+\subsubsection[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, LlAJR, and DL 
-developed adaptive \QMC algorithms for $\SOL(f) = \int_{[0,1]^d} f(\bx) \, \dif \bx$  \cite{HicJim16a,JimHic16a}.  \QMC algorithms \cite{DicEtal14a} commonly 
+FJH, LlAJR, DL, and JR
+developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ basd on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and Sobol' sequences \cite{DicEtal14a} commonly 
 choose the 
 sequence of nodes, $\{\bx_i\}_{i=1}^\infty$, to be an integration lattice node sequence  or a digital
 sequence, in particular, the Sobol' sequence.  \QMC cubature is superior to 
