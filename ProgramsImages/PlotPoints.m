@@ -62,7 +62,7 @@ figure
 plot(sxlat(:,1),sxlat(:,2),'.','color',MATLABGreen)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Shifted Lattice Data Sites')
+title('Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc ShiftedLatticePoints.eps
