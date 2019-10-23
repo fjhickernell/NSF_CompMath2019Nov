@@ -10,6 +10,10 @@
 \usepackage{algorithm, algorithmicx}
 \usepackage{anyfontsize}
 \usepackage{cleveref}
+
+
+
+
 \newcommand{\myshade}{85}
 \colorlet{mylinkcolor}{violet}
 \colorlet{mycitecolor}{Aquamarine}
@@ -387,7 +391,7 @@ Here, $\APP(f,10)$ captures the peak on the left because the data sites are dens
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
-    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation for using $10$ and $4$ data sites. A poor approximation results from too few data sites.  The right plot includes an approximate prediction error bound, $\ERR(10,x)$ from \eqref{DataErrBda} with $A_n =1.3$, and the location of the largest prediction error, $x_{\textup{bad}}$. The largest actual error actually occurs far away from $x_{\textup{bad}}$.}
+    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation for using $10$ and $4$ data sites. A poor approximation results from too few data sites.  The right plot includes an approximate prediction error bound, $\ERR(10,x)$ from \eqref{DataErrBda} with $A_{10} =1.3$, and the location of the largest prediction error, $x_{\textup{bad}}$. The largest actual error actually occurs far away from $x_{\textup{bad}}$.}
     \label{fig:sampleFun}
 \end{figure}
 
@@ -432,13 +436,12 @@ Given method for choosing data sites adaptively, an adaptive function approximat
 \repeatkeyidea{keyideacone}{\keyideaconetext}
 The intuition is \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea.
 
-The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,n)(x) \pm \ERR(f,n,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
+The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,10)(x) \pm \ERR(f,10,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} and/or the value $\theta =1$ may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone $\calc$ defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{An Illustrative Multivariate Example}
+\subsection{An Illustrative Multivariate Example} \label{ex:multi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Although many of the key ideas that arise in the proposed research can be illustrated by univariate function approximation, there are some ideas that only make sense in a multivariate setting.  We consider such a setting here.
-
+Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
 Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
 \begin{subequations} \label{ex:multilin}
 \begin{gather}
@@ -454,7 +457,7 @@ for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose o
 \end{equation}
 
 \repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
-If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if multilinear not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$ decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in ???
+If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$, decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in Sect.\ ???
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
@@ -510,9 +513,9 @@ include
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to guarantee that the error tolerance is met.
+FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to meet the error tolerance.
 
-However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are locally adaptive, meaning that the sampling density is non-uniform and influenced by the function data (Key Idea \ref{keyideafunction}).  The cone of functions for which these algorithms are guaranteed to succeed (Key Idea \ref{keyideacone}) consists of functions where the maximum of the second derivative in a sub-interval is not much drastically smaller than it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
+However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are \emph{locally adaptive}, meaning that the sampling density is non-uniform and influenced by the function data (Key Idea \ref{keyideafunction}).  Qualitatively, cone of functions for which these algorithms are guaranteed to succeed (Key Idea \ref{keyideacone}) consists of functions where the maximum of the second derivative in a sub-interval is not drastically smaller than it's minimum value to either the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
 $\norm[\infty]{f''}$ for peaky functions.
 
 \begin{figure}[h]
@@ -529,7 +532,7 @@ $\norm[\infty]{f''}$ for peaky functions.
 \subsubsection[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
+FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
 
 \begin{figure}[h] % MATLAB Driver: PlotPoints.m
 	\centering
@@ -540,9 +543,9 @@ FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating 
 	\caption{IID data sites contrasted with two families of space filling data sites.\label{PtsFig}}
 \end{figure}
 
-The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier bases \{complex exponential/Walsh functions\} are chosen to match the designs \{lattices/digital sequences\}, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
+The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
 
-The cones, $\calc$ of integrands for which these adaptive cubatures are guaranteed (Key Idea \ref{keyideacone})  are those for which the magnitudes of the Fourier coefficients, $\bigabs{\hf(\bk(\kappa))}$ decay steadily, but not monitonically.  Fig.\ \ref{GoodBadWalshFig} displays a typical function inside $\calc$ and one outside $\calc$. Here $\bk(0), \bk(1), \ldots$ is a natural ordering of the $d$-dimensional wavenumbers.  The function lying outside the cone appears to have high frequency noise. 
+The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed (Key Idea \ref{keyideacone})  are those for which  the Fourier coefficients, $\bigabs{\hf(\bk(\kappa))}$ decay steadily, but not monitonically, in magnitude.  Fig.\ \ref{GoodBadWalshFig} displays a typical function inside $\calc$ and one outside $\calc$. Here $\bk(0), \bk(1), \ldots$ is a natural ordering of the $d$-dimensional wavenumbers.  The function lying outside the cone appears to have high frequency noise. 
 
 \begin{figure}[h]
 	\centering
@@ -558,87 +561,64 @@ The cones, $\calc$ of integrands for which these adaptive cubatures are guarante
 	\label{GoodBadWalshFig}}
 \end{figure}
 
-FJH and JR assumed that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $K:[0,1]^d \times [0,1]^d \to \reals$ (Key Idea \ref{keyideaBayesian}).  The same space-filling designs are used as are pictured in Fig.\ \ref{PtsFig}.  A $99\%$ credible interval for the integral is constructed.  The sample size, $n$, is increased until the half-width is no greater than the error tolerance, $\varepsilon$, the algorithm terminates.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $C$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}. 
+A different approach was taken by FJH and JR, who assumed that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $K:[0,1]^d \times [0,1]^d \to \reals$ (Key Idea \ref{keyideaBayesian}).  The same space-filling designs are used as are pictured in Fig.\ \ref{PtsFig}.  A $99\%$ credible interval for the integral is constructed.  The sample size, $n$, is increased until the half-width is no greater than the error tolerance, $\varepsilon$, the algorithm terminates.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $C$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}. 
 
-The major contribution of FJH and JR is to speed up the computational cost required by this Bayesian cubature.  Ordinarily, Bayesian cubature requires operations
-involving the Gram matrix $\mC = \bigl(C(\bx_i,\bx_j)\bigr)_{i,j=1}^n$ that have a cost of
-$\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the space-filling designs and reduced the computational cost $\Order(n 
+The major contribution of FJH and JR is to speed up the computational cost required by this Bayesian cubature.  Bayesian cubature requires operations
+involving the Gram matrix $\mK$ defined in \eqref{appxExOne}, and ordinarily these operations  have a cost of
+$\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the space-filling designs and reduced the computational cost to $\Order(n 
 \log(n))$, making Bayesian cubature practical.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Multivariate Function Approximation} \label{sec:PrevFunAppx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-FJH, YD, and LlAJR and collaborators investigated the solution of general linear problems where series coefficients are available \cite{DinHic20a}.  Suppose that 
-\begin{subequations} \label{serForm}
-\begin{gather}
-    \calf := \left \{ \sum_{\bk \in \caln} \hf(\bk) u_{\bk} : \norm[\calf]{f} := \norm[r]{\left(\frac{\bigabs{\hf(\bk)}}{\lambda_{\bk}} \right)_{\bk \in \caln}} \right \},  \quad
-    \calg : = \biggl \{ \sum_{\bk \in \caln} \hg(\bk) v_{\bk} : \norm[\calg]{g} := \bignorm[r']{\hg}\biggr \}, \\ 
-    v_{\bk} = \SOL(u_{\bk}), \quad
-     \lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots, \qquad
-      n_0 < n_1 < n_2 < \cdots, \quad r^{-1} + r'{}^{-1} = 1.
-\end{gather}
-
-\end{subequations}
-By assuming a steady decay of the series coefficients, ordered according to the $\lambda_{\bk}$, and for the case $r=2$, we constructed an adaptive algorithm defined on a cone, $\cc \subset \calf$, and based on sampling \emph{Fourier coefficients}, not function values.  This algorithm is essentially optimal.
+FJH, YD, and LlAJR and collaborators investigated the function approximation problems that resemble the setting in Sect.\ \ref{ex:multi}, but more generally allowing the basis $\{u_{\bk}\}_{\bk \in \bbK}$ to be general multivariate polynomials \cite{DinHic20a,DinEtal20a}.  Three different definitions of cones of functions were defined, all describing a reasonable behavior of the series coefficients.  Adaptive function approximation algorithms were constructed for these three cones shown to be essentially optimal.  The shortcoming of this research is that the algorithms use series coefficients rather than function values. 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Broader Impacts from Previous NSF Funding} \label{prevBIsect}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\emph{Publications, Conference Participation, and Conference Organization.} Publications by GEF, FJH,  SCTC, students, and collaborators are listed at the beginning of this section.  We have spoken at many applied mathematics, statistics, 
+\emph{Publications, Conference Participation, Conference Organization, and Leadership.} Publications by GEF, FJH,  SCTC, students, and collaborators are listed at the beginning of this section.  We have spoken at many applied mathematics, statistics, 
 and computational science conferences and given colloquium/seminar talks to mathematics and 
-statistics departments.  Here are highlights.  FJH, SCTC, LJ, and LlAJR published  an 
-encyclopedia entry on adaptive Monte Carlo \cite{HicEtal18a}.  FJH co-organized the 
+statistics departments.  FJH co-organized the 
 \href{http://cos.iit.edu/2016-spring-research-conference/}{2016 Spring Research 
-Conference}, a long-running annual industrial statistics conference.   FJH gave an invited tutorial 
-at the \href{http://mcqmc2016.stanford.edu}{MCQMC 2016} 
+Conference}, a long-running annual industrial statistics conference.   FJH gave an invited tutorial
+at \href{http://mcqmc2016.stanford.edu}{MCQMC 2016} 
 \cite{Hic17a}, a biennial conference for which he serves on the steering committee.  FJH 
 was a program leader for the SAMSI 2017--18 
 \href{https://www.samsi.info/programs-and-activities/year-long-research-programs/2017-18-program-quasi-monte-carlo-high-dimensional-sampling-methods-applied-mathematics-qmc/
-}{\QMC Program (\hypertarget{SAMSIlink}{SAMSI-QMC})}.   He  gave an invited tutorial 
-	at the Opening Workshop, and led one of 
-	the working groups.  FJH received the 2016 Joseph F.\ Traub 
-	Prize for Achievement in Information-Based Complexity.
-	
-	
-FJH's leadership in the MCQMC conferences  and \SAMSIQMC brought \QMC to other areas of potential application.  One concrete example, is the 
-	collaboration between FJH, LlAJR and French collaborators working in uncertainty quantification \cite{GilEtal16a, GilJim16b}.  Another example, is the collaboration of LlAJR with
-	high energy physicists at Fermilab, in the Chicago suburbs, using \QMC to speed 
-	up their calculations.
+}{Quasi-Monte Carlo (QMC) Program (\hypertarget{SAMSIlink}{SAMSI-QMC})}.   FJH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, FJH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
+Scientific Computation in 2017.  In 2018, FJH was appointed Vice Provost for Research.
+
 	
 \emph{\GAIL Software.} The results of this research have been implemented in 
 \GAIL, our open source \MATLAB library hosted on
 \href{http://gailgithub.github.io/GAIL_Dev/} {Github}. This software 
 has been implemented with input parsing, input validation, unit tests, inline documentation, and 
-demonstrations.  \GAIL makes it easier for practitioners to try our new adaptive algorithms.  SCTC has been key in this effort.  
+demonstrations.  \GAIL makes it easier for practitioners to try our new adaptive algorithms.  SCTC has been key in this effort.  \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by FJH and YD.  
 %With the help of students, we are starting to port GAIL to Python and \Rlang.
 
-\emph{Boosting the STEM Workforce.} GEF, FJH, and SCTC have mentored a number of 
-research students associated with this project.  The main ones are mentioned at the beginning of 
-this section.  Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017).   GEF, FJH,  and SCTC have mentored many undergraduate students including more than a dozen 
-Brazilian Science Mobility Program students in the summers of 2015 and 2016, Noah Grudowski (BS student IIT), Cu Hauw Hung (BS Biola U, now MS student at UCLA), Tanner Johnson (BS U Minnesota, now MS student at U British Columbia), Yueyi Li (female, BS Macalester U, now MS student at Johns Hopkins), Tianpei Qian (BS NUS, now MS student at Stanford), Alexsei Sorokin (BS student IIT), Paul Wolfert (BS student Colorado Schoo of Mines), and 
-Tianci Zhu (female, now MS student at NYU).  We have also had a few high school students join us. As part of our team, all of
+\emph{Boosting the STEM Workforce.} GEF, FJH, and SCTC mentored a number of 
+research students associated with this project.  Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017).   GEF, FJH,  and SCTC have mentored many undergraduate students including more than a dozen 
+Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from IIT, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  All but one have enrolled in graduate programs.   As part of our team, all of
 these students have learned how to conduct theoretical and/or practical computational mathematics research.
 
-FJH has taught a course on Monte Carlo methods each fall.  For the past several years students 
-have been introduced to \GAIL and used it in their coursework.  \GAIL has been used to teach how 
-to know how large $n$ must be for an \IIDMC or \QMC simulation to reach the desired accuracy 
-requirement.  A number of student class projects have been devoted to improving \GAIL.
-
-In recognition of his research leadership, FJH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
-Scientific Computation in 2017.  In this position he fostered collaborative scientific computation 
-research across departments by hosting matchmaking seminars and sponsoring a seed grant 
-competition. In 2018, FJH was appointed Vice Provost for Research.
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intellectual Merit of the Proposed Research} \label{sec:Proposed}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Shortcomings of Existing Adaptive Sampling Schemes} \label{sec:shortExist}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{??} \label{sec:??}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Test Bed of Practical Problems} \label{sec:TestBed}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
