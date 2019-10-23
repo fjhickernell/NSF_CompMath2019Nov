@@ -87,5 +87,64 @@ whMiss = find((fPlot > fAppPlot + A*RMSPE + 1000*eps) | ...
    (fPlot < fAppPlot - A*RMSPE - 1000*eps))
 Miss = [xPlot(whMiss) fPlot(whMiss) fAppPlot(whMiss) + A*[-1 1].*RMSPE(whMiss)]
 
+%% Infer theta using empirical Bayes
+Ktheta = @(logth) kernel(dist(xData,xData),s,exp(logth));
+objective = @(K,y) mean(log(eig(K))) + log(y'*(K\y));
+figure
+logthetaRange = log(0.01):0.005:log(100);
+semilogx(exp(logthetaRange), ...
+   arrayfun(@(lgth) objective(Ktheta(lgth),fData), logthetaRange))
+logthopt = fminbnd(@(logth) objective(Ktheta(logth),fData),-5,5);
+thetaopt = exp(logthopt)
+
+%% Compute and plot approximation with optimal theta
+theta = thetaopt;
+KOptDataData = kernel(dist(xData,xData),s,theta);
+coeffOpt = KOptDataData\fData;
+KOptPlotData = kernel(dist(xPlot,xData),s,theta);
+fOptAppPlot = KOptPlotData*coeffOpt;
+figure
+h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptAppPlot);
+xlabel('\(x\)')
+legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
+legend('boxoff')
+axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
+print('-depsc','fandDataAndOptAppx.eps')
+
+%% Infer y-varying kernel using empirical Bayes
+kernel = @(z,s,theta,a,x,y) s*exp(a*(x+y')).*(1 + theta*z).*exp(-theta*z);
+Ktheta = @(logth,a) kernel(dist(xData,xData),s,exp(logth),a,xData,xData);
+objective = @(K,y) mean(log(max(eig(K),100*eps))) + log(y'*(K\y));
+figure
+theta = 1;
+aRange = -15:0.01:0;
+plot(aRange, ...
+    arrayfun(@(a) objective(Ktheta(log(theta),a),fData), aRange))
+% aopt = fminbnd(@(a) objective(Ktheta(log(theta),a),fData),-15,0)
+[bopt,objmin] = fminsearch(@(b) objective(Ktheta(b(1),b(2)),fData),[2,-10])
+thetaopt = exp(bopt(1))
+aopt = bopt(2)
+
+%% Compute and plot approximation with optimal y-varying
+theta = thetaopt;
+a = aopt;
+KOptyDataData = kernel(dist(xData,xData),s,theta,a,xData,xData);
+coeffOpty = KOptyDataData\fData;
+KOptyPlotData = kernel(dist(xPlot,xData),s,theta,a,xPlot,xData);
+fOptyAppPlot = KOptyPlotData*coeffOpty;
+figure
+h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot);
+xlabel('\(x\)')
+legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
+legend('boxoff')
+axis([0 1 -0.2 0.4])
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
+print('-depsc','fandDataAndOptyAppx.eps')
+
 
 
