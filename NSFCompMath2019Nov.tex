@@ -218,6 +218,7 @@
 \newcommand{\norm}[2][{}]{\ensuremath{\left \lVert #2 \right \rVert}_{#1}}
 \newcommand{\ip}[3][{}]{\ensuremath{\left \langle #2, #3 \right \rangle_{#1}}}
 \newcommand{\bignorm}[2][{}]{\ensuremath{\bigl \lVert #2 \bigr \rVert}_{#1}}
+\newcommand{\Bignorm}[2][{}]{\ensuremath{\Bigl \lVert #2 \Bigr \rVert}_{#1}}
 \newcommand{\calm}{{\mathfrak{M}}}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\dist}{dist}
@@ -440,15 +441,15 @@ Although many of the key ideas that arise in the proposed research can be illust
 Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
 \begin{subequations} \label{ex:multilin}
 \begin{gather}
-    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) \bx_{\bk} \right \}, 
+    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) u_{\bk} \right \}, 
     \\ 
-    \bx_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
-    \norm[\calf]{f} : = \norm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
+    u_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
+    \norm[\calf]{f} : = \Bignorm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
 \end{gather}
 \end{subequations}
 for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose ordering, $\lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots \ge \lambda_{\bk_{2^d}}$, implies an ordering of the $\bk$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf(\bk)$.  In this case, the optimal approximation in the $\calg$-norm is $\APP(f,n) = \sum_{i=1}^n \hf(\bk_i) \bx_{\bk_i}$, and the error of this approximation is 
 \begin{equation}
-    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\sum_{i = n+1}^{\infty} \hf(\bk_i)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
+    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\bigl(\hf(\bk_i) \bigr)_{i=n+1}^\infty} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
 \end{equation}
 
 \repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
@@ -527,7 +528,7 @@ $\norm[\infty]{f''}$ for peaky functions.
 \subsubsection[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ basd on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are based on integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not as space-filling.
+FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating multivariate integrals of the form  $\int_{[0,1]^d} f(\bx) \, \dif \bx$ based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
 
 \begin{figure}[h] % MATLAB Driver: PlotPoints.m
 	\centering
@@ -535,7 +536,7 @@ FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating 
 	\includegraphics[width = 0.31\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \quad
 	\includegraphics[width = 0.31\textwidth]{ProgramsImages/SSobolPoints.eps} 
 	
-	\caption{IID nodes contrasted with two common families of space filling nodes.\label{PtsFig}}
+	\caption{IID data sites contrasted with two families of space filling data sites.\label{PtsFig}}
 \end{figure}
 
 The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier bases \{complex exponential/Walsh functions\} are chosen to match the designs \{lattices/digital sequences\}, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
