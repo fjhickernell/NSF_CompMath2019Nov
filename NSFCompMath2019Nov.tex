@@ -311,16 +311,16 @@
 \newcommand{\FJHNote}[1]{{\color{blue}Fred: #1}}
 \newcommand{\JMHNote}[1]{{\color{green}Mac: #1}}
 
-\newcommand{\keyideainitialtext}{The initial design must be fill the domain well enough to detect significant fluctuations in the function.}
-\newcommand{\keyideafunctiontext}{The choice of the next data site should depend on function data, not only on the location of the other sites.}
-\newcommand{\keyideaBayesiantext}{An alternative to deterministic numerical analysis is Bayesian numerical analysis.  The two perspectives produce similar outcomes.  The Bayesian perspective permits inference.}
-\newcommand{\keyideaconetext}{Adaptive approximation algorithms are constructed for cones of functions that are roughly approximated via a modest number of observations.}
-\newcommand{\keyidealowdimtext}{Avoiding the curse of dimensionality requires the function being approximated to have a low dimensional structure.}
+\newcommand{\keyideainitialtext}{The initial design must be fill the domain, $\Omega$, well enough to detect significant fluctuations in the function.}
+\newcommand{\keyideafunctiontext}{The choice of the $n+1^{\text{st}}$ data site should depend meaningfully on function data, $\by_{1:n}$, not only on the location of the other sites.}
+\newcommand{\keyideaBayesiantext}{Bayesian numerical analysis provides an alternative to deterministic numerical analysis.  The two perspectives produce similar outcomes.  The Bayesian perspective permits inference.}
+\newcommand{\keyideaconetext}{Adaptive approximation algorithms are constructed for \emph{cones} of functions that are roughly approximated via a modest number of observations.}
+\newcommand{\keyidealowdimtext}{Avoiding the curse of dimensionality requires $f$ to have an inherent low dimensional structure.}
 
 
-\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that there is no dependence on the sampled function values, $\by_{1:n}$, at all, but only on the placement of the previous data sites, $\mX_{1:n}$.}
+\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that these schemes are oblivious to the function values, $\by_{1:n}$.}
 
-\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on the sampled function values are heuristic; they lack a theoretical basis.}
+\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on $\by_{1:n}$ are heuristic; they lack a theoretical basis.}
 
 
 \newcommand{\repeatkeyidea}[2]{\begin{itshape}Key Idea \ref{#1}. #2\end{itshape}}
@@ -342,13 +342,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Surrogate models are approximations of functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive}. The sampled function values should inform the choice of the \emph{next} data site: 
+Surrogate models are approximations to functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example $f$ is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive} to be optimally efficient.  The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
     \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
 \end{equation}
 where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  If $f$ is detected to be highly variable in one portion of the domain, $\Omega$, then more data sites should be placed there. 
 
-Adaptive sampling has been studied for decades.  The shortcomings of existing adaptive sampling theory are twofold:
+Adaptive sampling and adaptive numerical algorithms are founded on the assumption that \emph{what you have not yet observed about $f$ is not much worse than what you have already observed}.  This idea must be made mathematically precise to justify any adaptive scheme.  Although adaptive sampling has been studied for decades, there remain two major shortcomings of existing theory:
 \begin{enumerate}[widest = Shortcomingj, leftmargin =*]
 \renewcommand{\labelenumi}{Shortcoming \arabic{enumi}.}
     \item \shortnoy \label{shortcomenoy}
@@ -356,9 +356,9 @@ Adaptive sampling has been studied for decades.  The shortcomings of existing ad
     \item \shortheuristic
     
 \end{enumerate}
-\emph{The PIs, Fred J Hickernell (FJH) and Mac Hyman (MH), propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}, and include data-driven error bounds that can be used to stop the algorithms when the desired error tolerance is reached.}
+\emph{The PIs, Fred J Hickernell (FJH) and Mac Hyman (MH), propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}.  These adaptive algorithms will stop when the data-driven error bounds are no greater than the prescribed error tolerance.}
 
-There are several key ideas that arise in the proposed research.  We list them here, illustrate them by example in this section, and then refer to them later in the proposal where the details of our proposed research is explained.
+Several key ideas arise in the proposed research.  We list them here, illustrate them by example in this section, and then refer to them later in the proposal.
 \begin{keyidea}\label{keyideainitial} \keyideainitialtext \end{keyidea}
 \begin{keyidea}\label{keyideafunction} \keyideafunctiontext \end{keyidea}
 \begin{keyidea}\label{keyideaBayesian} \keyideaBayesiantext \end{keyidea} 
@@ -381,7 +381,7 @@ with $\theta = 1$.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, Sc
 Fig.\ \ref{fig:sampleFun} also shows $\APP(f,10)$.  
 
 \repeatkeyidea{keyideainitial}{\keyideainitialtext}
-Here, $\APP(f,10)$ captures the peak on the left because the data sites are dense enough where the peak occurs.  If the design consists only of the $n=4$ sparse data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,4)$ does not capture the peak, as shown in Fig.\ \ref{fig:sampleFun}.  There is a substantial literature on space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
+Here, $\APP(f,10)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,4)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}.  There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
 \begin{figure}[H]
     \centering
@@ -391,39 +391,40 @@ Here, $\APP(f,10)$ captures the peak on the left because the data sites are dens
     \label{fig:sampleFun}
 \end{figure}
 
-Not surprisingly, the error of the approximation is greatest on the left side of $[0,1]$, where the fluctuation of $f$ is greatest.  Intuitively, one might expect that adding the next data site in the design on the left would yield the greatest improvement.  Unfortunately, typical adaptive schemes do not necessarily work this way.
+Not surprisingly, the actual approximation error is greatest on the left side of $[0,1]$, where $f$ fluctuates the most.  Intuitively, one might expect that adding the next data site in the design on the left would yield the greatest improvement.  Unfortunately, typical adaptive schemes do not necessarily work this way (Shortcoming \ref{shortcomenoy}).
 
-One common adaptive sampling rule is to place the next data site where the approximation error is maximized.  For this $\APP(f)$, the error has the following upper bound:
-\begin{gather}
+One common adaptive sampling rule is to place the next data site where the theoretical approximation error bound is maximized.  For this $\APP(f)$, the error has the following upper bound:
+\begin{align}
 \label{RKHSErrBd}
-    \abs{f(x) - \APP(f,n)(x)} \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)}, \\
+    \abs{f(x) - \APP(f,n)(x)} & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)}, \\
     \nonumber
-    \text{where} \qquad \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
-\end{gather}
-Choosing the next data site where the approximation error is maximized corresponds to 
+    & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f},
+    \quad \text{where }  \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
+\end{align}
+Choosing the next data site where the approximation error bound is maximized corresponds to 
 \begin{equation} \label{minprederr}
     x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX_{1:n}),
 \end{equation}
 which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
 
 \repeatkeyidea{keyideafunction}{\keyideafunctiontext}
-The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by_{1:n}$, in a meaningful way.  Another approach is to compute the approximation error only on the basis of nearby function data.  These approaches are elaborated in ???
+The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by_{1:n}$, in a significant way.  Another approach is to compute the approximation error bound only on the basis of nearby function data.  These approaches are elaborated in ???
 
 An alternative perspective to assuming that the function to be approximated is a deterministic object in a Hilbert or Banach space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\APP(f,n)$ as in \eqref{appxExOne}.
 
 \repeatkeyidea{keyideaBayesian}{\keyideaBayesiantext}
-In ??? we will appeal to the Bayesian perspective.
+In ??? we appeal to the Bayesian perspective.
 
 As it stands, approximation error bound \eqref{RKHSErrBd} cannot be used as a stopping criterion for an adaptive function approximation algorithm because $\norm[\calf]{f - \APP(f,n)}$ is typically unknown.  However, if $n$ is large enough, we might hypothesize that our $f$ belongs to the cone of functions,
 \begin{equation} \label{RKHScone}
     \calc := \{f \in \calf : \norm[\calf]{f - \APP(f,n)} \le A_n \norm[\calf]{\APP(f,n)} \},
 \end{equation}
-where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because any multiple of an element of $\calc$ is also in $\calc$.  This $\calc$ may be interpreted as the functions in $\calf$ whose norms are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by_{1:n} \mK^{-1} \by_{1:n}}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
+where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $af \in \calc$ for any real $a$.  This $\calc$ may be interpreted as the functions in $\calf$ whose norms are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by_{1:n} \mK^{-1} \by_{1:n}}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
 \begin{subequations} \label{DataErrBd}
 \begin{gather}
     \label{DataErrBda} 
-    \ERR(n,x) : = A_n \sqrt{[K(x,x) - \bk^T(x) \mK^{-1} \bk(x)] \, [\by_{1:n}^T \mK^{-1} \by_{1:n}] }, \\
-    \norm[\infty]{f - \APP(f,n)} \le \norm[\infty]{\ERR(n,\cdot)} \qquad \forall f \in \calc.
+    \ERR(f,n,x) : = A_n \sqrt{[K(x,x) - \bk^T(x) \mK^{-1} \bk(x)] \, [\by_{1:n}^T \mK^{-1} \by_{1:n}] }, \\
+    \norm[\infty]{f - \APP(f,n)} \le \norm[\infty]{\ERR(f,n,\cdot)} \qquad \forall f \in \calc.
 \end{gather}
 \end{subequations}
 Given method for choosing data sites adaptively, an adaptive function approximation algorithm proceeds by increasing $n$ until the right hand side of \eqref{DataErrBd} does not exceed the prescribed error tolerance, $\varepsilon$.  Then the algorithm returns $\APP(f)$.
@@ -431,7 +432,7 @@ Given method for choosing data sites adaptively, an adaptive function approximat
 \repeatkeyidea{keyideacone}{\keyideaconetext}
 The intuition is \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea.
 
-The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,n)(x) \pm \ERR(n,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
+The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,n)(x) \pm \ERR(f,n,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{An Illustrative Multivariate Example}
