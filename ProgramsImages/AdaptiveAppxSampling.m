@@ -181,7 +181,8 @@ print('-depsc','fandDataAndOptyAppx.eps')
 
 %% Next data point based on prediction error for y-varying
 n = length(xData);
-AOpty = -tinv(0.005,n)/sqrt(length(xData))
+%AOpty = -tinv(0.005,n)/sqrt(length(xData))
+AOpty = 1;
 normf = sqrt(coeffOpty'*fData);
 kernelDiag = @(s,theta,a,x) s*exp(a*(2*x));
 RMSPEOpty = real(sqrt(kernelDiag(s,theta,a,xPlot) - ...
