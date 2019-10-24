@@ -82,6 +82,7 @@
 \DeclareMathOperator{\GP}{\mathcal{G} \! \mathcal{P}}
 \DeclareMathOperator{\erf}{erf}
 \DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 
 \newcommand{\reals}{{\mathbb{R}}}
@@ -371,7 +372,7 @@ Several key ideas arise in the proposed research.  We list them here, illustrate
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Illustrative Univariate Example} 
+\subsection{Illustrative Univariate Example} \label{sec:UniEx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
@@ -391,7 +392,7 @@ Here, $\APP(f,10)$ captures the peak on the left because the data sites are dens
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
-    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation for using $10$ and $4$ data sites. A poor approximation results from too few data sites.  The right plot includes an approximate prediction error bound, $\ERR(10,x)$ from \eqref{DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\textup{bad}}$. The largest actual error actually occurs far away from $x_{\textup{bad}}$.}
+    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation \eqref{appxExOne} for using $10$ and $4$ data sites and the kernel \eqref{MatKer} with $\theta = 1$. A poor approximation results from too few data sites.  The right plot includes an approximate prediction error bound, $\ERR(10,x)$ from \eqref{DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\textup{bad}}$. The largest actual error actually occurs far away from $x_{\textup{bad}}$.}
     \label{fig:sampleFun}
 \end{figure}
 
@@ -400,7 +401,7 @@ Not surprisingly, the actual approximation error is greatest on the left side of
 One common adaptive sampling rule is to place the next data site where the theoretical approximation error bound is maximized.  For this $\APP(f)$, the error has the following upper bound:
 \begin{align}
 \label{RKHSErrBd}
-    \abs{f(x) - \APP(f,n)(x)} & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)}, \\
+    \abs{f(x) - \APP(f,n)(x)} & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)} \\
     \nonumber
     & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f},
     \quad \text{where }  \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
@@ -466,7 +467,6 @@ Approximation and
 Integration}, \\
 \$270,000, August 2015 -- July 2018}} \label{sec:Previous}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FJHNote{This is copied from my old proposal.  Must be revised.}
 
 Gregory E.\ Fasshauer (GEF, co-PI) and FJH (PI) led this project, and Sou-Cheng Terrya Choi (SCTC) contributed as senior personnel.  Other major contributors were FJH's research students Yuhan Ding (YD, PhD 2015), Lan Jiang (LJ, PhD 2016), 
 Llu\'is Antoni Jim\'enez Rugama (LlAJR, PhD 2016), Da Li (DL, MS 2016), Jiazhen Liu (JL, MS 2018), Jagadeeswaran Rathinavel (JR, 
@@ -601,7 +601,7 @@ demonstrations.  \GAIL makes it easier for practitioners to try our new adaptive
 
 \emph{Boosting the STEM Workforce.} GEF, FJH, and SCTC mentored a number of 
 research students associated with this project.  Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017).   GEF, FJH,  and SCTC have mentored many undergraduate students including more than a dozen 
-Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from IIT, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  All but one have enrolled in graduate programs.   As part of our team, all of
+Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from Illinois Tech, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  All but one have enrolled in graduate programs.   As part of our team, all of
 these students have learned how to conduct theoretical and/or practical computational mathematics research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -613,7 +613,33 @@ these students have learned how to conduct theoretical and/or practical computat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{??} \label{sec:??}
+\subsection{Reproducing/Covariance Kernels Inferred from Data} \label{sec:kerinferdata}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Key Idea \ref{keyideafunction} stresses the importance of having the choice of the next data site depend on function data.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.  Returning to the illustrative example in Sect.\ \ref{sec:UniEx}, the lack of fit of our approximation on the left and our poor choice of the next data site based on the approximation error bound is due to the fact that the form of our reproducing kernel in \eqref{MatKer} and/or our choice of $\theta$ was inadequate.
+
+The value of $\theta$ can be inferred using an empirical Bayes perspective (Key Idea \ref{keyideaBayesian}), which leads to the following optimization problem \cite{Hic17a}: 
+\begin{equation}
+    \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by_{1:n}^T \mK_\theta^{-1} \by_{1:n} \bigr)\right].
+\end{equation}
+For the example in Sect.\ \ref{sec:UniEx}, $\theta_{\textup{EB}} = 20$, and it is 
+
+\begin{figure}
+    \centering
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Detrending} \label{sec:detrending}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Selecting Importanct Coordinates} \label{sec:seletCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
