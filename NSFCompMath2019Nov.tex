@@ -590,7 +590,6 @@ was a program leader for the SAMSI 2017--18
 \href{https://www.samsi.info/programs-and-activities/year-long-research-programs/2017-18-program-quasi-monte-carlo-high-dimensional-sampling-methods-applied-mathematics-qmc/
 }{Quasi-Monte Carlo (QMC) Program (\hypertarget{SAMSIlink}{SAMSI-QMC})}.   FJH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, FJH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
 Scientific Computation in 2017.  In 2018, FJH was appointed Vice Provost for Research.
-
 	
 \emph{\GAIL Software.} The results of this research have been implemented in 
 \GAIL, our open source \MATLAB library hosted on
@@ -618,20 +617,28 @@ these students have learned how to conduct theoretical and/or practical computat
 Key Idea \ref{keyideafunction} stresses the importance of having the choice of the next data site depend on function data.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.  Returning to the illustrative example in Sect.\ \ref{sec:UniEx}, the lack of fit of our approximation on the left and our poor choice of the next data site based on the approximation error bound is due to the fact that the form of our reproducing kernel in \eqref{MatKer} and/or our choice of $\theta$ was inadequate.
 
 The value of $\theta$ can be inferred using an empirical Bayes perspective (Key Idea \ref{keyideaBayesian}), which leads to the following optimization problem \cite{Hic17a}: 
-\begin{equation}
+\begin{equation} \label{eq:thetEB}
     \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by_{1:n}^T \mK_\theta^{-1} \by_{1:n} \bigr)\right].
 \end{equation}
-For the example in Sect.\ \ref{sec:UniEx}, $\theta_{\textup{EB}} = 20$, and it is 
+For the example in Sect.\ \ref{sec:UniEx}, $\theta_{\textup{EB}} = 20$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  The new function approximation has similar deficiencies as the original one in Sect.\ \ref{sec:UniEx}, and the suggested next data site is at a place where the function approximation is already quite good.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndOptAppx.eps} \qquad \qquad
-    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndOptyAppx.eps}
-    \caption{Caption}
-    \label{fig:my_label}
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
+    \caption{The left plot shows the function approximation with an error bound for the example in Sect.\ \ref{sec:UniEx} but with $\theta = \theta_{\textup{EB}} = 20$ rather than $\theta =1$.  The approximation is slightly better, but the error bound is much larger.  The right plot shows the the function approximation with an error bound for the example in Sect.\ \ref{sec:UniEx} but for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5$ and $S = S_{\textup{EB}} = -10$.  The approximation is much improved, especially for smaller $x$, and the error bound is much smaller.  The next data site is in a region that makes intuitive sense.}
+    \label{fig:InferKernel}
 \end{figure}
 
+We may generalize the Mat\`ern kernel as follows to allow for the variation of the functions to be greater in one part of the domain than the other:
+\begin{equation} \label{modMatKer}
+    K(t,x) = \exp(S(t+x))(1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}).
+\end{equation}
+This new kernel maintains its properties of being symmetric and positive definite because all we have done is to multiply the original kernel by a $g(t)g(x)$ for some function $g$.  Here $S$ is a parameter to be inferred.
 
+The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in  Sect.\ \ref{sec:UniEx}, but for  this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better, the approximate error bound captures the true function everywhere in the domain, and the next data site $x_{n+1} = x_{\textup{bad}} = \argmax_x \ERR(f,10,\cdot)$ makes sense.
+
+This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept and is part of Key Idea \ref{keyideafunction}.  We plan to extend this idea to a more general multivariate setting.  Some of the challenges will be how to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -639,7 +646,7 @@ For the example in Sect.\ \ref{sec:UniEx}, $\theta_{\textup{EB}} = 20$, and it i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Selecting Importanct Coordinates} \label{sec:seletCoord}
+\subsection{Selecting Important Coordinates} \label{sec:seletCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
