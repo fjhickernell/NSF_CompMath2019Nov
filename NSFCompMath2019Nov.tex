@@ -391,19 +391,17 @@ where $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ measures the value to $\APP(n+1,\cdot,\
 
 \subsection{Our goal}
 
-We propose to find better $\APP$ and $\VAL$ than what is state-of-the art.  Current $\VAL$ do not assess the uncertainty of $\APP$ as well as they should, often because they do not take full account of $\by_{1:n}$
+The PIs, Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH), propose to find better $\APP$ and $\VAL$ than what is current best practice.  Current $\VAL$ do not assess the uncertainty of $\APP$ as well as they should, often because they do not take full account of $\by_{1:n}$.
 
 We also plan to derive error data-driven bounds satisfying
 \begin{equation} \label{eq:errbd}
     \bignorm[\calg]{\QOI(f) - \APP(n,\mX_{1:n},\by_{1:n})} \le \ERR(n,\mX_{1:n},\by_{1:n}) \qquad \forall f \in \calc,
 \end{equation}
-where $\calc$ is a precisely defined set of maps between POIs and outputs.  This will allow the user to decide whether to additional data is needed to improve the accuracy of $\APP(n,\mX_{1:n},\by_{1:n})$.
-
-We will use a two-step process to improve, create, and analyze adaptive sampling algorithms to sequentially guide the sample design based on both the locations and function values at the exiting samples.  
+where $\calc$ is a precisely defined set of maps between POIs and outputs.  This will allow the user to decide whether to additional data is needed to improve the accuracy of $\APP(n,\mX_{1:n},\by_{1:n})$.  Most current $\ERR$ are based on heuristics with no rigorous understanding of what $\calc$ should be. 
 
 \subsection{Our plan}
 
-Our plan follows the popular two-step \emph{explore-exploit} process.  In the \emph{explore} step, little or nothing is known of the QOIs or of $f$.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. The initial design does not depend on function data.
+Our plan follows the popular two-step \emph{explore-exploit} process.  In the \emph{explore} step, little or nothing is known of the QOIs or of $f$.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over the region of feasible POIs.  If $f$ is detected to be highly variable in one portion of the domain, $\Omega$, then more data sites should be placed there during the next step. This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. The initial design does not depend on function data.
 
 Starting with $n = n_0$, we then \emph{exploit} the existing sample to create multiple approximations $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ for $\btheta \in \Theta$.  These may be involve
 \begin{itemize}
@@ -423,40 +421,14 @@ The $\APP_{\btheta}(n_0, \mX_{1:n}, \by_{1:n})$ are then used to choose
 \end{itemize}
 This exploit step is repeated until the time budget is exhausted or the uncertainty tolerance is met.
 
-For $\QOI(f) = f$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ will correspond to a pointwise determinstic error bound or probabilistic error standard error.  For $\QOI(f) = \min_{\bx \in \Omega} f(\bx)$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ may be determined from sensitivity analysis or correspond to expected improvement.
+For $\QOI(f) = f$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ will correspond to a pointwise determinstic error bound or probabilistic error standard error.  For $\QOI(f) = \min_{\bx \in \Omega} f(\bx)$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ may be determined from sensitivity analysis or correspond to expected improvement.  Because function approximation, optimization, and integration are all homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  It then makes sense that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
 
-\subsection{Our impact.}
+\subsection{Our impact}
  
- The explore-exploit two-step process can sequentially guide the sampling process from the early stages, where little is know of the QOIs, though a stage where all past samples are exploited and each new sample is chosen to maximize the information gained.  
- 
- Applications include:\\
+Applications include:\\
  cubature - \\
  optimization - this approach can guide an algorithm to identify a good starting location for a gradient descent algorithm,\\
  cost-benefit analysis\\
- 
- 
- Surrogate models are approximations to functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example $f$ is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive} to be optimally efficient.  The sampled function values should inform the choice of the \emph{next} data site: 
-\begin{equation} \label{adaptsite}
-    \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
-\end{equation}
-where $\phi_{n+1} : \Omega^{n} \times \reals^n \to \Omega$ is some well chosen function that depends on underlying assumptions about $f$.  If $f$ is detected to be highly variable in one portion of the domain, $\Omega$, then more data sites should be placed there. 
-
-Adaptive sampling and adaptive numerical algorithms are founded on the assumption that \emph{what you have not yet observed about $f$ is not much worse than what you have already observed}.  This idea must be made mathematically precise to justify any adaptive scheme.  Although adaptive sampling has been studied for decades, there remain two major shortcomings of existing theory:
-\begin{enumerate}[widest = Shortcomingj, leftmargin =*]
-\renewcommand{\labelenumi}{Shortcoming \arabic{enumi}.}
-    \item \shortnoy \label{shortcomenoy}
-    
-    \item \shortheuristic
-    
-\end{enumerate}
-\emph{The PIs, Fred J Hickernell (FJH) and Mac Hyman (MH), propose to develop theoretically sound adaptive algorithms for function approximation, which adaptively choose the data sites, as in \eqref{adaptsite}.  These adaptive algorithms will stop when the data-driven error bounds are no greater than the prescribed error tolerance.}
-
-Several key ideas arise in the proposed research.  We list them here, illustrate them by example in this section, and then refer to them later in the proposal.
-\begin{keyidea}\label{keyideainitial} \keyideainitialtext \end{keyidea}
-\begin{keyidea}\label{keyideafunction} \keyideafunctiontext \end{keyidea}
-\begin{keyidea}\label{keyideaBayesian} \keyideaBayesiantext \end{keyidea} 
-\begin{keyidea} \label{keyideacone} \keyideaconetext \end{keyidea}
-\begin{keyidea} \label{keyidealowdim} \keyidealowdimtext \end{keyidea} 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -697,6 +669,10 @@ these students have learned how to conduct theoretical and/or practical computat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Exploratory Sampling} \label{sec:exploreSample}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
