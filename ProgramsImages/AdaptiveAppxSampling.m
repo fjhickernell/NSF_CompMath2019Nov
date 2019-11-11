@@ -1,7 +1,9 @@
 %% Adaptive sampling and approximation example
 clearvars
 InitializeDisplay
-f = @(x) exp(-10*x).*sin(8*x);
+f0 = @(x) exp(-6*x).*sin(8*x);
+f = @(x) f0(x+0.01);
+axisBox = [0 1 -0.2 0.5];
 
 %% Plot function
 xData = [0:0.1:0.6 0.8:0.1:1]';
@@ -12,7 +14,7 @@ figure(1)
 plot(xPlot,fPlot,xData,fData,'.')
 xlabel('\(x\)')
 ylabel('\(f(x)\)')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -30,9 +32,9 @@ fAppPlot = KPlotData*coeff;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
+[lgd,icons] = legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'});
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -50,14 +52,14 @@ h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot,xPlot,fAppPlotSmall);
 xlabel('\(x\)')
 legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', 'APP\((f,4)(x)\)'})
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
 print('-depsc','fandDataAndAppxSmall.eps')
 
 
-%% Next data point based on prediction error
+%% Next data point based on prediction error, no inference
 A = 1;
 normf = sqrt(coeff'*fData);
 RMSPE = real(sqrt(kernel(0,s,theta) - ...
@@ -72,12 +74,12 @@ hold on
 h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
+[lgd,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
    'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
    '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -86,6 +88,38 @@ print('-depsc','fandDataAndAppxAndRMSPE.eps')
 whMiss = find((fPlot > fAppPlot + A*RMSPE + 1000*eps) | ...
    (fPlot < fAppPlot - A*RMSPE - 1000*eps))
 Miss = [xPlot(whMiss) fPlot(whMiss) fAppPlot(whMiss) + A*[-1 1].*RMSPE(whMiss)]
+
+%% Find next data point for optimization
+[~,whBadMin] = min(fAppPlot - A.*RMSPE);
+xBadMin = xPlot(whBadMin);
+fBadMin = f(xBadMin);
+[fDataMin,whDataMin] = min(fData);
+xDataMin = xData(whDataMin);
+figure
+h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot, ...
+   xPlot,fAppPlot + A*[-1,1].*RMSPE);
+hold on
+h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d'); ...
+   scatter(xDataMin,fDataMin,800,MATLABGreen,'filled','p'); ...
+   scatter(xBadMin,fBadMin,200,MATLABCyan,'filled','s')];
+set(h(4:5),'color',MATLABOrange)
+xlabel('\(x\)')
+[lgd,icons] = legend(h([1:4 6:8]),{'\(f(x)\)','\(f(x_i)\)',...
+   '\(\widehat{\textrm{APP}}(10)(x)\)', ...
+   '\(\widehat{\textrm{APP}}(10)(x) \pm \)ERR\((10,x)\)', ...
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{APP}}\)', ...
+   '\(\bigl(x_{\textrm{min}},f(x_{\textrm{min}})\bigr)\)', ... 
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{MIN}}\)'});
+lgd.NumColumns = 2;
+legend('boxoff')
+icons(16).Children.MarkerSize = 15;
+icons(17).Children.MarkerSize = 15;
+icons(18).Children.MarkerSize = 15;
+axis(axisBox)
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
+print('-depsc','fandDataAndAppxAndRMSPEAndMin.eps')
 
 %% Infer theta using empirical Bayes
 Ktheta = @(logth) kernel(dist(xData,xData),s,exp(logth));
@@ -108,7 +142,7 @@ h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptAppPlot);
 xlabel('\(x\)')
 legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -135,7 +169,7 @@ lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
    '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -173,7 +207,7 @@ h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot);
 xlabel('\(x\)')
 legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -202,7 +236,7 @@ lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
    '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
-axis([0 1 -0.2 0.4])
+axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
@@ -212,4 +246,28 @@ whMissOpty = find((fPlot > fOptyAppPlot + AOpty*RMSPEOpty + 1000*eps) | ...
    (fPlot < fOptyAppPlot - AOpty*RMSPEOpty - 1000*eps))
 Miss = [xPlot(whMissOpty) fPlot(whMissOpty) fOptyAppPlot(whMissOpty) + ...
    AOpty*[-1 1].*RMSPEOpty(whMissOpty)]
+
+%% Find next data point for optimization based on prediction error for y-varying
+[~,whBadOptyMin] = min(fAppPlot - A.*RMSPEOpty);
+xBadOptyMin = xPlot(whBadOptyMin);
+fBadOptyMin = f(xBadOptyMin);
+figure
+h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot, ...
+   xPlot,fOptyAppPlot + AOpty*[-1,1].*RMSPEOpty);
+hold on
+h = [h; scatter(xBadOpty,fBadOpty,200,MATLABPurple,'filled','d'); ...
+   scatter(xBadOptyMin,fBadOptyMin,200,MATLABCyan,'filled','s')];
+set(h(4:5),'color',MATLABGreen)
+xlabel('\(x\)')
+lgd = legend(h([1:4 6:7]),{'\(f(x)\)','\(f(x_i)\)','APP\((10)(x)\)', ...
+   'APP\((10)(x) \pm \)ERR\((10,x)\)', ...
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for APP', ...
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{MIN}}\)'});
+lgd.NumColumns = 2;
+legend('boxoff')
+axis(axisBox)
+set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
+pos = get(gcf,'Position');
+set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
+print('-depsc','fandDataAndAppxAndRMSPEOpty.eps')
 
