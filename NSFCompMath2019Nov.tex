@@ -1,4 +1,4 @@
-%Fred's NSF Grant Dec 2018
+%Fred, Mac, Yuhan NSF Grant Dec 2019
 % GitHub: https://github.com/fjhickernell/NSF_CompMath2018Nov
 % Overleaf: https://www.overleaf.com/9576964687whkhbmrrvhsd
 \documentclass[11pt]{NSFamsart}
@@ -71,9 +71,10 @@
 \newcommand{\tf}{\widetilde{f}}
 \newcommand{\tbf}{\tilde{\bff}}
 %\DeclareMathOperator{\Pr}{\mathbb{P}}
+
+% Math operators
 \DeclareMathOperator{\cost}{COST}
 \DeclareMathOperator{\comp}{COMP}
-
 \DeclareMathOperator{\loss}{loss}
 \DeclareMathOperator{\lof}{lof}
 \DeclareMathOperator{\reg}{reg}
@@ -83,6 +84,34 @@
 \DeclareMathOperator{\erf}{erf}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\QOI}{QOI}
+\DeclareMathOperator{\POI}{POI}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\oerr}{\overline{\err}}
+\DeclareMathOperator{\herr}{\widehat{\err}}
+\DeclareMathOperator{\Ans}{ANS}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\SOL}{SOL}
+\DeclareMathOperator{\APP}{\widehat{\QOI}}
+\DeclareMathOperator{\ALG}{ALG}
+\DeclareMathOperator{\ERR}{ERR}
+\DeclareMathOperator{\VAL}{VAL}
+\DeclareMathOperator{\OPER}{OPER}
+\DeclareMathOperator{\INT}{INT}
+\DeclareMathOperator{\OPT}{MIN}
+\DeclareMathOperator{\Prob}{\mathbb{P}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\filldis}{fill}
+\DeclareMathOperator{\sep}{sep}
+\DeclareMathOperator{\avg}{avg}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\cov}{cov}
+
+
+
+
+
 
 
 \newcommand{\reals}{{\mathbb{R}}}
@@ -132,22 +161,8 @@
 \newcommand{\cube}{[0,1]^d}
 \newcommand{\design}{\{\bx_i\}_{i=1}^n}
 
-\DeclareMathOperator{\err}{err}
-\DeclareMathOperator{\oerr}{\overline{\err}}
-\DeclareMathOperator{\herr}{\widehat{\err}}
-\DeclareMathOperator{\Ans}{ANS}
-
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\SOL}{SOL}
-\DeclareMathOperator{\APP}{APP}
-\DeclareMathOperator{\ALG}{ALG}
-\DeclareMathOperator{\ERR}{ERR}
-\DeclareMathOperator{\OPER}{OPER}
 
 
-
-\DeclareMathOperator{\INT}{INT}
-\DeclareMathOperator{\OPT}{MIN}
 
 \newcommand{\bone}{\boldsymbol{1}}
 \newcommand{\bzero}{\boldsymbol{0}}
@@ -177,6 +192,7 @@
 \newcommand{\bgamma}{{\boldsymbol{\gamma}}}
 \newcommand{\bphi}{{\boldsymbol{\phi}}}
 \newcommand{\bpsi}{{\boldsymbol{\psi}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
 \newcommand{\bnu}{{\boldsymbol{\nu}}}
 \newcommand{\balpha}{{\boldsymbol{\alpha}}}
 \newcommand{\bbeta}{{\boldsymbol{\beta}}}
@@ -216,7 +232,6 @@
 \newcommand{\fL}{\mathfrak{L}}
 \newcommand{\fU}{\mathfrak{U}}
 \newcommand{\hS}{\widehat{S}}
-\DeclareMathOperator{\Prob}{\mathbb{P}}
 
 \def\abs#1{\ensuremath{\left \lvert #1 \right \rvert}}
 \newcommand{\bigabs}[1]{\ensuremath{\bigl \lvert #1 \bigr \rvert}}
@@ -225,13 +240,6 @@
 \newcommand{\bignorm}[2][{}]{\ensuremath{\bigl \lVert #2 \bigr \rVert}_{#1}}
 \newcommand{\Bignorm}[2][{}]{\ensuremath{\Bigl \lVert #2 \Bigr \rVert}_{#1}}
 \newcommand{\calm}{{\mathfrak{M}}}
-\DeclareMathOperator{\diag}{diag}
-\DeclareMathOperator{\dist}{dist}
-\DeclareMathOperator{\filldis}{fill}
-\DeclareMathOperator{\sep}{sep}
-\DeclareMathOperator{\avg}{avg}
-\DeclareMathOperator{\vol}{vol}
-\DeclareMathOperator{\cov}{cov}
 
 \newcommand{\des}{\{\bx_i\}}
 \newcommand{\desinf}{\{\bx_i\}_{i=1}^{\infty}}
@@ -262,6 +270,8 @@
 \newcommand{\ErrN}{\ERR\bigl(\dataN,n\bigr)}
 \newcommand{\fint}{f_{\text{int}}}
 \newcommand{\inflate}{\fC}
+
+
 
 
 \definecolor{MATLABOrange}{rgb}{0.85,  0.325, 0.098}
@@ -331,15 +341,21 @@
 \newcommand{\repeatkeyidea}[2]{\begin{itshape}Key Idea \ref{#1}. #2\end{itshape}}
 \newcommand{\repeatshort}[2]{Shortcoming\ref{#1}. #2}
 
+% Notes on the paper for communicating with coauthors
+\newif\ifnotesw \noteswtrue
+\newcommand{\notes}[1]{\ifnotesw \textcolor{red}{  $\clubsuit$\ {\sf \bf \it  #1}\ $\clubsuit$  }\fi}
+%\noteswfalse   % comment this line out to turn on style notes 
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
 
 \begin{center}
-\Large \textbf{Adaptive Sampling and Function Approximation \\ Project Description}
+\Large \textbf{Adaptive Sampling for Multivariate Problems\\ 
+Adaptive Multivariate Sampling to Accelerate  Discovery\\ 
+Project Description}
 \end{center}
 \vspace{-2ex}
 
-\setcounter{tocdepth}{1}
+\setcounter{tocdepth}{4}
 \tableofcontents
 
 \vspace{-6ex}
@@ -347,7 +363,79 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Surrogate models are approximations to functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example $f$ is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive} to be optimally efficient.  The sampled function values should inform the choice of the \emph{next} data site: 
+\subsection{Our problem}
+
+Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.   The quantities of interest (QOIs) depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The model output or response can be viewed as a map $f:\Omega \subseteq \reals^d \rightarrow \reals$.   Possible QOIs include function approximation, optimization, and integration:
+\begin{equation}
+    \QOI(f) = f, \quad \QOI(f) = \min_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \argmin_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \int_{\Omega} f(\bx) \, \dif \bx.
+\end{equation}
+
+Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX_{1:n},\by_{1:n})$, where 
+\begin{itemize}
+    \item $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen design, i.e., an array of POI values or data sites, and
+    
+    \item $\by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T$ is (noiseless) function data, i.e., a vector of outputs.
+\end{itemize}   
+Multivariate surrogate models and emulators typically underlie $\APP$.
+
+Limited computer resources and the curse of dimensionality prevent acquiring a dense sample $\mX_{1:n}$, in the input space. Therefore, it is important to sample adaptively, choosing the next data site, $\bx_{n+1}$, in terms of $\mX_{1:n}$ and  $\by_{1:n}$.  This is typically accomplished via
+\begin{equation} \label{eq:nextsample}
+    \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX_{1:n}, \by_{1:n}),
+\end{equation}
+where $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, given what has been observed already.  Such $\VAL$ are sometimes called acquisition functions and are typically based on a measure of uncertainty in the approximate QOI so far, i.e., $\APP(n,\mX_{1:n},\by_{1:n})$.
+
+% \subsection{What has been done}
+
+% Existing algorithms Multivariate surrogate models and emulators can provide predict the QOIs between the existing samples.  These emulators are based on having a good representative sample of the underlying response function, which is often unknown when the simulations start. 
+
+
+\subsection{Our goal}
+
+We propose to find better $\APP$ and $\VAL$ than what is state-of-the art.  Current $\VAL$ do not assess the uncertainty of $\APP$ as well as they should, often because they do not take full account of $\by_{1:n}$
+
+We also plan to derive error data-driven bounds satisfying
+\begin{equation} \label{eq:errbd}
+    \bignorm[\calg]{\QOI(f) - \APP(n,\mX_{1:n},\by_{1:n})} \le \ERR(n,\mX_{1:n},\by_{1:n}) \qquad \forall f \in \calc,
+\end{equation}
+where $\calc$ is a precisely defined set of maps between POIs and outputs.  This will allow the user to decide whether to additional data is needed to improve the accuracy of $\APP(n,\mX_{1:n},\by_{1:n})$.
+
+We will use a two-step process to improve, create, and analyze adaptive sampling algorithms to sequentially guide the sample design based on both the locations and function values at the exiting samples.  
+
+\subsection{Our plan}
+
+Our plan follows the popular two-step \emph{explore-exploit} process.  In the \emph{explore} step, little or nothing is known of the QOIs or of $f$.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. The initial design does not depend on function data.
+
+Starting with $n = n_0$, we then \emph{exploit} the existing sample to create multiple approximations $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ for $\btheta \in \Theta$.  These may be involve
+\begin{itemize}
+\item weighted resampling of the data, as in a bootstrap-like approach, where $\btheta$ represents different weights (Section \ref{sec:Bootstrap}),
+\item fitting kriging or reproducing kernel Hilbert space models where the parameter $\btheta$ determining the form of the  covariance/reporducing kernel is inferred from the data (Section \ref{sec:kerinferdata}), or 
+\item multivariate polynomial models where the importance of different POIs and their interaction terms is mediated by $\btheta$ (Section \ref{sec:selectCoord}).
+\end{itemize}
+When the QOI is function approximation or optimization, $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ will the approximation of $f$.  When the QOI is the integral may be approximated directly or may be the integral of a function approximation. Because the primary time cost in our problems is acquiring data, we are not overly concerned about the time required to all of the $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ needed.
+
+The $\APP_{\btheta}(n_0, \mX_{1:n}, \by_{1:n})$ are then used to choose 
+\begin{itemize} 
+\item a best approximation, $\APP(n, \mX_{1:n}, \by_{1:n})$,
+
+\item a measure of the uncertainty of our approximation, $\ERR(n,\mX_{1:n}, \by_{1:n})$ for a well defined set of functions $\calc$, as in \eqref{eq:errbd},  and 
+
+\item $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$, which tells us where to choose the next data site, $\bx_{n+1}$, via \eqref{eq:nextsample}.
+\end{itemize}
+This exploit step is repeated until the time budget is exhausted or the uncertainty tolerance is met.
+
+For $\QOI(f) = f$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ will correspond to a pointwise determinstic error bound or probabilistic error standard error.  For $\QOI(f) = \min_{\bx \in \Omega} f(\bx)$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ may be determined from sensitivity analysis or correspond to expected improvement.
+
+\subsection{Our impact.}
+ 
+ The explore-exploit two-step process can sequentially guide the sampling process from the early stages, where little is know of the QOIs, though a stage where all past samples are exploited and each new sample is chosen to maximize the information gained.  
+ 
+ Applications include:\\
+ cubature - \\
+ optimization - this approach can guide an algorithm to identify a good starting location for a gradient descent algorithm,\\
+ cost-benefit analysis\\
+ 
+ 
+ Surrogate models are approximations to functions, $f: \Omega \subseteq \reals^d \to \reals$, that are very expensive to evaluate.  An example $f$ is the output of a complex time-consuming computer simulation.  Accurate surrogate models require a well-chosen design, $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$, i.e., an array of data sites where $f$ is to be evaluated.  Ideally, the choice of the design should be \emph{adaptive} to be optimally efficient.  The sampled function values should inform the choice of the \emph{next} data site: 
 \begin{equation} \label{adaptsite}
     \bx_{n+1} = \phi_{n+1}(\mX_{1:n},\by_{1:n}), \quad \by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T, \qquad n \in \naturals,
 \end{equation}
@@ -608,11 +696,18 @@ these students have learned how to conduct theoretical and/or practical computat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Shortcomings of Existing Adaptive Sampling Schemes} \label{sec:shortExist}
+\subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adaptive Sampling Schemes via Weighted Average of Models (Mac's Idea)} \label{sec:Bootstrap}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Reproducing/Covariance Kernels Inferred from Data} \label{sec:kerinferdata}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adaptive Sampling via Data-Based Kernel Inference} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Key Idea \ref{keyideafunction} stresses the importance of having the choice of the next data site depend on function data.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.  Returning to the illustrative example in Sect.\ \ref{sec:UniEx}, the lack of fit of our approximation on the left and our poor choice of the next data site based on the approximation error bound is due to the fact that the form of our reproducing kernel in \eqref{MatKer} and/or our choice of $\theta$ was inadequate.
 
@@ -646,11 +741,11 @@ This example of modifying a well-known kernel so that data-based inference of th
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Selecting Important Coordinates} \label{sec:seletCoord}
+\subsection{Adaptive Sampling via Selecting Important Coordinates} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Test Bed of Practical Problems} \label{sec:TestBed}
+\subsection{Testing Adaptive Sampling via Practical Problems} \label{sec:TestBed}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
