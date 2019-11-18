@@ -11,6 +11,15 @@
 \usepackage{anyfontsize}
 \usepackage{cleveref}
 
+\usepackage{algpseudocode}
+\algnewcommand\algorithmicparam{\textbf{Parameters:}}
+\algnewcommand\PARAM{\item[\algorithmicparam]}
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\INPUT{\item[\algorithmicinput]}
+%\algnewcommand\STATE{\item}
+\algnewcommand\RETURN{\State \textbf{Return }}
+
+%\usepackage{showlabels}
 
 
 
@@ -103,6 +112,11 @@
 \DeclareMathOperator{\ID}{ID}
 \DeclareMathOperator{\APPMIN}{\widehat{\MIN}}
 \DeclareMathOperator{\APPID}{\widehat{\ID}}
+\DeclareMathOperator{\MINVAL}{MINVAL}
+\DeclareMathOperator{\IDVAL}{IDVAL}
+\DeclareMathOperator{\SURRERR}{SERR}
+\DeclareMathOperator{\MINERR}{MINERR}
+\DeclareMathOperator{\IDERR}{IDERR}
 \DeclareMathOperator{\Prob}{\mathbb{P}}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\dist}{dist}
@@ -291,13 +305,6 @@
 
 
 %\setcounter{page}{1}
-\usepackage{algpseudocode}
-\algnewcommand\algorithmicparam{\textbf{Parameters:}}
-\algnewcommand\PARAM{\item[\algorithmicparam]}
-\algnewcommand\algorithmicinput{\textbf{Input:}}
-\algnewcommand\INPUT{\item[\algorithmicinput]}
-%\algnewcommand\STATE{\item}
-\algnewcommand\RETURN{\State \textbf{Return }}
 
 
 \setlist[description]{font=\normalfont\itshape, labelindent = 0.5cm}
@@ -735,13 +742,13 @@ these students have learned how to conduct theoretical and/or practical computat
 
 One approach to function approximation is to assume that the $f$ of interest belongs to a reproducing kernel Hilbert space $\calf$.  A commonly used kernel is the following member of the Mat\'ern kernel family,
 \begin{equation} \label{MatKer}
-    K(\bt,\bx) = (1 + \theta \norm[1]{\bt-\bx}) \exp(-\theta\norm[1]{\bt-\bx}),
+    K(\bt,\bx) = (1 + \theta \norm[2]{\bt-\bx}) \exp(-\theta\norm[2]{\bt-\bx}),
 \end{equation}
 where $\theta$ is a parameter to be set or inferred.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in reproducing kernel Hilbert spaces.  The mimimum norm interpolant of $f$ in this $\calf$ is given by the surrogate model
 \begin{equation} \label{appxExOne}
     \SURR(n,\mX,\by) = \sum_{i=1}^n c_i K(\cdot, \bx_i), \quad \text{where } \bc = \mK^{-1} \by, \quad \mK = \mK(\mX) = \bigl( K(\bx_i,\bx_j) \bigr)_{i,j=1}^n.
 \end{equation}
-This surrogate model is known to have the following error bound:
+This surrogate model is known to have the following pointwise error bound:
 \begin{align}
 \label{RKHSErrBd}
     \abs{f(\bx) - \SURR(n,\mX,\by)(x)} & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f - \SURR(n,\mX,\by)} \\
@@ -751,9 +758,8 @@ This surrogate model is known to have the following error bound:
     & \qquad \qquad \text{where }  \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
 \end{align}
 
-
-Fig.\ \ref{fig:sampleFun} shows $\SURR(10,\mX,\by)$ for the univariate function $f \colon x \mapsto \exp(-10x) \sin(8x)$ using the $n=10$ point design, $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$.  
-Although it is not yet sufficiently accurate for our purposes, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. Hence the need for the sufficient samples in the explore stage mentioned in Section \ref{sec:OurPlan}. 
+As an illustration, Fig.\ \ref{fig:sampleFun} displays the the univariate function $f \colon x \mapsto \exp(-10x) \sin(8x)$ and the corrsponding surrogate model $\SURR(10,\mX,\by)$ using the $n=10$ point design, $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, and $\theta =1$.  
+Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage mentioned in Section \ref{sec:OurPlan}. 
 
 \begin{figure}[H]
     \centering
@@ -765,24 +771,41 @@ Although it is not yet sufficiently accurate for our purposes, $\SURR(10,\mX,\by
 
 There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
-We consider two QOIs, function approximation (the identity map), $\ID(f) = f$, and function minimization, $\MIN(f) = \min_{0 \le x \le 1} f(x)$.  For these two QOIs, our approximations are the surrogate model and the minimum function data observed:
+We illustrate the state-of-the-art for adaptive sampling for two QOIs: i) function approximation (the identity map), $\ID(f) = f$, and ii) function minimization, $\MIN(f) = \min_{\bx \in \Omega} f(\bx)$.  The corresponding approximations for these two QOIs are the surrogate model and the minimum function data observed:
 \begin{equation*}
-    \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i
+    \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation*}
 
-One common adaptive sampling rule is to place the next data site where the theoretical approximation error bound is maximized.  For this $\APP(f)$, the error has the following upper bound:
-\begin{align}
-\label{RKHSErrBd}
-    \abs{f(x) - \APP(f,n)(x)} & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)} \\
-    \nonumber
-    & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f},
-    \quad \text{where }  \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
-\end{align}
-Choosing the next data site where the approximation error bound is maximized corresponds to 
+One common adaptive sampling rule for function approximation is to define the acquisition function, $\IDVAL$, in terms of the prediction error bound in \eqref{RKHSErrBd}, and then use the process suggested in \eqref{eq:nextsample}:
 \begin{equation} \label{minprederr}
-    x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX),
+    \IDVAL(\bx,n,\mX,\by) =  K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx), \qquad 
+    \bx_{\ID, n+1} = \argmax_{\bx \in \Omega} \IDVAL(\bx,n,\mX,\by).
 \end{equation}
-which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
+Note that $\norm[\calf]{f - \SURR(n,\mX,\by)}$ is independent of $\bx$ and can be ignored here. The result of this rule for the example introduced above is plotted on the right in Fig.\ \ref{fig:sampleFun}.  However, $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$ so sampling at $x_{\ID, 11}$ does not help much.  The adaptive sampling rule in \eqref{minprederr} does not depend at all on the function data, $\by$, which is why it performs poorly.  Alternatives to this approach are described in Sections ???
+
+The optimization problem requires a more delicate expression for the prediction error to define the acquisition function, $\MINVAL$. Let $\calc$ be the cone of functions whose norms are approximated modestly well by the norms of their surrogates:  
+\begin{align}  \label{RKHScone}
+    \calc &:= \Bigl\{f \in \calf : \norm[\calf]{f - \SURR(n,\mX,\by)} \le A_n \bignorm[\calf]{\SURR(n,\mX,\by)} \Bigr \} \\
+    \nonumber
+    & = \Bigl\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \bignorm[\calf]{\SURR(n,\mX,\by)}^2 \Bigr \}
+\end{align}
+where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $c f \in \calc$ for any real $c$.  Noting that $\bignorm[\calf]{\SURR(n,\mX,\by)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
+\begin{subequations} \label{DataErrBd}
+\begin{gather}
+    \label{DataErrBda} 
+    \SURRERR(\bx,n,\mX,\by) : = A_n \sqrt{[K(\bx,x) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by^T \mK^{-1} \by] }, \\
+    \abs{f(\bx) - \SURR(n,\mX,\by)(\bx)} \le \SURRERR(\bx,n,\mX,\by) \qquad \forall f \in \calc.
+\end{gather}
+\end{subequations}
+It makes sense to define the acquisition function $\MINVAL$ by the improvement in the minimum function value one could optimistically hope to observe:
+\begin{subequations} \label{minvaldef}
+\begin{gather} 
+    \MINVAL(\bx,n,\mX,\by) = \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(\bx,n,\mX,\by)], \\
+    \bx_{n+1} = \argmax_{\bx \in \Omega} \MINVAL(\bx,n,\mX,\by).
+\end{gather}
+\end{subequations}
+
+
 
 \repeatkeyidea{keyideafunction}{\keyideafunctiontext}
 The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by$, in a significant way.  Another approach is to compute the approximation error bound only on the basis of nearby function data.  These approaches are elaborated in ???
