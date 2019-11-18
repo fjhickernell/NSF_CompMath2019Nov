@@ -103,11 +103,11 @@ h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d'); ...
    scatter(xBadMin,fBadMin,200,MATLABCyan,'filled','s')];
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
-[lgd,icons,plts,txt] = legend(h([1:3 7 4 6 8]), ...
+[~,icons,plts,txt] = legend(h([1:3 7 4 6 8]), ...
    {'\(f(x)\)','\(f(x_i)\)',...
    'SURR\((10)(x)\)', ...
    '\(\bigl(\widehat{x}_{\mathrm{MIN}},\widehat{\mathrm{MIN}}(10) \bigr)\)', ... 
-   'SURR\((10)(x) \pm \)SERR\((10,x)\)', ...
+   'SURR\((10)(x) \pm \)SERR\((10)(x)\)', ...
    '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)', ...
    '\(\bigl(x_{\mathrm{MIN},11},f(x_{\mathrm{MIN}, 11})\bigr)\)'});
 legend('boxoff')
@@ -120,7 +120,6 @@ set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
 print('-depsc','fandDataAndAppxAndRMSPEAndMin.eps')
-return
 
 %% Infer theta using empirical Bayes
 Ktheta = @(logth) kernel(dist(xData,xData),s,exp(logth));
@@ -141,7 +140,7 @@ fOptAppPlot = KOptPlotData*coeffOpt;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptAppPlot);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
+legend(h,{'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -165,11 +164,13 @@ hold on
 h = [h; scatter(xBadOpt,fBadOpt,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
-   'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
-   '\(\bigl(x_{\mathrm{bad}},f(x_{\mathrm{bad}})\bigr)\)'});
-lgd.NumColumns = 2;
-legend('boxoff')
+[~,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)', ...
+   'SURR\((10)(x) \pm \)SERR\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'}, ...
+   'box','off');
+%lgd.NumColumns = 2;
+icons(14).Children.MarkerSize = 15;
+%legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
@@ -206,7 +207,7 @@ fOptyAppPlot = KOptyPlotData*coeffOpty;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'})
+legend(h,{'\(f(x)\)','\(f(x_i)\)','SURR\((n)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -232,10 +233,11 @@ hold on
 h = [h; scatter(xBadOpty,fBadOpty,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
-   'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
-   '\(\bigl(x_{\mathrm{bad}},f(x_{\mathrm{bad}})\bigr)\)'});
-lgd.NumColumns = 2;
+lgd = legend(h([1:4 6]), ...
+   {'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)', ...
+   'SURR\((10)(x) \pm \)SERR\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'});
+%lgd.NumColumns = 2;
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -257,15 +259,22 @@ h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot, ...
    xPlot,fOptyAppPlot + AOpty*[-1,1].*RMSPEOpty);
 hold on
 h = [h; scatter(xBadOpty,fBadOpty,200,MATLABPurple,'filled','d'); ...
+   scatter(xDataMin,fDataMin,800,MATLABGreen,'filled','p'); ...
    scatter(xBadOptyMin,fBadOptyMin,200,MATLABCyan,'filled','s')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6:7]),{'\(f(x)\)','\(f(x_i)\)','APP\((10)(x)\)', ...
-   'APP\((10)(x) \pm \)ERR\((10,x)\)', ...
-   '\(\bigl(x_{11},f(x_{11})\bigr)\) for APP', ...
-   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\mathrm{MIN}}\)'});
-lgd.NumColumns = 2;
-legend('boxoff')
+[~,icons] = legend(h([1:3 7 4 6 8]),...
+   {'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)', ...
+    '\(\bigl(\widehat{x}_{\mathrm{MIN}},\widehat{\mathrm{MIN}}(10) \bigr)\)', ... 
+  'SURR\((10)(x) \pm \)SERR\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)', ...
+   '\(\bigl(x_{\mathrm{MIN},11},f(x_{\mathrm{MIN},11})\bigr)\)'}, ...
+   'box','off');
+%lgd.NumColumns = 2;
+%legend('boxoff')
+icons(17).Children.MarkerSize = 15;
+icons(14).Children.MarkerSize = 20;
+icons(18).Children.MarkerSize = 15;
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
