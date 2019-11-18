@@ -396,11 +396,14 @@ $\mX$ & \tabularnewline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Our problem}
 
-Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  The quantities of interest (QOIs) often depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The set of feasible POIs is denoted $\Omega \subseteq \reals^d$.  The QOIs depend on the simulation output or response, which can be viewed as a map $f:\Omega \rightarrow \reals$.   Possible QOIs include surrogate models for global uncertainty analysis, optimal values of nonconvex response surfaces, and the integrals of multivariate high-dimensional functions, e.g., 
+Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  The quantities of interest (QOIs) often depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The set of feasible POIs is denoted $\Omega \subseteq \reals^d$.  The QOIs depend on the simulation output or response, which can be viewed as a map $f:\Omega \rightarrow \reals$.   
+
+To facilitate the analysis, we define $\QOI \colon \calf \to \calg$, as the map from the space of possible simulation input POIs, $\calf$,  to the space of possible output QOIs,  $\calg$.  Possible QOIs include surrogate models for global uncertainty analysis, optimal values of nonconvex response surfaces, and the integrals of multivariate high-dimensional functions.   For example,  
 \begin{equation}
     \QOI(f) = f, \quad \QOI(f) = \min_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \argmin_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \int_{\Omega} f(\bx) \, \dif \bx.
 \end{equation}
-To facilitate analysis, $\QOI \colon \calf \to \calg$, where $\calf$ is the space of possible simulation output maps, and $\calg$ is the space of possible QOIs.  In the above examples $\calg$ corresponds to a Banach space of functions, $\reals$, or $\Omega$.
+In these examples $\calg$ corresponds to a Banach space of functions, $\reals$, or $\Omega$.
+
 
 Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)$, where 
 \begin{itemize}
@@ -437,7 +440,7 @@ That is, we will derive estimates for the error, $\ERR$, which are valid for $\c
 
 Our plan follows the effective two-stage \emph{explore-exploit} process.  In the \emph{explore} stage, little or nothing is known of the QOIs or function values, and the sampling does not depend on function data.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. 
 
-The goal of the \emph{exploit} stage is to detect regions where $f$ is poorly represented with respect to its influence on $\QOI(f)$ and place more future samples to reduce the uncertainty. 
+The goal of the \emph{exploit} stage is to use all past samples to detect regions where $f$ is poorly represented with respect to its influence on $\QOI(f)$.  This information is then used to optimize the placement of future samples that reduce the uncertainty in the QOIs. 
 Starting with $n = n_0$, we then \emph{exploit} the existing sample to create multiple approximations $\APP_{\btheta}(n, \mX, \by)$ for $\btheta \in \Theta$.  
 
 One approach we are considering is create an ensemble of surrogate models by resampling the current samples.  That is, we iteratively 
@@ -450,15 +453,15 @@ One approach we are considering is create an ensemble of surrogate models by res
 \end{itemize}
 \item Evaluate the surrogate model at candidate sample locations to identify where the surrogate model has the most variance. 
 \end{enumerate}
-When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, \mX, \by)$ will the approximation of $f$.  When the QOI is the integral may be approximated directly or may be the integral of a function approximation. Because the primary time cost in our problems is acquiring data, we are not overly concerned about the time required to all of the $\APP_{\btheta}(n, \mX, \by)$ needed.
+When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, \mX, \by)$ will the approximation of $f$.  When the QOI is the integral may be approximated directly or may be the integral of a function approximation. Because the primary time cost in our problems is acquiring data, we are not overly concerned about the time required to generate the ensemble of surrogate models $\APP_{\btheta}(n, \mX, \by)$.
 
-The $\APP_{\btheta}(n_0, \mX, \by)$ are then used to choose 
+The $\APP_{\btheta}(n_0, \mX, \by)$ are then used to  
 \begin{itemize} 
-\item a best approximation, $\APP(n, \mX, \by)$,
+\item identify the `best' approximation, $\APP(n, \mX, \by)$,
 
-\item a measure of the uncertainty of our approximation, $\ERR(n,\mX, \by)$ for a well defined set of functions $\calc$, as in \eqref{eq:errbd},  and 
+\item create a measure for the uncertainty of our approximation, $\ERR(n,\mX, \by)$ for a well defined set of functions $\calc$, as in \eqref{eq:errbd},  and 
 
-\item $\VAL(\bx,n,\mX, \by)$, which tells us where to choose the next data site, $\bx_{n+1}$, via \eqref{eq:nextsample}.
+\item estimate the expected value of each candidate sample, $\VAL(\bx,n,\mX, \by)$, to guide us in choosing the next data site, $\bx_{n+1}$, via \eqref{eq:nextsample}.
 \end{itemize}
 This exploit step is repeated until the time budget is exhausted or the uncertainty tolerance is met.
 
@@ -488,9 +491,18 @@ By utilizing adaptive sampling algorithms will create more computationally effic
 \subsubsection{Software}
 Our algorithms will be implemented in open source libraries for use by the modeling community.  The software will include the following routines:
 \begin{itemize}
-\item Adaptive samplers,
-\item Surrogate modellers,
-\item Function approximation, optimization, and integration.
+\item \underline{Surrogate models:} We will consider surrogate models based on both distance weighted least squares (DWLS) quasi-interpolation methods and kriging.  
+These methods consider the distance and function values when estimating values in unknown areas. The interpolated values can be expressed as a weighted linear combination of the known sample values. 
+
+These methods assume that the influence of a function value decreases with distance.  We use a Gaussian kernal for the weights in DWLS with variance depending on the distance to the samples neighboring the location where it will be evaluated.
+The uncertainty in the interpolated values can be estimated by  by refitting the data, where the DWLS Gaussian weights are reweighted (multiplied) by Bayesian bootstrap weights.  
+
+In kriging,  the distance between the sample points defines the spatial correlation that can be used to predict variation in the surface. We will compare the DWLS with the DACE kriging MATLAB algorithm \cite{}. \notes{talk about variance estimation with kriging.  Do we want to talk about Gaussian process models? MH}
+
+\item \underline{Adaptive samplers:}
+
+\item \underline{Optimization:}
+
 \end{itemize}
 
 \subsubsection{Broader Impact}
