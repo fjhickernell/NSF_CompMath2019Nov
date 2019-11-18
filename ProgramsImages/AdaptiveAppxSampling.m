@@ -32,7 +32,7 @@ fAppPlot = KPlotData*coeff;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-[lgd,icons] = legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,n)(x)\)'});
+[lgd,icons] = legend(h,{'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)'});
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -50,14 +50,13 @@ fAppPlotSmall = KPlotSmallData*coeffSmall;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot,xPlot,fAppPlotSmall);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', 'APP\((f,4)(x)\)'})
+legend(h,{'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)', 'SURR\((4)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
 print('-depsc','fandDataAndAppxSmall.eps')
-
 
 %% Next data point based on prediction error, no inference
 A = 1;
@@ -74,9 +73,9 @@ hold on
 h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
-[lgd,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
-   'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
-   '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
+[lgd,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','SURR\((10)(x)\)', ...
+   'SURR\((10)(x) \pm \)SERR\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
 axis(axisBox)
@@ -104,22 +103,23 @@ h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d'); ...
    scatter(xBadMin,fBadMin,200,MATLABCyan,'filled','s')];
 set(h(4:5),'color',MATLABOrange)
 xlabel('\(x\)')
-[lgd,icons] = legend(h([1:4 6:8]),{'\(f(x)\)','\(f(x_i)\)',...
-   '\(\widehat{\textrm{APP}}(10)(x)\)', ...
-   '\(\widehat{\textrm{APP}}(10)(x) \pm \)ERR\((10,x)\)', ...
-   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{APP}}\)', ...
-   '\(\bigl(x_{\textrm{min}},f(x_{\textrm{min}})\bigr)\)', ... 
-   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{MIN}}\)'});
-lgd.NumColumns = 2;
+[lgd,icons,plts,txt] = legend(h([1:4 6:8]),{'\(f(x)\)','\(f(x_i)\)',...
+   '\(\widehat{\mathrm{APP}}(10)(x)\)', ...
+   '\(\widehat{\mathrm{APP}}(10)(x) \pm \)ERR\((10,x)\)', ...
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\mathrm{APP}}\)', ...
+   '\(\bigl(x_{\mathrm{min}},f(x_{\mathrm{min}})\bigr)\)', ... 
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\mathrm{MIN}}\)'});
 legend('boxoff')
-icons(16).Children.MarkerSize = 15;
-icons(17).Children.MarkerSize = 15;
-icons(18).Children.MarkerSize = 15;
+% icons(16).Children.MarkerSize = 15;
+% icons(17).Children.MarkerSize = 15;
+% icons(18).Children.MarkerSize = 15;
+lgd.NumColumns = 2;
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
 print('-depsc','fandDataAndAppxAndRMSPEAndMin.eps')
+return
 
 %% Infer theta using empirical Bayes
 Ktheta = @(logth) kernel(dist(xData,xData),s,exp(logth));
@@ -166,7 +166,7 @@ set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
 lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
    'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
-   '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
+   '\(\bigl(x_{\mathrm{bad}},f(x_{\mathrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
 axis(axisBox)
@@ -233,7 +233,7 @@ set(h(4:5),'color',MATLABGreen)
 xlabel('\(x\)')
 lgd = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','APP\((f,10)(x)\)', ...
    'APP\((f,10)(x) \pm \)ERR\((f,10,x)\)', ...
-   '\(\bigl(x_{\textrm{bad}},f(x_{\textrm{bad}})\bigr)\)'});
+   '\(\bigl(x_{\mathrm{bad}},f(x_{\mathrm{bad}})\bigr)\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
 axis(axisBox)
@@ -262,7 +262,7 @@ xlabel('\(x\)')
 lgd = legend(h([1:4 6:7]),{'\(f(x)\)','\(f(x_i)\)','APP\((10)(x)\)', ...
    'APP\((10)(x) \pm \)ERR\((10,x)\)', ...
    '\(\bigl(x_{11},f(x_{11})\bigr)\) for APP', ...
-   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\textrm{MIN}}\)'});
+   '\(\bigl(x_{11},f(x_{11})\bigr)\) for \(\widehat{\mathrm{MIN}}\)'});
 lgd.NumColumns = 2;
 legend('boxoff')
 axis(axisBox)
