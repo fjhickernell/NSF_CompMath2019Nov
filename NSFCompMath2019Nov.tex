@@ -3,7 +3,7 @@
 % Overleaf: https://www.overleaf.com/9576964687whkhbmrrvhsd
 \documentclass[11pt]{NSFamsart}
 \usepackage{latexsym,amsfonts,amsmath,amsthm,epsfig,extdash,multirow}
-\usepackage{stackrel,tabularx,mathtools,enumitem,xspace}
+\usepackage{stackrel,tabularx,mathtools,enumitem,longtable,xspace}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[numbers]{natbib}
 \usepackage{hyperref,accents, booktabs}
@@ -93,12 +93,16 @@
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\SOL}{SOL}
 \DeclareMathOperator{\APP}{\widehat{\QOI}}
+\DeclareMathOperator{\SURR}{SURR}
 \DeclareMathOperator{\ALG}{ALG}
 \DeclareMathOperator{\ERR}{ERR}
 \DeclareMathOperator{\VAL}{VAL}
 \DeclareMathOperator{\OPER}{OPER}
 \DeclareMathOperator{\INT}{INT}
-\DeclareMathOperator{\OPT}{MIN}
+\DeclareMathOperator{\MIN}{MIN}
+\DeclareMathOperator{\ID}{ID}
+\DeclareMathOperator{\APPMIN}{\widehat{\MIN}}
+\DeclareMathOperator{\APPID}{\widehat{\ID}}
 \DeclareMathOperator{\Prob}{\mathbb{P}}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\dist}{dist}
@@ -296,7 +300,7 @@
 \algnewcommand\RETURN{\State \textbf{Return }}
 
 
-\setlist[description]{font=\normalfont\itshape}
+\setlist[description]{font=\normalfont\itshape, labelindent = 0.5cm}
 
 \makeatletter
 \newenvironment{varsubequations}[1]
@@ -327,15 +331,15 @@
 \newcommand{\JMHNote}[1]{{\color{green}Mac: #1}}
 
 \newcommand{\keyideainitialtext}{The initial design must be fill the domain, $\Omega$, well enough to detect significant fluctuations in the function.}
-\newcommand{\keyideafunctiontext}{The choice of the $n+1^{\text{st}}$ data site should depend meaningfully on function data, $\by_{1:n}$, not only on the location of the other sites.}
+\newcommand{\keyideafunctiontext}{The choice of the $n+1^{\text{st}}$ data site should depend meaningfully on function data, $\by$, not only on the location of the other sites.}
 \newcommand{\keyideaBayesiantext}{Bayesian numerical analysis provides an alternative to deterministic numerical analysis.  The two perspectives produce similar outcomes.  The Bayesian perspective permits inference.}
 \newcommand{\keyideaconetext}{Adaptive approximation algorithms are constructed for \emph{cones} of functions that are roughly approximated via a modest number of observations.}
 \newcommand{\keyidealowdimtext}{Avoiding the curse of dimensionality requires $f$ to have an inherent low dimensional structure.}
 
 
-\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX_{1:n},\by_{1:n}) = \phi_{n+1}(\mX_{1:n})$, meaning that these schemes are oblivious to the function values, $\by_{1:n}$.}
+\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX,\by) = \phi_{n+1}(\mX)$, meaning that these schemes are oblivious to the function values, $\by$.}
 
-\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on $\by_{1:n}$ are heuristic; they lack a theoretical basis.}
+\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on $\by$ are heuristic; they lack a theoretical basis.}
 
 
 \newcommand{\repeatkeyidea}[2]{\begin{itshape}Key Idea \ref{#1}. #2\end{itshape}}
@@ -351,38 +355,59 @@
 \begin{center}
 \Large \textbf{
 Adaptive Multivariate Sampling to Accelerate  Discovery\\ 
-Project Description}
+%Project Description
+}
 \end{center}
 \vspace{-2ex}
 
-%\setcounter{tocdepth}
+\setcounter{tocdepth}{4}
 \tableofcontents
 
 \vspace{-6ex}
+
+\noindent \textbf{Notation}
+
+\begin{longtable}{>{\raggedleft}p{2.5cm}@{\quad}>{\raggedright}p{12.5cm}}
+POIs & parameters of interest, denoted $\bx$, taking values in the domain, $\Omega \subseteq \reals$; inputs into computationally expensive models \tabularnewline
+$f$ & real-valued map on $\Omega$, providing the output of the expensive model \tabularnewline
+$\calf$ & set of possible output maps, $f$ \tabularnewline
+QOI & quantity of interest, function from $\calf$ to $\calg$, solution of our problem that we wish to approximate well, e.g., surrogate model, optimum, or integral; the solution \tabularnewline
+$\calg$ & space of possible QOIs; could be functions, scalars, or vectors\tabularnewline
+$\bx_i$ & $d$ dimensional vector denoting the $i^{\text{th}}$ data site or node; $\bx_i \in \Omega$ \tabularnewline
+$\mX$ & design;  $n \times d$ array of $n$ data sites; $\mX = (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ \tabularnewline
+$\by$ & vector of output data; $\by := (f(\bx_1), \ldots, f(\bx_n))^T \in \reals^n$   \tabularnewline
+$\APP(n,\mX,\by)$ & approximation to $\QOI(f)$ based on the sample of $n$ outputs\tabularnewline
+$\VAL(\bx,n,\mX, \by)$ & value of observing $f(\bx)$ given $n$ data observed so far \tabularnewline
+$\ERR(n,\mX,\by)$ & data-driven error bound for $\APP(n,\mX,\by)$ that is valid for all $f \in \calc$ \tabularnewline
+$\calc$ & set of output maps for which our adaptive sampling schemes are valid; $\calc \subset \calf$ \tabularnewline
+$\mX$ & \tabularnewline
+$\mX$ & \tabularnewline
+\end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Our problem}
 
-Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.   The output quantities of interest (QOIs) often depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The model output or response can be viewed as a map $f:\Omega \subseteq \reals^d \rightarrow \reals$.   Possible QOIs include function approximation of surrogate models for global uncertainty analysis, exploring nonconvex response surfaces in numerical optimization, and the integration of multivariate high-dimensional functions:
+Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  The quantities of interest (QOIs) often depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The set of feasible POIs is denoted $\Omega \subseteq \reals^d$.  The QOIs depend on the simulation output or response, which can be viewed as a map $f:\Omega \rightarrow \reals$.   Possible QOIs include surrogate models for global uncertainty analysis, optimal values of nonconvex response surfaces, and the integrals of multivariate high-dimensional functions, e.g., 
 \begin{equation}
     \QOI(f) = f, \quad \QOI(f) = \min_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \argmin_{\bx \in \Omega} f(\bx), \quad \QOI(f) = \int_{\Omega} f(\bx) \, \dif \bx.
 \end{equation}
+To facilitate analysis, $\QOI \colon \calf \to \calg$, where $\calf$ is the space of possible simulation output maps, and $\calg$ is the space of possible QOIs.  In the above examples $\calg$ corresponds to a Banach space of functions, $\reals$, or $\Omega$.
 
-Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX_{1:n},\by_{1:n})$, where 
+Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)$, where 
 \begin{itemize}
-    \item $\mX_{1:n} := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen design, i.e., an array of POI values or data sites, and
+    \item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of POI vectors or data sites, and
     
-    \item $\by_{1:n} := (f(\bx_1), \ldots, f(\bx_n))^T$ is (noiseless) function data, i.e., a vector of outputs.
+    \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless) output data.
 \end{itemize}   
-The $\APP$s can be investigated between the samples using multivariate surrogate models or emulators.
+The $n$-dependence of $\mX$ and $\by$ is implicit.
 
-Limited computer resources and the curse of dimensionality prevent acquiring a dense sample $\mX_{1:n}$, in the input space. Adaptive sampling  uses past samples as a guide in choosing future samples to maximize the expected information.   That is, the next sample, $\bx_{n+1}$, is a function of both $\mX_{1:n}$ and  $\by_{1:n}$ and chosen to maximize the expected value it will bring to the $\APP$s, 
+Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. Adaptive sampling uses past samples as a guide in choosing future samples to maximize the expected information.   That is, the next data site, $\bx_{n+1}$, is a function of both $\mX$ and  $\by$ and chosen to maximize the expected value it will bring to the $\APP$s:
 \begin{equation} \label{eq:nextsample}
-    \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX_{1:n}, \by_{1:n})~.
+    \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
-Here $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, based on what has been already observed.  The $\VAL$ function is sometimes called an acquisition functions and is typically based on a measure of uncertainty in the approximate QOI so far, i.e., $\APP(n,\mX_{1:n},\by_{1:n})$.
+Here $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, based on what has been already observed.  The $\VAL$ function is sometimes called an acquisition functions and is typically based on a measure of uncertainty in the approximate QOI so far, i.e., $\APP(n,\mX,\by)$.
 
 % \subsection{What has been done}
 
@@ -391,20 +416,22 @@ Here $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ measures the value to $\APP(n+1,\cdot,\c
 
 \subsection{Our goal}
 
-The PIs, Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH), propose to find better surrogate models, $\APP$s,  and adaptive sampling acquisition functions, $\VAL$, than are currently available.  For example, many $\VAL$ functions only use the past sample locations $\mX_{1:n}$ to assess the uncertainty of $\APP$ and do not take into account the sample values $\by_{1:n}$.
+The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH)---propose to find better approximations, $\APP$, and adaptive sampling acquisition functions, $\VAL$, than those currently available.  For example, many $\VAL$ functions only use the past sample locations $\mX$ to assess the uncertainty of $\APP$ and do not take into account the sample output values $\by$ (see Section \ref{}).
 
-Our algorithms will be guided by deriving error data-driven bounds of the form 
+Our algorithms will be guided by deriving data-driven bounds error of the form 
 \begin{equation} \label{eq:errbd}
-    \bignorm[\calg]{\QOI(f) - \APP(n,\mX_{1:n},\by_{1:n})} \le \ERR(n,\mX_{1:n},\by_{1:n}) \qquad \forall f \in \calc.
+    \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc.
 \end{equation}
-That is, we will derive estimates for the error, $\ERR$, based on a precisely defined set of maps, $\calc$, between the input POIs and output QOIs.  This will allow the user to decide whether to additional data is needed to improve the accuracy of $\APP(n,\mX_{1:n},\by_{1:n})$.  Most current $\ERR$ are based on heuristics with no rigorous understanding of what $\calc$ should be. 
+That is, we will derive estimates for the error, $\ERR$, which are valid for $\calc$, a precisely defined subset of $\calf$ consisting of well-behaved maps between the input POIs and the simulation outputs. This will allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.  Most current data-based $\ERR$ are based on heuristics with no rigorous understanding of what $\calc$ should be. 
 
-\subsection{Our plan}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Our plan} \label{sec:OurPlan}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Our plan follows the effective two-stage \emph{explore-exploit} process.  In the \emph{explore} stage, little or nothing is known of the QOIs or function values, and the sampling does not depend on function data.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. 
 
-The goal of the \emph{exploit} stage is to detect regions where $f$ is poorly represented and place more future samples to reduce the uncertainty. 
-Starting with $n = n_0$, we then \emph{exploit} the existing sample to create multiple approximations $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ for $\btheta \in \Theta$.  
+The goal of the \emph{exploit} stage is to detect regions where $f$ is poorly represented with respect to its influence on $\QOI(f)$ and place more future samples to reduce the uncertainty. 
+Starting with $n = n_0$, we then \emph{exploit} the existing sample to create multiple approximations $\APP_{\btheta}(n, \mX, \by)$ for $\btheta \in \Theta$.  
 
 One approach we are considering is create an ensemble of surrogate models by resampling the current samples.  That is, we iteratively 
 \begin{enumerate}
@@ -416,60 +443,70 @@ One approach we are considering is create an ensemble of surrogate models by res
 \end{itemize}
 \item Evaluate the surrogate model at candidate sample locations to identify where the surrogate model has the most variance. 
 \end{enumerate}
-When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ will the approximation of $f$.  When the QOI is the integral may be approximated directly or may be the integral of a function approximation. Because the primary time cost in our problems is acquiring data, we are not overly concerned about the time required to all of the $\APP_{\btheta}(n, \mX_{1:n}, \by_{1:n})$ needed.
+When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, \mX, \by)$ will the approximation of $f$.  When the QOI is the integral may be approximated directly or may be the integral of a function approximation. Because the primary time cost in our problems is acquiring data, we are not overly concerned about the time required to all of the $\APP_{\btheta}(n, \mX, \by)$ needed.
 
-The $\APP_{\btheta}(n_0, \mX_{1:n}, \by_{1:n})$ are then used to choose 
+The $\APP_{\btheta}(n_0, \mX, \by)$ are then used to choose 
 \begin{itemize} 
-\item a best approximation, $\APP(n, \mX_{1:n}, \by_{1:n})$,
+\item a best approximation, $\APP(n, \mX, \by)$,
 
-\item a measure of the uncertainty of our approximation, $\ERR(n,\mX_{1:n}, \by_{1:n})$ for a well defined set of functions $\calc$, as in \eqref{eq:errbd},  and 
+\item a measure of the uncertainty of our approximation, $\ERR(n,\mX, \by)$ for a well defined set of functions $\calc$, as in \eqref{eq:errbd},  and 
 
-\item $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$, which tells us where to choose the next data site, $\bx_{n+1}$, via \eqref{eq:nextsample}.
+\item $\VAL(\bx,n,\mX, \by)$, which tells us where to choose the next data site, $\bx_{n+1}$, via \eqref{eq:nextsample}.
 \end{itemize}
 This exploit step is repeated until the time budget is exhausted or the uncertainty tolerance is met.
 
-For $\QOI(f) = f$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ will correspond to a pointwise determinstic error bound or probabilistic error standard error.  For $\QOI(f) = \min_{\bx \in \Omega} f(\bx)$, $\VAL(\bx,n,\mX_{1:n}, \by_{1:n})$ may be determined from sensitivity analysis or correspond to expected improvement.  Because function approximation, optimization, and integration are all homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  It then makes sense that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
+For $\QOI(f) = f$, $\VAL(\bx,n,\mX, \by)$ will correspond to a pointwise determinstic error bound or probabilistic error standard error.  
+For $\QOI(f) = \min_{\bx \in \Omega} f(\bx)$, $\VAL(\bx,n,\mX, \by)$ may be determined from sensitivity analysis or correspond to expected improvement.  
+Because function approximation, optimization, and integration are all homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  
+It then makes sense that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
 
 \subsection{Our impact}
-\paragraph{\bf Theoretical advances}
+\subsubsection{Theoretical advances}
 The theoretical advances for error estimates will extend mathematical foundation for adaptive sampling by 
 \begin{itemize}
-\item Providing error estimates based on both the sample locations and function values,
-\item Extending the theoretical basis for ...
+\item Providing error bounds, $\ERR$, based on both the sample locations and function values and justified for input functions in $\calc$, and 
+\item Providing acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
+\end{itemize}
+Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic, applicable for the situation in which output data is expensive.
+
+\subsubsection{Algorithms}
+By utilizing adaptive sampling algorithms will create more computationally efficient algorithms, $\APP$.
+\renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}\textit{#1}.}
+\begin{description}
+\item[Function approximation] We will create a surrogate models, with uncertainty estimates, that represent the output well over the entire feasible range of POIs using a minimal number of samples.  This model can be used for global sensitivity analysis and dynamic (interactive) visualization of the response surface. 
+\item[Optimization] We will use our surrogate models to identify multiple local optima of the response function.  The local minima can then be used to identify as starting locations for gradient descent algorithms.
+\item[Integration] The surrogate model can be used as a control variate to detrend the integrand and speed up cubature \cite{}.  
+\end{description}
+
+\subsubsection{Software}
+Our algorithms will be implemented in open source libraries for use by the modeling community.  The software will include the following routines:
+\begin{itemize}
+\item Adaptive samplers,
+\item Surrogate modellers,
+\item Function approximation, optimization, and integration.
 \end{itemize}
 
- \paragraph{\bf Algorithms}
-Our algorithms will have an impact on applications where function evaluations are expensive by
-\begin{itemize}
-\item \underline{function approximation:} creating a surrogate model, with uncertainty estimates, to investigate the response of the QOIs over the entire feasible range of POIs using a minimal number of samples.  This model can be used for global sensitivity analysis of dynamic (interactive) visualization of the response surface. 
-\item \underline{optimization:} The surrogate model can identify multiple locally optimal solutions of a response function.  The model will provide a large scale, global, representation of the response function that can be used to identify a good starting locations for gradient descent algorithms.
- \item \underline{integration:} The surrogate model can be used as a control variate to detrend the data and significantly decrease the numerical integration error of functions defined on a sparse, arbitrary spaced, grid \cite{}.  
-\end{itemize}
+\subsubsection{Broader Impact}
 
-\paragraph{\bf Software}
-We will provide software so our algorithms will be useful and used by the modeling community.  The software will include 
-\begin{itemize}
-\item adaptive samplers
-\item surrogate models
-\item application software for function approximation, optimization, and integration
-\end{itemize}
-\paragraph{\bf Broader Impact}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Illustrative Univariate Example} \label{sec:UniEx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX_{1:n} = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
+The univariate function $f: x \mapsto \exp(-10x) \sin(8x)$, plotted in Fig.\ \ref{fig:sampleFun}, illustrates some of the challenges of adaptive sampling.  Using the $n=10$ point design, $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$, an approximation, $\APP(f,n)$, is constructed as the minimum norm interpolant in the Hilbert space, $\calf$, defined by its Mat\'ern reproducing kernel,
 \begin{equation} \label{MatKer}
     K(t,x) = (1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}),
 \end{equation}
 with $\theta = 1$.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of optimal function approximation in reproducing kernel Hilbert spaces.  The approximation is given in general by
 \begin{equation} \label{appxExOne}
-    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \quad \text{where } \bc = \mK^{-1} \by_{1:n}, \quad \mK = \mK(\mX_{1:n}) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n.
+    \APP(f,n) = \sum_{i=1}^n c_i K(\cdot, x_i), \quad \text{where } \bc = \mK^{-1} \by, \quad \mK = \mK(\mX) = \bigl( K(x_i,x_j) \bigr)_{i,j=1}^n.
 \end{equation}
 Fig.\ \ref{fig:sampleFun} also shows $\APP(f,10)$.  
 
 \repeatkeyidea{keyideainitial}{\keyideainitialtext}
-Here, $\APP(f,10)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX_{1:n} = (0, 0.4,  0.6, 1)^T$, then $\APP(f,4)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}.  There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
+Here, $\APP(f,10)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\APP(f,4)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}.  There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
 \begin{figure}[H]
     \centering
@@ -491,12 +528,12 @@ One common adaptive sampling rule is to place the next data site where the theor
 \end{align}
 Choosing the next data site where the approximation error bound is maximized corresponds to 
 \begin{equation} \label{minprederr}
-    x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX_{1:n}),
+    x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX),
 \end{equation}
 which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
 
 \repeatkeyidea{keyideafunction}{\keyideafunctiontext}
-The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by_{1:n}$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by_{1:n}$, in a significant way.  Another approach is to compute the approximation error bound only on the basis of nearby function data.  These approaches are elaborated in ???
+The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by$, in a significant way.  Another approach is to compute the approximation error bound only on the basis of nearby function data.  These approaches are elaborated in ???
 
 An alternative perspective to assuming that the function to be approximated is a deterministic object in a Hilbert or Banach space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\APP(f,n)$ as in \eqref{appxExOne}.
 
@@ -507,11 +544,11 @@ As it stands, approximation error bound \eqref{RKHSErrBd} cannot be used as a st
 \begin{equation} \label{RKHScone}
     \calc := \{f \in \calf : \norm[\calf]{f - \APP(f,n)} \le A_n \norm[\calf]{\APP(f,n)} \},
 \end{equation}
-where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $af \in \calc$ for any real $a$.  This $\calc$ may be interpreted as the functions in $\calf$ whose norms are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by_{1:n} \mK^{-1} \by_{1:n}}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
+where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $af \in \calc$ for any real $a$.  This $\calc$ may be interpreted as the functions in $\calf$ whose norms are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
 \begin{subequations} \label{DataErrBd}
 \begin{gather}
     \label{DataErrBda} 
-    \ERR(f,n,x) : = A_n \sqrt{[K(x,x) - \bk^T(x) \mK^{-1} \bk(x)] \, [\by_{1:n}^T \mK^{-1} \by_{1:n}] }, \\
+    \ERR(f,n,x) : = A_n \sqrt{[K(x,x) - \bk^T(x) \mK^{-1} \bk(x)] \, [\by^T \mK^{-1} \by] }, \\
     \norm[\infty]{f - \APP(f,n)} \le \norm[\infty]{\ERR(f,n,\cdot)} \qquad \forall f \in \calc.
 \end{gather}
 \end{subequations}
@@ -694,6 +731,91 @@ these students have learned how to conduct theoretical and/or practical computat
 \subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsubsection{Minimizing Prediction Error}
+
+One approach to function approximation is to assume that the $f$ of interest belongs to a reproducing kernel Hilbert space $\calf$.  A commonly used kernel is the following member of the Mat\'ern kernel family,
+\begin{equation} \label{MatKer}
+    K(\bt,\bx) = (1 + \theta \norm[1]{\bt-\bx}) \exp(-\theta\norm[1]{\bt-\bx}),
+\end{equation}
+where $\theta$ is a parameter to be set or inferred.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in reproducing kernel Hilbert spaces.  The mimimum norm interpolant of $f$ in this $\calf$ is given by the surrogate model
+\begin{equation} \label{appxExOne}
+    \SURR(n,\mX,\by) = \sum_{i=1}^n c_i K(\cdot, \bx_i), \quad \text{where } \bc = \mK^{-1} \by, \quad \mK = \mK(\mX) = \bigl( K(\bx_i,\bx_j) \bigr)_{i,j=1}^n.
+\end{equation}
+This surrogate model is known to have the following error bound:
+\begin{align}
+\label{RKHSErrBd}
+    \abs{f(\bx) - \SURR(n,\mX,\by)(x)} & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f - \SURR(n,\mX,\by)} \\
+    \nonumber
+    & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f} \qquad \forall f \in \calf, \\
+    \nonumber
+    & \qquad \qquad \text{where }  \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
+\end{align}
+
+
+Fig.\ \ref{fig:sampleFun} shows $\SURR(10,\mX,\by)$ for the univariate function $f \colon x \mapsto \exp(-10x) \sin(8x)$ using the $n=10$ point design, $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$.  
+Although it is not yet sufficiently accurate for our purposes, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. Hence the need for the sufficient samples in the explore stage mentioned in Section \ref{sec:OurPlan}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
+    \caption{The left plot shows $f: x \mapsto \exp(-10x) \sin(8x)$ and its approximation \eqref{appxExOne} for using $10$ and $4$ data sites and the kernel \eqref{MatKer} with $\theta = 1$. A poor approximation results from too few data sites.  The right plot includes an approximate prediction error bound, $\ERR(10,x)$ from \eqref{DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\textup{bad}}$. The largest actual error actually occurs far away from $x_{\textup{bad}}$.}
+    \label{fig:sampleFun}
+\end{figure}
+
+There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
+
+We consider two QOIs, function approximation (the identity map), $\ID(f) = f$, and function minimization, $\MIN(f) = \min_{0 \le x \le 1} f(x)$.  For these two QOIs, our approximations are the surrogate model and the minimum function data observed:
+\begin{equation*}
+    \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i
+\end{equation*}
+
+One common adaptive sampling rule is to place the next data site where the theoretical approximation error bound is maximized.  For this $\APP(f)$, the error has the following upper bound:
+\begin{align}
+\label{RKHSErrBd}
+    \abs{f(x) - \APP(f,n)(x)} & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f - \APP(f,n)} \\
+    \nonumber
+    & \le \sqrt{K(x,x) - \bk^T(x) \mK^{-1} \bk(x)} \, \norm[\calf]{f},
+    \quad \text{where }  \bk(x) = \bigl(K(x,x_i) \bigr)_{i=1}^n.
+\end{align}
+Choosing the next data site where the approximation error bound is maximized corresponds to 
+\begin{equation} \label{minprederr}
+    x_{n+1} = x_{\textup{bad}} = \argmax_x K(x,x) - \bk^T(x) \mK^{-1} \bk(x) = \phi_{n+1}(\mX),
+\end{equation}
+which is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since the $f(x_{\textup{bad}}) \approx \APP(f,n)(x_{\textup{bad}})$, adding $x_{\textup{bad}}$ to the design does not help much.
+
+\repeatkeyidea{keyideafunction}{\keyideafunctiontext}
+The adaptive sampling criterion in \eqref{minprederr} does not depend at all on the function data, $\by$, which is why it performs poorly.  For the example in Fig.\ \ref{fig:sampleFun}, a good adaptive sampling algorithm would choose the next data site on the left where it will improve upon $\APP(f,n)$ the most.  One approach to construct a good adaptive sampling criterion is to have the reproducing kernel, $K$, inferred from the function data, $\by$, in a significant way.  Another approach is to compute the approximation error bound only on the basis of nearby function data.  These approaches are elaborated in ???
+
+An alternative perspective to assuming that the function to be approximated is a deterministic object in a Hilbert or Banach space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\APP(f,n)$ as in \eqref{appxExOne}.
+
+Not surprisingly, the actual approximation error is greatest on the left side of $[0,1]$, where $f$ fluctuates the most.  Intuitively, one might expect that adding the next data site in the design on the left would yield the greatest improvement.  Unfortunately, typical adaptive schemes do not necessarily work this way (Shortcoming \ref{shortcomenoy}).
+
+
+\repeatkeyidea{keyideaBayesian}{\keyideaBayesiantext}
+In ??? we appeal to the Bayesian perspective.
+
+As it stands, approximation error bound \eqref{RKHSErrBd} cannot be used as a stopping criterion for an adaptive function approximation algorithm because $\norm[\calf]{f - \APP(f,n)}$ is typically unknown.  However, if $n$ is large enough, we might hypothesize that our $f$ belongs to the cone of functions,
+\begin{equation} \label{RKHScone}
+    \calc := \{f \in \calf : \norm[\calf]{f - \APP(f,n)} \le A_n \norm[\calf]{\APP(f,n)} \},
+\end{equation}
+where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $af \in \calc$ for any real $a$.  This $\calc$ may be interpreted as the functions in $\calf$ whose norms are not too badly approximated by $\APP(\cdot,n)$.  Since the approximation error is perpendicular to the approximation in the Hilbert space $\calf$, one may equivalently define $\calc$ as  $\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \norm[\calf]{\APP(f,n)}^2 \}$.  Noting that $\norm[\calf]{\APP(f,n)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on function data: 
+\begin{subequations} \label{DataErrBd}
+\begin{gather}
+    \label{DataErrBda} 
+    \ERR(f,n,x) : = A_n \sqrt{[K(x,x) - \bk^T(x) \mK^{-1} \bk(x)] \, [\by^T \mK^{-1} \by] }, \\
+    \norm[\infty]{f - \APP(f,n)} \le \norm[\infty]{\ERR(f,n,\cdot)} \qquad \forall f \in \calc.
+\end{gather}
+\end{subequations}
+Given method for choosing data sites adaptively, an adaptive function approximation algorithm proceeds by increasing $n$ until the right hand side of \eqref{DataErrBd} does not exceed the prescribed error tolerance, $\varepsilon$.  Then the algorithm returns $\APP(f)$.
+
+\repeatkeyidea{keyideacone}{\keyideaconetext}
+The intuition is \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea.
+
+The cone in  \eqref{RKHScone} and the error bound in \eqref{DataErrBd} have their shortcomings. The interval $\APP(f,10)(x) \pm \ERR(f,10,x)$ does not quite cover $f(x)$ in Fig.\ 1 near $x=0$.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} and/or the value $\theta =1$ may not be the best suited to this particular $f$.  This again raises the importance of Key Idea \ref{keyideafunction}. Also, the cone $\calc$ defined in  \eqref{RKHScone} depends strongly on the specific design chosen.  We would rather that it did not.  This point is addressed in ??.
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Exploratory Sampling} \label{sec:exploreSample}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -712,7 +834,7 @@ Key Idea \ref{keyideafunction} stresses the importance of having the choice of t
 
 The value of $\theta$ can be inferred using an empirical Bayes perspective (Key Idea \ref{keyideaBayesian}), which leads to the following optimization problem \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
-    \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by_{1:n}^T \mK_\theta^{-1} \by_{1:n} \bigr)\right].
+    \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
 For the example in Sect.\ \ref{sec:UniEx}, $\theta_{\textup{EB}} = 20$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  The new function approximation has similar deficiencies as the original one in Sect.\ \ref{sec:UniEx}, and the suggested next data site is at a place where the function approximation is already quite good.
 
