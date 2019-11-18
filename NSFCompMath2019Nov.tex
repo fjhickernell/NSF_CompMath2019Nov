@@ -496,26 +496,6 @@ Our algorithms will be implemented in open source libraries for use by the model
 \subsubsection{Broader Impact}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{An Illustrative Multivariate Example} \label{ex:multi}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
-Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
-\begin{subequations} \label{ex:multilin}
-\begin{gather}
-    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) u_{\bk} \right \}, 
-    \\ 
-    u_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
-    \norm[\calf]{f} : = \Bignorm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
-\end{gather}
-\end{subequations}
-for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose ordering, $\lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots \ge \lambda_{\bk_{2^d}}$, implies an ordering of the $\bk$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf(\bk)$.  In this case, the optimal approximation in the $\calg$-norm is $\APP(f,n) = \sum_{i=1}^n \hf(\bk_i) \bx_{\bk_i}$, and the error of this approximation is 
-\begin{equation}
-    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\bigl(\hf(\bk_i) \bigr)_{i=n+1}^\infty} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
-\end{equation}
-
-\repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
-If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$, decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in Sect.\ ???
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
@@ -689,7 +669,7 @@ The known pointwise error bound for this surrogate model is
 \end{align}
 
 To illustrate, Fig.\ \ref{fig:sampleFun} displays the univariate function $f \colon x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{MatKer} with $\theta =1$.  
-Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighed in Section \ref{sec:OurPlan}. 
+Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Section \ref{sec:OurPlan}. 
 
 \begin{figure}[H]
     \centering
@@ -711,7 +691,7 @@ One common adaptive sampling rule for function approximation is to define the ac
     \IDVAL(\bx,n,\mX,\by) =  K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx), \qquad 
     \bx_{\ID, n+1} = \argmax_{\bx \in \Omega} \IDVAL(\bx,n,\mX,\by).
 \end{equation}
-Because $\norm[\calf]{f - \SURR(n,\mX,\by)}$ is independent of $\bx$, it can be ignored here. The result of this rule for the example introduced above is plotted on the right in Fig.\ \ref{fig:sampleFun}.  However, $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$ so sampling at $x_{\ID, 11}$ does not help much.  We would have hoped that the adaptive sampling rule would have chosen a point on the left, where the surrogate error is larger.  The adaptive sampling rule in \eqref{minprederr} performs poorly because it does not depend at all on the function data, $\by$.  Remedies for this deficiency are are described in Sections ???
+Because $\norm[\calf]{f - \SURR(n,\mX,\by)}$ is independent of $\bx$, it can be ignored here. The result of this rule for the example introduced above is plotted on the right in Fig.\ \ref{fig:sampleFun}.  However, $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$ so sampling at $x_{\ID, 11}$ does not help much.  We would have hoped that the adaptive sampling rule would have chosen a point on the left, where the surrogate error is larger.  The adaptive sampling rule in \eqref{minprederr} performs poorly because it  is essentially filling in holes in the domain and does not depend at all on the function data, $\by$.  Remedies for this deficiency are are described in Sections ???
 
 The optimization problem requires a more delicate expression for the prediction error to define the acquisition function, $\MINVAL$. Let $\calc$ be the cone of functions whose norms are approximated modestly well by the norms of their surrogates:  
 \begin{align}  \label{RKHScone}
@@ -741,7 +721,9 @@ For our illustrative example with $A_{10} = 1$, the next data site for minimizat
 
 Fig.\ \ref{fig:sampleFun} also shows the surrogate model plus and minus its pointwise error bound.  This error bound is much too large on the right, and barely large enough on the left.  Again we remark that this state-of-the-art needs improvement, which we discuss in Sect.\ .
 
-An alternative perspective to assuming that the function to be approximated is a deterministic object in a Hilbert or Banach space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis, was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  The deterministic framework using reproducing kernel Hilbert spaces for $f$ has a parallel Bayesian interpretation assuming $f$ is an instance of a Gaussian process.
+One may question why the surrogate error bound in \eqref{DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f$.  Since $\calf$ is infinite dimensional, no matter what $n$ function data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The numerical approximations, $\APP(f \pm c f_\perp)$, must be the same for all $c$, while the true solutions  $\QOI(f + c f_\perp)$ and  $\QOI(f - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate error bound cannot apply for all $f + c f_\perp$.
+
+An alternative perspective to assuming that $f$ a deterministic object in a reproducing kernel Hilbert space is to assume that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  This perspective, called Bayesian or average case numerical analysis, was promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  The deterministic framework using reproducing kernel Hilbert spaces for $f$ has a parallel Bayesian interpretation assuming $f$ is an instance of a Gaussian process.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -798,6 +780,23 @@ This example of modifying a well-known kernel so that data-based inference of th
 \subsection{Adaptive Sampling via Selecting Important Coordinates} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
+Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
+\begin{subequations} \label{ex:multilin}
+\begin{gather}
+    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) u_{\bk} \right \}, 
+    \\ 
+    u_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
+    \norm[\calf]{f} : = \Bignorm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
+\end{gather}
+\end{subequations}
+for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose ordering, $\lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots \ge \lambda_{\bk_{2^d}}$, implies an ordering of the $\bk$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf(\bk)$.  In this case, the optimal approximation in the $\calg$-norm is $\APP(f,n) = \sum_{i=1}^n \hf(\bk_i) \bx_{\bk_i}$, and the error of this approximation is 
+\begin{equation}
+    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\bigl(\hf(\bk_i) \bigr)_{i=n+1}^\infty} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
+\end{equation}
+
+\repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
+If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$, decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in Sect.\ ???
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Testing Adaptive Sampling via Practical Problems} \label{sec:TestBed}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
