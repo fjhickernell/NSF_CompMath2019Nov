@@ -423,7 +423,7 @@ Here $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in obs
 
 \subsection{Our goal}
 
-The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH)---propose to find better approximations, $\APP$, and adaptive sampling acquisition functions, $\VAL$, than those currently available.  For example, many $\VAL$ functions only use the past sample locations $\mX$ to assess the uncertainty of $\APP$ and do not take into account the sample output values $\by$ (see Section \ref{}).
+The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH)---propose to find better approximations, $\APP$, and adaptive sampling acquisition functions, $\VAL$, than those currently available.  For example, many $\VAL$ functions only use the past sample locations $\mX$ to assess the uncertainty of $\APP$ and do not take into account the sample output values $\by$ (see Sect.\ \ref{}).
 
 Our algorithms will be guided by deriving data-driven bounds error of the form 
 \begin{equation} \label{eq:errbd}
@@ -442,11 +442,11 @@ Starting with $n = n_0$, we then \emph{exploit} the existing sample to create mu
 
 One approach we are considering is create an ensemble of surrogate models by resampling the current samples.  That is, we iteratively 
 \begin{enumerate}
-\item resample the data using a weighted Bayesian bootstrap approach, where $\btheta$ represents different sample weights (Section \ref{sec:Bootstrap}),
+\item resample the data using a weighted Bayesian bootstrap approach, where $\btheta$ represents different sample weights (Sect.\ \ref{sec:Bootstrap}),
 \item Create a surrogate model based on the weighted/resampled data using either 
 \begin{itemize}
-\item fitting kriging or reproducing kernel Hilbert space models where the parameter $\btheta$ determining the form of the  covariance/reporducing kernel is inferred from the data (Section \ref{sec:kerinferdata}), or 
-\item multivariate polynomial models where the importance of different POIs and their interaction terms is mediated by $\btheta$ (Section \ref{sec:selectCoord}).
+\item fitting kriging or reproducing kernel Hilbert space models where the parameter $\btheta$ determining the form of the  covariance/reporducing kernel is inferred from the data (Sect.\ \ref{sec:kerinferdata}), or 
+\item multivariate polynomial models where the importance of different POIs and their interaction terms is mediated by $\btheta$ (Sect.\ \ref{sec:selectCoord}).
 \end{itemize}
 \item Evaluate the surrogate model at candidate sample locations to identify where the surrogate model has the most variance. 
 \end{enumerate}
@@ -669,7 +669,7 @@ The known pointwise error bound for this surrogate model is
 \end{align}
 
 To illustrate, Fig.\ \ref{fig:sampleFun} displays the univariate function $f \colon x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{MatKer} with $\theta =1$.  
-Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Section \ref{sec:OurPlan}. 
+Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Sect.\ \ref{sec:OurPlan}. 
 
 \begin{figure}[H]
     \centering
