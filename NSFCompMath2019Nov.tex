@@ -791,13 +791,13 @@ Another area weakness in the adaptive scheme outlined above is that the cone $\c
 \subsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To approximate or optimize a $d$-variate function using $n$ function data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, if $f$ is even only a multilinear function,
+To approximate or optimize a $d$-variate function using $n$ function data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
 \begin{equation*}
-    f = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d,
+    f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d
 \end{equation*}
-then one requires at least $n = 2^d$ function data.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.
+requires at least $n = 2^d$ function data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.
 
-There are different ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  
+There are different ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  \textbf{stopping here}
 
 
 of Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
