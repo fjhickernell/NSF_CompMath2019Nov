@@ -1,16 +1,24 @@
 %%%%%%%%%%%
 Overview:
 %%%%%%%%%%%
+Large scale simulations, such as global climate simulations, may require hours to obtain the output for just one choice of the parameters of interest (POIs).  The simulation output may depend on dozens of POIs in a complex way.  The goal of the practitioner is a quantity of interest (QOI), which may be the output expressed as a function of the POIs, the minimum output over all feasible POIs, or the average output. An accurate and efficient numerical approximation to the QOI requires a careful, adaptive sampling of the POI vectors for input into the large scale simulation. The simulation output is used to construct surrogate models for the output, and those surrogates inform the choice of the next POIs to be input into the simulation.  
 
+Existing adaptive sampling schemes are not effective enough because the surrogate models that they are based on are inflexible and do not adequately incorporate output data. This research will rectify that deficiency.
 
 
 %%%%%%%%%%%
 Intellectual Merit:
 %%%%%%%%%%%
+Treating the simulation as a black box, our new adaptive sampling schemes will employ an explore-exploit paradigm.  In the explore step the initial sample will identify POI values that significantly affect the QOI. The iterative exploit steps will then identify the POI value where the next simulation output is likely to improve the approximate QOI the most.  
 
+Choosing the next POI value requires an accurate surrogate model based on existing output data and a good measure of the surrogate model's uncertainty.  We will mainly investigate two approaches: i) Bayesian bootstrap combined with kernel weighted least squares surrogates and ii) kriging or reproducing kernel Hilbert space surrogates with data-inferred covariance/reproducing kernels.  We will include techniques that reduce the effective number of POIs to avoid the curse of dimensionality.  
 
+We will develop new algorithms for the QOIs of function approximation (recovery), optimization, and (parametric) integration when the number of POIs is in the dozens.  Rather than relying on heuristics, our algorithms will be rigorously justified for cones of output functions.  We will derive data-driven error bounds for our surrogate models that both underscore our adaptive sampling algorithms and data-driven error bounds for the QOI approximations.  These data-driven error bounds will have good pre-asymptotic properties as the total number of time-consuming simulations that can be afforded will be modest.
+
+Our new adaptive sampling schemes, algorithms for approximating QOIs, and error bounds will be tested on existing test beds of problems.  They will also be tried on large practical  problems.
 
 
 %%%%%%%%%%%
 Broader Impacts:
 %%%%%%%%%%%
+The complexity of physical models grows with computing power.  Therefore, practitioners will continue to need for accurate algorithms for function approximation, optimization, and integration based on clever adaptive sampling.  This research will provide the next generation of such algorithms for a wide spectrum of practitioners.  The theoretical advances based on error analysis for QOIs based on functions lying in cones in this project will point the way for similar approaches in other numerical problems.  Software developed in this project will be available on public repository for download.  Students mentored during the course of this project will learn theory, algorithm development, and applications.
