@@ -395,14 +395,12 @@ $\calc$ & set of output maps for which our adaptive sampling schemes are valid; 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Our problem}
 
-Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  The quantities of interest (QOIs) often depend on $d \in [10, 100]$ input parameters of interest (POIs), denoted $\bx$.  The set of feasible POIs is denoted $\Omega \subseteq \reals^d$.  The QOIs depend on the simulation output or response, which can be viewed as a map $f:\Omega \rightarrow \reals$.   
-
-To facilitate the analysis, we define $\QOI \colon \calf \to \calg$, as the map from the space of possible simulation input POIs, $\calf$,  to the space of possible output QOIs,  $\calg$.  Possible QOIs include surrogate models for global uncertainty analysis, optimal values of nonconvex response surfaces, and the integrals of multivariate high-dimensional functions.   Two QOIs of particular interest in this proposal are multivariate function recovery (the identity map) and optimization:\footnote{QOIs of lesser interest include locating the position of the minimum and (parametric) integration.}  
+Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, from a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
+the representation of the simulation output (the identity map) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
 \begin{equation} \label{eq:ourQOIs}
     \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
-In these examples $\calg$ corresponds to a Banach space of functions or $\reals$, respectively.
-
+Our problem is to numerically approximate these QOIs when $d \in [10, 100]$ and the feasible number of simulations, $n$, is relatively small, say in the hundreds.  The primary cost of our algorithms will be the cost of running the simulations to obtain $f(\bx_1), \ldots, f(\bx_n)$.
 
 Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)$, where 
 \begin{itemize}
@@ -793,7 +791,7 @@ Another area weakness in the adaptive scheme outlined above is that the cone $\c
 
 To approximate or optimize a $d$-variate function using $n$ function data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
 \begin{equation*}
-    f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d
+    f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
 \end{equation*}
 requires at least $n = 2^d$ function data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.
 
