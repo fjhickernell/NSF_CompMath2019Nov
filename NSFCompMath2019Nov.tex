@@ -470,7 +470,7 @@ Based on \eqref{eq:nextsample}, the next data site, $\bx_{n+1}$ is chosen.   The
 \begin{subequations} \label{eq:QOIerr}
 \begin{align}
 \label{eq:iderr}
-     \bignorm[\calg]{f - \APPID(n,\mX,\by)} &\le \norm[\calg]{\SURRERR(n,\mX,\by)} =: \IDERR(n,\mX,\by), \\
+     \bignorm[\infty]{f - \APPID(n,\mX,\by)} &\le \norm[\infty]{\SURRERR(n,\mX,\by)} =: \IDERR(n,\mX,\by), \\
      \label{eq:minerr}
      \bigabs{\MIN(f) - \APPMIN(n,\mX,\by)} & \le \max_{\bx \in \Omega} \Bigl\{ \APPMIN(n,\mX,\by) - [f(\bx)- \SURRERR(n,\mX,\by)](\bx) \Bigr\} \\
      \nonumber
@@ -757,9 +757,11 @@ This data-driven error bound for the surrogate model now leads to acquisition fu
 
 One may question why the surrogate error bound in \eqref{eq:DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The numerical approximations, $\APP(f \pm c f_\perp)$, must be the same for all $c$, while the true solutions  $\QOI(f + c f_\perp)$ and  $\QOI(f - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate error bound cannot apply for all $f + c f_\perp$.
 
-The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpretation promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero\footnote{There is also value in assuming a simple polynomial form for the mean, just as the RKHS approach may be extended to reproduce polynomials exactly.} and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
+The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpretation promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero\footnote{There is also value in assuming a simple polynomial form for the mean, just as the RKHS approach may be extended to reproduce polynomials exactly. We will explore such ideas in our research.} and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
 
-\subsection{A Univariate Example of the RKHS/Kriging Approach}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{A Univariate Example of the RKHS/Kriging Approach} \label{sec:UnivarEx}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To illustrate the RKHS approach, Fig.\ \ref{fig:sampleFun} displays the univariate function
 \begin{equation} \label{eq:univarfun}
@@ -788,7 +790,7 @@ The adaptive sampling rule outlined here performs poorly for this example for se
     
     \item As a consequence of the first two points, the surrogate error bound is tight on the left, but quite loose on the right. 
 \end{itemize}
-Remedies for this deficiency are are described in Sect.\ \ref{sec:kerinferdata}.
+The shortcomings highlighted here do not speak against the idea of choosing to sample next where the prediction error is largest.  Rather, our surrogate models and their uncertainties must become more sophisticated.  Remedies are proposed in Sects.\ \ref{sec:Bootstrap} and \ref{sec:kerinferdata}.
 
 
 
@@ -809,29 +811,29 @@ Remedies for this deficiency are are described in Sect.\ \ref{sec:kerinferdata}.
 \subsection{Adaptive Sampling via Data-Based Kernel Inference} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The approach outlined of minimizing prediction error outlined in Sect.\  \ref{sec:MinPredErr} that leads to the  cone of reasonable functions in  \eqref{RKHScone} and the error bound for the surrogate model in \eqref{eq:DataErrBd} has its faults. The error bound is far too large in some places and barely large enough in others.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} and/or the value $\theta =1$ may not be the best suited to this particular $f$.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.
+Sect.\  \ref{sec:UnivarEx} highlights some of the drawbacks of sampling in a way to minimize prediction error arising from RKHS or kriging models.  While we value the underlying approach, the models and their uncertainties or errors are not well adapted to the functions being approximated or optimized.
 
-The value of $\theta$ can be inferred using an empirical Bayes perspective, which leads to the following optimization problem \cite{Hic17a}: 
+One improvement is to infer the value of $\theta$ inherent in the defintion of $K$ in \eqref{MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
     \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
-For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  The new function approximation has similar deficiencies as the original one in Sect.\ \ref{sec:MinPredErr}, and the suggested next data site is at a place where the function approximation is already quite good.
+For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unforutnately, the new surrogate model has similar deficiencies as the original one in Sect.\ \ref{sec:UnivarEx}, and the suggested next data site is at a place where the function approximation is already quite good.
 
-\begin{figure}[h]
+\begin{figure}
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
-    \caption{The left plot shows the function approximation with an error bound for the example $f$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 20$ rather than $\theta =1$.  The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the surrogate error bound is much larger.  The right plot shows the the function approximation with the surrogate error bound for the example $f$ in \eqref{eq:univarfun} but for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$.  The approximation is much improved, especially for smaller $x$, and the error bound is much smaller.  The next data sites for function approximation and optimization are in locations that makes intuitive sense.}
+    \caption{The left plot shows the function approximation with an error bound for the example $f$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$.  The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the surrogate error bound is much larger.  The right plot shows the the function approximation with the surrogate error bound for the example $f$ in \eqref{eq:univarfun} but for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$.  The approximation is much improved, especially for smaller $x$, and the error bound is much smaller.  The next data sites for function approximation and optimization are in locations that makes intuitive sense.}
     \label{fig:InferKernel}
 \end{figure}
 
-We may generalize the Mat\'ern kernel as follows to allow for the variation of the functions to be greater in one part of the domain than the other:
+A more helpful approach is to generalize the Mat\'ern kernel as follows to allow for the variation of the functions to be greater in one part of the domain than the other:
 \begin{equation} \label{modMatKer}
     K(t,x) = \exp(S(t+x))(1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}).
 \end{equation}
-Here we have considered the case $d=1$.  This new kernel maintains its properties of being symmetric and positive definite because all we have done is to multiply the original kernel by a $g(t)g(x)$ for some function $g$.  Here $S$ is a parameter to be inferred.
+Here we have considered the case $d=1$.  This new kernel maintains its properties of being symmetric and positive definite because all we have done is to multiply the original kernel by $g(t)g(x)$ for some function $g$.  Here $S$ is a parameter to be inferred.
 
-The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in \eqref{eq:univarfun}, but for  this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better and the error bound captures the true function better.  The next data site for function approximation according to \eqref{eq:minprederr}, $x_{\ID,11}$, is in a region where $f$ varies greatly.  The next data site for optimization according to \eqref{eq:minvaldef}, $x_{\MIN,11}$,  is on the side of the observed minimum where $f$ fluctuates more.
+The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better and the error bound captures the true function better.  The next data site for function approximation, $x_{\ID,11}$, is in a region where $f$ varies greatly.  The next data site for optimization, $x_{\MIN,11}$,  is on the side of the observed minimum where $f$ fluctuates more.
 
 This example of \emph{modifying a well-known kernel so that data-based inference of the parameters produce a better approximation} and a better adaptive sampling scheme is proof of concept.  We plan to extend this idea to a more general multivariate setting.  Some of the challenges will be how to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
 
@@ -848,7 +850,14 @@ To approximate or optimize a $d$-variate function using $n$ output data, where $
 \end{equation*}
 requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.
 
-There are different ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  \textbf{stopping here}
+There are different ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  
+
+
+
+
+
+
+\textbf{stopping here}
 
 
 of Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
