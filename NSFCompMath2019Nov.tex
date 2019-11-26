@@ -782,7 +782,7 @@ The next data sites for both the function approximation and minimization problem
 
 The adaptive sampling rule outlined here performs poorly for this example for several reasons.
 \begin{itemize}
-    \item The kernel, $K$, is not influenced by the output data, $\by$.
+    \item The form of the kernel, $K$, is not influenced by the output data, $\by$.
     
     \item The pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$.  The fact that the function is observed to fluctuate more on the left does not influence this surrogate error bound, $\SURRERR(n,\mX,\by)$.  In fact, $\bx_{\ID,11}$ is not affected by $\by$ at all.
     
