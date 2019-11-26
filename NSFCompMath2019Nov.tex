@@ -745,14 +745,21 @@ To make the error bound for the surrogate model data driven, let $\calc$ be the 
     \nonumber
     & = \Bigl\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \bignorm[\calf]{\SURR(n,\mX,\by)}^2 \Bigr \},
 \end{align}
-where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $c f \in \calc$ for any real $c$.  The intuition in defining this cone is: \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. 
+where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $c f \in \calc$ for any real $c$.  The intuition in defining this cone is: \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SURR(n,\mX,\by)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
+\begin{subequations} \label{eq:DataErrBd}
+\begin{gather}
+    \abs{f(\bx) - \SURR(n,\mX,\by)(\bx)} \le \SURRERR(,n,\mX,\by)(\bx) \qquad \forall f \in \calc, \\
+        \label{eq:DataErrBda} 
+   \text{where } \SURRERR(n,\mX,\by)(\bx) : = A_n \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by^T \mK^{-1} \by] }.
+\end{gather}
+\end{subequations}
+This data-driven error bound for the surrogate model now leads to acquisition functions in \eqref{eq:QOIval} and error bounds in \eqref{eq:QOIerr} for the two QOIs in \eqref{eq:ourQOIs} with their approximations in \eqref{eq:QOIhat}.
 
+One may question why the surrogate error bound in \eqref{eq:DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The numerical approximations, $\APP(f \pm c f_\perp)$, must be the same for all $c$, while the true solutions  $\QOI(f + c f_\perp)$ and  $\QOI(f - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate error bound cannot apply for all $f + c f_\perp$.
 
+The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpretation promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero\footnote{There is also value in assuming a simple polynomial form for the mean, just as the RKHS approach may be extended to reproduce polynomials exactly.} and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
 
-
-
-
-
+\subsection{A Univariate Example of the RKHS/Kriging Approach}
 
 To illustrate the RKHS approach, Fig.\ \ref{fig:sampleFun} displays the univariate function
 \begin{equation} \label{eq:univarfun}
@@ -761,54 +768,30 @@ f \colon x \mapsto \exp(-6x) \sin(8x+0.1)
 and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8,\linebreak 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{MatKer} with $\theta =1$.  
 Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Sect.\ \ref{sec:OurPlan}. 
 
-\begin{figure}[t]
+\begin{figure}
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEAndMin.eps}
-    \caption{The left plot shows $f: x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate model prediction error bound, $\SURRERR(10,\mX,\by)$ from \eqref{DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\ID,11}$. The largest true error occurs far away from $x_{\ID,11}$.}
+    \caption{The left plot shows $f: x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate model prediction error bound, $\SURRERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\ID,11}$. The largest true error occurs far away from $x_{\ID,11}$.}
     \label{fig:sampleFun}
 \end{figure}
 
 There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
 
-Recall our two key QOIs in \eqref{eq:ourQOIs}, their approximations in \eqref{eq:QOIhat}, and the acquisition functions in \eqref{eq:QOIval}. A common  acquisition function for function approximation correspond to the prediction error bound of the surrogate in \eqref{RKHSErrBd}:
-\begin{equation} \label{eq:minprederr}
-    \IDVAL(\bx,n,\mX,\by) =  K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx), \qquad 
-    \bx_{\ID, n+1} = \argmax_{\bx \in \Omega} \IDVAL(\bx,n,\mX,\by).
-\end{equation}
-Because $\norm[\calf]{f - \SURR(n,\mX,\by)}$ is independent of $\bx$, it can be ignored here. The next data site from this sampling rule is plotted on the right in Fig.\ \ref{fig:sampleFun}.  Since $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$  sampling at $x_{\ID, 11}$ does not help much.  We would want the adaptive sampling rule to choose a point on the left, where the surrogate error is larger.  The adaptive sampling rule in \eqref{eq:minprederr} performs poorly because it is essentially filling in holes in the domain and does not depend at all on the output data, $\by$.  Remedies for this deficiency are are described in Sections ???
+The next data sites for both the function approximation and minimization problems using our adaptive rule \eqref{eq:nextsample} with the acquisition functions \eqref{eq:QOIval} and $A_{10}$ are plotted on the right in Fig.\ \ref{fig:sampleFun}.  Note that $x_{\ID, 11} = x_{\MIN, 11}$ and $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$, so  sampling at $x_{\ID, 11}$ does not help much.  
 
-The optimization problem requires a more delicate expression for the prediction error to define the acquisition function, $\MINVAL$. Let $\calc$ be the cone of functions whose norms are approximated modestly well by the norms of their surrogates:  
-\begin{align}  \label{RKHScone}
-    \calc &:= \Bigl\{f \in \calf : \norm[\calf]{f - \SURR(n,\mX,\by)} \le A_n \bignorm[\calf]{\SURR(n,\mX,\by)} \Bigr \} \\
-    \nonumber
-    & = \Bigl\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \bignorm[\calf]{\SURR(n,\mX,\by)}^2 \Bigr \},
-\end{align}
-where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $c f \in \calc$ for any real $c$.  The intuition in defining this cone is: \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. 
+The adaptive sampling rule outlined here performs poorly for this example for several reasons.
+\begin{itemize}
+    \item The kernel, $K$, is not influenced by the output data, $\by$.
+    
+    \item The pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$.  The fact that the function is observed to fluctuate more on the left does not influence this surrogate error bound, $\SURRERR(n,\mX,\by)$.  In fact, $\bx_{\ID,11}$ is not affected by $\by$ at all.
+    
+    \item As a consequence of the first two points, the surrogate error bound is tight on the left, but quite loose on the right. 
+\end{itemize}
+Remedies for this deficiency are are described in Sect.\ \ref{sec:kerinferdata}.
 
-Noting that $\bignorm[\calf]{\SURR(n,\mX,\by)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that depends completely on output data: 
-\begin{subequations} \label{DataErrBd}
-\begin{gather}
-    \abs{f(\bx) - \SURR(n,\mX,\by)(\bx)} \le \SURRERR(,n,\mX,\by)(\bx) \qquad \forall f \in \calc, \\
-        \label{DataErrBda} 
-   \text{where } \SURRERR(n,\mX,\by)(\bx) : = A_n \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by^T \mK^{-1} \by] }.
-\end{gather}
-\end{subequations}
-It makes sense to define the acquisition function $\MINVAL$ by the improvement in the minimum function value one could optimistically hope to observe:
-\begin{subequations} \label{eq:minvaldef}
-\begin{gather} 
-    \MINVAL(\bx,n,\mX,\by) = \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)], \\
-    \bx_{\MIN, n+1} = \argmax_{\bx \in \Omega} \MINVAL(\bx,n,\mX,\by).
-\end{gather}
-\end{subequations}
 
-For our illustrative example with $A_{10} = 1$, the next data site for minimization, $x_{\MIN,11}$, coincides with that for function approximation, as seen in Fig.\ \ref{fig:sampleFun}.  Also shown are the minimum function value observed so far, $\MIN(10,\mX,\by)$ and its location, $\widehat{x}_{\MIN}$.  Again the weakness of this adaptive sampling method is that the surrogate model and its error bound do not make sufficient use of the output data $\by$.  See Sections ??? for an alternative.
 
-Fig.\ \ref{fig:sampleFun} also shows the surrogate model plus and minus its pointwise error bound.  This error bound is much too large on the right, and barely large enough on the left.  Again we remark that this state-of-the-art needs improvement, which we discuss in Sect.\ .
-
-One may question why the surrogate error bound in \eqref{DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The numerical approximations, $\APP(f \pm c f_\perp)$, must be the same for all $c$, while the true solutions  $\QOI(f + c f_\perp)$ and  $\QOI(f - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate error bound cannot apply for all $f + c f_\perp$.
-
-The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpretation promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero\footnote{There is also value in assuming a simple polynomial form for the mean, just as the RKHS approach may be extended to reproduce polynomials exactly.} and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -826,7 +809,7 @@ The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpre
 \subsection{Adaptive Sampling via Data-Based Kernel Inference} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The approach outlined of minimizing prediction error outlined in Sect.\  \ref{sec:MinPredErr} that leads to the  cone of reasonable functions in  \eqref{RKHScone} and the error bound for the surrogate model in \eqref{DataErrBd} has its faults. The error bound is far too large in some places and barely large enough in others.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} and/or the value $\theta =1$ may not be the best suited to this particular $f$.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.
+The approach outlined of minimizing prediction error outlined in Sect.\  \ref{sec:MinPredErr} that leads to the  cone of reasonable functions in  \eqref{RKHScone} and the error bound for the surrogate model in \eqref{eq:DataErrBd} has its faults. The error bound is far too large in some places and barely large enough in others.  Part of the reason is that the kernel $K$ chosen in \eqref{MatKer} and/or the value $\theta =1$ may not be the best suited to this particular $f$.  The function, $f$, that we intend to approximate belongs to an infinite number of function spaces or cones within those function spaces.  Our adaptive sampling scheme should help identify a function space for which $f$ is typical, not an unusual.
 
 The value of $\theta$ can be inferred using an empirical Bayes perspective, which leads to the following optimization problem \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
@@ -858,6 +841,7 @@ Another area weakness in the adaptive scheme outlined above is that the cone $\c
 \subsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\FJHNote{Needs fixing}
 To approximate or optimize a $d$-variate function using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
 \begin{equation*}
     f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
