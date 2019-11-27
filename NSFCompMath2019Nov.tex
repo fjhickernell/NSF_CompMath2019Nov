@@ -398,42 +398,42 @@ $\calc$ & set of output maps for which our adaptive sampling schemes are valid; 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Our problem}
 
-Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, from a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
-the representation of the simulation output (the identity map) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
+Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
+an inexpensive representation of the simulation output (the identity map) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
 \begin{equation} \label{eq:ourQOIs}
     \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
-Our problem is to numerically approximate these QOIs when $d \in [10, 100]$ and the feasible number of simulations, $n$, is relatively small, say in the hundreds.  The primary time cost of our algorithms will be the cost of running the simulations to obtain $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the data.
+Our problem is to numerically approximate these QOIs when $d \in [10, 100]$ and the feasible number of simulations, $n$, is relatively small, say in the hundreds.  The primary time cost of our algorithms is in obtaining the output, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the output.
 
 Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)$, where 
 \begin{itemize}
     \item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of POI vectors or data sites, and
     
-    \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless) output data.
+    \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless) \emph{output} data.
 \end{itemize}   
 The $n$-dependence of $\mX$ and $\by$ is implicit.  
 
-Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. Adaptive sampling uses past samples as a guide in choosing future samples.   That is, the next data site, $\bx_{n+1}$, is a function of both $\mX$ and  $\by$ and chosen to maximize the expected value it will bring to the $\APP$s:
+Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. Adaptive sampling uses past data as a guide in choosing future data sites.   That is, $\bx_{n+1}$, depends on both $\mX$ and  $\by$ and is chosen to maximize the expected value, $\VAL$, it will bring to the $\APP$s:
 \begin{equation} \label{eq:nextsample}
     \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
-Here $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, based on what has been already observed.  The $\VAL$ function is sometimes called an acquisition function and is typically based on a measure of uncertainty in $\APP(n,\mX,\by)$.
+Here $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, based on what has been already observed.  The $\VAL$ function is sometimes called an acquisition function and  typically depends on a measure of uncertainty or error in $\APP(n,\mX,\by)$.
 
-The uncertainty or error in our $\APP(n,\mX,\by)$ must also be inferred from data, so we need data-driven bounds error of the form 
+The uncertainty or error in $\APP(n,\mX,\by)$ must also be inferred from data, which mandates data-driven bounds error of the form 
 \begin{equation} \label{eq:errbd}
     \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
 \end{equation}
-either absolutely or with high probability.  Here, $\norm[\calg]{\cdot}$ corresponds to some function space norm for function approximation and the absolute value for minimization.  These error bounds in \eqref{eq:errbd} are valid for $\calc$,  precisely defined sets of well-behaved output maps between the input POIs and the simulation outputs that are amenable to this adaptive sampling philosophy.  These error bounds will allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
+either absolutely or with high probability.  Here, $\norm[\calg]{\cdot}$ corresponds to some function space norm for function approximation and the absolute value for minimization.  These error bounds in \eqref{eq:errbd} are valid for $\calc$,  precisely defined sets of well-behaved output maps, $f$, between the input POIs and the simulation outputs.  These error bounds allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
 
 
 \subsection{Our goal}
 
-The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and Mac Hyman (MH)---propose to find
+The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and James ``Mac'' Hyman (JMH)---propose to find
 \begin{itemize}
-    \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small,
-    \item Based on better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations $\mX$ and the output data, $\by$, 
-    \item Informed by rigorous (not heuristic) data-driven error bounds, $\ERR$, 
-    \item Valid for precisely defined sets---which will turn out to be cones--of output maps, $\calc$.
+    \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small, which are based on
+    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations $\mX$ and the output data, $\by$, which depend on
+    \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for
+    \item Precisely defined sets---which will turn out to be cones---of output maps, $\calc$.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -520,12 +520,12 @@ By utilizing adaptive sampling algorithms will create more computationally effic
 %\item[Integration] The surrogate model can be used as a control variate to detrend the integrand and speed up cubature \cite{}.  
 \end{description}
 
-\subsubsection{Applications} \notes{MH section}
+\subsubsection{Applications} \notes{JMH section}
 --- Lots of potential applications with references 
 These are illustrative of the applications we see for the algorithms. 
 
 
-\underline{Los Alamos Sea Ice Model}  \notes{Hunke has agreed write a letter of collaboration MH}
+\underline{Los Alamos Sea Ice Model}  \notes{Hunke has agreed write a letter of collaboration JMH}
 Accurate climate predictions depend on understanding role the that sea ice plays and how the ice couples with the ocean and atmospheric models.
 %About nine million square miles of sea ice float on top of the world’s high-latitude seas and oceans. Sea ice helps keep polar regions cool. It is constantly in motion and constantly changing internally. It influences Earth’s climate, wildlife, and people who must contend with it year-round. Sea ice makes navigation difficult, creating challenges for commercial shipping, mining and energy development, fishing, hunting, tourism, scientific research, military bases, and defense operations.  
 We will collaborate with Elizabeth Hunke (Los Alamos National Laboratory) to apply our methodology to predicting the sea ice environment.   Hunke is the principal developer of  Los Alamos sea ice model (CICE) \cite{hunke2017cice, hunke2010cice}. This model incorporates physical effects of the atmosphere and ocean on the ice, and accounts for the physical feedback mechanisms between the sea ice and the full Earth climate system models. Each CICE simulation can take hours to run, even on the world's fastest computers.
@@ -537,7 +537,7 @@ Hunke and her colleagues have conduced 150 CICE model runs selected to space fil
 Our goal is will be to collaborate with Hunke (see the letter of collaboration) and quantify the sensitivity of the model predictions for sea ice coverage and volume with respect to 39 model parameters.  We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
     
   
-\underline{Volcanic Impact on North Atlantic Oscillation:}\notes{I'm writing to get a letter of collaboration for this project. This is a placeholder until I get the approval to use the data. MH}
+\underline{Volcanic Impact on North Atlantic Oscillation:}\notes{I'm writing to get a letter of collaboration for this project. This is a placeholder until I get the approval to use the data. JMH}
 Large tropical volcanic eruptions have received attention in the scientific community due to the wide range of effects they cause in the climate system. When ${SO_2}$ is injected into the atmosphere it is converted into sulfate aerosols which impose radiative forcing, most notably, surface cooling due to reflected short-wave radiation and stratospheric warming due to an absorption of longwave radiation in the lower stratosphere \cite{zanchettin2013background}. Together, this radiative forcing causes changes in the climate system including surface and sea surface temperatures, zonal and meridional winds, global precipitation patterns and more \cite{legrande2015volcanic}.  Such large perturbations in the climate system have the ability to cause major global change in climate patterns.
 
 One of these distinct patterns of the climatic response after eruptions is post eruptive winter warming \cite{zambri2017northern}. When an eruption occurs in the low latitude regions of the world, the stratospheric warming at the equator perturbs the global atmospheric circulation. This in turn can cause changes in circulation even in distantly connected regions such as high latitude North Atlantic Ocean Basin \cite{zambri2017northern}. The observed winter warming response is coincident with a strengthening of the polar vortex \cite{robock1995volcanic}, which causes fewer cold air mass outbreaks in the northern hemisphere, thus leading to an anomalously warm post-eruptive winter response.
@@ -560,7 +560,7 @@ These methods consider the distance and function values when estimating values i
 These methods assume that the influence of a function value decreases with distance.  We use a Gaussian kernal for the weights in DWLS with variance depending on the distance to the samples neighboring the location where it will be evaluated.
 The uncertainty in the interpolated values can be estimated by  by refitting the data, where the DWLS Gaussian weights are reweighted (multiplied) by Bayesian bootstrap weights.  
 
-In kriging,  the distance between the sample points defines the spatial correlation that can be used to predict variation in the surface. We will compare the DWLS with the DACE kriging MATLAB algorithm \cite{}. \notes{talk about variance estimation with kriging.  Do we want to talk about Gaussian process models? MH}
+In kriging,  the distance between the sample points defines the spatial correlation that can be used to predict variation in the surface. We will compare the DWLS with the DACE kriging MATLAB algorithm \cite{}. \notes{talk about variance estimation with kriging.  Do we want to talk about Gaussian process models? JMH}
 
 \item \underline{Adaptive samplers:}
 
@@ -1041,6 +1041,14 @@ to discuss with software developers about good practices for adaptive algorithms
 \emph{New Applications of \QMC.}
 The application of \QMC has focused on a few areas, such as financial modeling and computer 
 graphics, but there is potential for much wider application.  LlAJR has collaborated with Fermilab implementing \QMC algorithms, and we plan to continue.    New applications of \QMC are arising from \SAMSIQMC that we plan to pursue.  KZ is exploring how to use adaptive \QMC to more efficiently perform Bayesian inference.
+
+\section{Project Management and Collaboration}
+This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where JMH has a courtesy appointment.  FJH will lead the effort at Illinois Tech, and JMH will lead the effort at Tulane.  FJH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models.  They will also lead the exploration of the data-inferred reproducing/covariance kernels.  JMH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap.  He will also lead the application of our new algorithms to the large-scale application problems.  
+
+The PhD student will be based at Illinois Tech during the academic year under the direct supervision of FJH and YD.  The PhD student will work on part of the algorithmic developments, its theoretical analysis, and its implementation in freely available software.  During the summer, the PhD student will join JMH in Los Alamos and be involved with testing our algorithms on challenging application problems.  The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting bite-sized aspects of the algorithms and their performance.
+
+Our research groups will meet regularly via video conference and in person a couple of times per year at one of our campuses or at conferences.
+
 
 
 \newpage
