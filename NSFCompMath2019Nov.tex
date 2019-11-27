@@ -5,12 +5,12 @@
 \usepackage{latexsym,amsfonts,amsmath,amsthm,epsfig,extdash,multirow}
 \usepackage{stackrel,tabularx,mathtools,enumitem,longtable,xspace}
 \usepackage[dvipsnames]{xcolor}
-\usepackage[numbers]{natbib}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage{hyperref,accents, booktabs}
 \usepackage{algorithm, algorithmicx}
 \usepackage{anyfontsize}
 \usepackage{cleveref}
-\usepackage[sort&compress]{natbib}
+%\usepackage[sort&compress]{natbib}
 
 \usepackage{algpseudocode}
 \algnewcommand\algorithmicparam{\textbf{Parameters:}}
@@ -378,7 +378,7 @@ Adaptive Multivariate Sampling to Accelerate  Discovery\\
 \vspace{-6ex}
 
 
-\notes{Do we need to highlight the research questions in the Intellectual Merit section to distinguish between what has been done or what is already known and what we will be exploring?}
+\notes{We will highlight the research questions in the Intellectual Merit section using \emph{\ldots}}
 
 \noindent \textbf{Notation}
 
@@ -535,22 +535,24 @@ Accurate climate predictions depend on understanding role the that sea ice plays
 %About nine million square miles of sea ice float on top of the world’s high-latitude seas and oceans. Sea ice helps keep polar regions cool. It is constantly in motion and constantly changing internally. It influences Earth’s climate, wildlife, and people who must contend with it year-round. Sea ice makes navigation difficult, creating challenges for commercial shipping, mining and energy development, fishing, hunting, tourism, scientific research, military bases, and defense operations.  
 We will collaborate with Elizabeth Hunke (Los Alamos National Laboratory) to apply our methodology to predicting the sea ice environment.   Hunke is the principal developer of  Los Alamos sea ice model (CICE) \cite{hunke2017cice, hunke2010cice}. This model incorporates physical effects of the atmosphere and ocean on the ice, and accounts for the physical feedback mechanisms between the sea ice and the full Earth climate system models. Each CICE simulation can take hours to run, even on the world's fastest computers.
 
-Under the influence of wind and ocean currents, the  fresh ice moves on the ocean surface, and melts.  The melting creates a layer of fresher water that disrupts the ocean convection and vertical motion.  This effect could modify the global “conveyor belt” (Gulf Stream) of heat moving through the world’s oceans and disrupt the entire Earth's environment. 
+%Under the influence of wind and ocean currents, the  fresh ice moves on the ocean surface, and melts.  The melting creates a layer of fresher water that disrupts the ocean convection and vertical motion.  This effect could modify the global “conveyor belt” (Gulf Stream) of heat moving through the world’s oceans and disrupt the entire Earth's environment. 
    
-Hunke and her colleagues have conduced 150 CICE model runs selected to space filling in the 39 dimensional  space of feasible  parameters.   Of these, only about 100 of the runs were successful, due to parameter induced instabilities.  They then added an additional 400 low discrepancy Sobol samples in regions where the simulation was stable.  In their preliminary studies, they confirmed that creating surrogate models for high-dimensional function, such as their 39 dimensional sample space, is difficult and not practical using the standard approaches \cite{bengio2006curse, o2010oxford}.  We will use our two-step surrogate model to identify the active parameters and predict the response between the sample points.  
+Hunke and her colleagues have conduced 150 CICE model runs selected to space filling in the 39 dimensional  space of feasible  parameters.   Of these, only about 100 of the runs were successful, due to parameter induced instabilities.  They then added an additional 400 low discrepancy Sobol samples in regions where the simulation was stable.  In their preliminary studies, they confirmed that creating surrogate models for high-dimensional function, such as their 39 dimensional sample space, is difficult and not practical using the standard approaches \cite{bengio2006curse, o2010oxford}.  We will use our two-step surrogate model to identify the active parameters \cite{constantine2014active} and predict the response between the sample points.  
 
-Our goal is will be to collaborate with Hunke (see the letter of collaboration) and quantify the sensitivity of the model predictions for sea ice coverage and volume with respect to 39 model parameters.  We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
+We will collaborate with Hunke to quantify the sensitivity of the model predictions for sea ice coverage and volume with respect to 39 model parameters.  We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
     
   
 \underline{Volcanic Impact on North Atlantic Oscillation:}\notes{I'm writing to get a letter of collaboration for this project. This is a placeholder until I get the approval to use the data. JMH}
-Large tropical volcanic eruptions inject ${SO_2}$ into the atmosphere where it is converted into sulfate aerosols.  These aerosols reflect short-wave radiation and cause changes in the climate system including surface and sea surface temperatures, zonal and meridional winds, global precipitation patterns and more \cite{zanchettin2013background, legrande2015volcanic}.  Such large perturbations in the climate system have the ability to cause major global change in climate patterns.
+Large volcanic eruptions inject massive amounts of ${SO_2}$ into the upper atmosphere where it is converted into sulfate aerosols.  These aerosols reflect short-wave radiation and cause changes in the surface and sea surface temperatures, upper atmospheric winds, and  global precipitation patterns \cite{zanchettin2013background, legrande2015volcanic}.  The large perturbations can lead to  major changes in global climate patterns.
 
-We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide large-scale simulations using the The Goddard Institute for Space Studies (GISS) climate model E2.1-R to investigate the impact of volcanic eruptions on the climate
-\cite{zanchettin2016model}.  MH is mentoring Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies.  Last summer she was an undergraduate research intership at GISS and plans to 
+We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide sampling large-scale simulations using the The Goddard Institute for Space Studies (GISS) large-scale climate model E2.1-R to investigate the impact of volcanic eruptions on the climate
+\cite{zanchettin2016model}.  MH is mentoring Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies.  Last summer she worked at GISS with Tsigaridis and LeGrande as an undergraduate research intern and will be collaborating with us to quantify the sensitivity of model model predictions to the initial state of the North Atlantic Oscillation. Other quantities of interest include the geopotential heights and upper atmosphere wind anomalies and sea level pressure in the North Atlantic basin. 
 
-
-After initial sampling and processing, sensitivity analysis will be used to quantify how sensitive the model is to initial NAO phase. Quantities of interest including geopotential heights and wind anomalies in the troposphere and stratosphere and sea level pressure in the North Atlantic basin will be analyzed in the NAO parameter space. A relative sensitivity index for each parameter will be used to measure the sensitivity of the polar vortex to initial NAO conditions.
-
+\underline{Stochastic Network Model for Spread of Sexually Transmitted Diseases:}  The previous climate models are deterministic models, where multiple simulates with the same parameter values predict identical results.  For the past six years, MH has been collaborating with the Tulane School of Public Health and Topical Medicine to develop a stochastic Monte Carlo Markov Chain agent-based model for the transmission of sexually transmitted infections (STIs) in New Orleans \cite{}.  
+The STIs spread through a dynamic heterosexual bipartite network of 20,000 nodes and include treatment, contact tracing, condom use, and partner notification. The network changes each day as people change their short-term and long-term partnerships.  
+Since the partnership network and disease transmission is modeled as a stochastic process, multiple simulations with the same parameter values produce a multivariate probability distribution of QOIs.  Each ensemble of runs can take hours on the Tulane Cypress 300+ TFlop supercomputer. 
+We will use our adaptive sampling to help guide the optimization of different mitigation efforts for slowing the spread of STIs.  
+In this example the mean-field DWLS model will identify the underlying trends in the predictions, and the kriging Gaussian Process model will quantify the aleatory uncertainty created by the stochastic events.
 
 \subsubsection{Software}
 Our algorithms will be implemented in open source libraries for use by the modeling community.  The software will include the following routines:
@@ -890,7 +892,7 @@ requires at least $n = 2^d$ output data to approximate or optimize well.  Expone
 The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has shown that the growth in the sample size, $n$, required to solve a problem involving $d$ POIs to an error of $\varepsilon$ can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$ if the coordinates can be ordered so that their importance decays sufficiently fast.  
 
 As an example, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
-\begin{equation} \label{eq:MatKer}
+\begin{equation} \label{eq:ProdMatKer}
     K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
 \end{equation}
 If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough.
