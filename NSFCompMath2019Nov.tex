@@ -460,7 +460,7 @@ Because the primary time cost in our problems is acquiring output data, we are n
 
 The \emph{exploit} stage uses surrogate models based on all past samples, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, to detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$.  For $\APPID$ the surrogate model needs to represent $f$ well throughout its domain, $\Omega$, while for $\APPMIN$ the surrogate model only needs to represent $f$ well near potential minima. This information is then used to optimize the placement of future samples that reduce the uncertainty in the subsequent  QOIs. 
 
-The acquisition function, $\VAL(\bx,n,\mX, \by)$, is constructed to guide us in choosing the next data site, $\bx_{n+1}$.  For function approximation, $\VAL(\bx,n,\mX, \by)$ corresponds to a pointwise error bound on the surrogate model, and for  minimization,  $\VAL(\bx,n,\mX, \by)$ corresponds to the expected improvement in the approximation to the minimum:
+The acquisition function, $\VAL(\bx,n,\mX, \by)$, guides us in choosing the next data site, $\bx_{n+1}$.  For function approximation, $\VAL(\bx,n,\mX, \by)$ corresponds to a pointwise error bound on the surrogate model, and for  minimization,  $\VAL(\bx,n,\mX, \by)$ corresponds to the expected improvement in the approximation to the minimum:
 \begin{subequations} \label{eq:QOIval}
 \begin{align}
 \label{eq:idval}
@@ -469,7 +469,7 @@ The acquisition function, $\VAL(\bx,n,\mX, \by)$, is constructed to guide us in 
       \MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)], 
 \end{align}
 \end{subequations}
-Based on \eqref{eq:nextsample}, the next data site, $\bx_{n+1}$ is chosen.   The acquisition functions are also related to the uncertainties or error bounds for the QOIs:
+The next data site, $\bx_{n+1}$ maximizes the acquisition function (see \eqref{eq:nextsample}).   The acquisition functions are related to the uncertainties or error bounds for the QOIs:
 \begin{subequations} \label{eq:QOIerr}
 \begin{align}
 \label{eq:iderr}
@@ -480,9 +480,9 @@ Based on \eqref{eq:nextsample}, the next data site, $\bx_{n+1}$ is chosen.   The
      & =: \MINERR(n,\mX,\by).
 \end{align}
 \end{subequations}
-This exploit stage is repeated until the time budget is exhausted or the uncertainty tolerance is met.
+The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
-Because function approximation, optimization are homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  It then makes sense that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
+Because function approximation and optimization are homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  It then follows that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
 
 
 
