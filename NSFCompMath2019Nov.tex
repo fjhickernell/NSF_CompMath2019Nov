@@ -10,6 +10,7 @@
 \usepackage{algorithm, algorithmicx}
 \usepackage{anyfontsize}
 \usepackage{cleveref}
+\usepackage[sort&compress]{natbib}
 
 \usepackage{algpseudocode}
 \algnewcommand\algorithmicparam{\textbf{Parameters:}}
@@ -20,7 +21,6 @@
 \algnewcommand\RETURN{\State \textbf{Return }}
 
 %\usepackage{showlabels}
-
 
 
 \newcommand{\myshade}{85}
@@ -40,10 +40,13 @@
 % This package prints the labels in the margin
 %\usepackage[notref,notcite]{showkeys}
 
-
-%\pagestyle{empty}
-\thispagestyle{plain}
+%\numberwithin{page} %add section before page
 \pagestyle{plain}
+%\setcounter{page}{1}
+%\renewcommand{\thepage}{C-\arabic{page}}
+
+%\thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
+%\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
 
 \headsep-0.6in
 %\headsep-0.45in
@@ -517,6 +520,37 @@ By utilizing adaptive sampling algorithms will create more computationally effic
 %\item[Integration] The surrogate model can be used as a control variate to detrend the integrand and speed up cubature \cite{}.  
 \end{description}
 
+\subsubsection{Applications} \notes{MH section}
+--- Lots of potential applications with references 
+These are illustrative of the applications we see for the algorithms. 
+
+
+\underline{Los Alamos Sea Ice Model}  \notes{Hunke has agreed write a letter of collaboration MH}
+Accurate climate predictions depend on understanding role the that sea ice plays and how the ice couples with the ocean and atmospheric models.
+%About nine million square miles of sea ice float on top of the world’s high-latitude seas and oceans. Sea ice helps keep polar regions cool. It is constantly in motion and constantly changing internally. It influences Earth’s climate, wildlife, and people who must contend with it year-round. Sea ice makes navigation difficult, creating challenges for commercial shipping, mining and energy development, fishing, hunting, tourism, scientific research, military bases, and defense operations.  
+We will collaborate with Elizabeth Hunke (Los Alamos National Laboratory) to apply our methodology to predicting the sea ice environment.   Hunke is the principal developer of  Los Alamos sea ice model (CICE) \cite{hunke2017cice, hunke2010cice}. This model incorporates physical effects of the atmosphere and ocean on the ice, and accounts for the physical feedback mechanisms between the sea ice and the full Earth climate system models. Each CICE simulation can take hours to run, even on the world's fastest computers.
+
+Under the influence of wind and ocean currents, the  fresh ice moves on the ocean surface, and melts.  The melting creates a layer of fresher water that disrupts the ocean convection and vertical motion.  This effect could modify the global “conveyor belt” (Gulf Stream) of heat moving through the world’s oceans and disrupt the entire Earth's environment. 
+   
+Hunke and her colleagues have conduced 150 CICE model runs selected to space filling in the 39 dimensional  space of feasible  parameters.   Of these, only about 100 of the runs were successful, due to parameter induced instabilities.  They then added an additional 400 low discrepancy Sobol samples in regions where the simulation was stable.  In their preliminary studies, they confirmed that creating surrogate models for high-dimensional function, such as their 39 dimensional sample space, is difficult and not practical using the standard approaches \cite{bengio2006curse, o2010oxford}.  We will use our two-step surrogate model to identify the active parameters and predict the response between the sample points.  
+
+Our goal is will be to collaborate with Hunke (see the letter of collaboration) and quantify the sensitivity of the model predictions for sea ice coverage and volume with respect to 39 model parameters.  We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
+    
+  
+\underline{Volcanic Impact on North Atlantic Oscillation:}\notes{I'm writing to get a letter of collaboration for this project. This is a placeholder until I get the approval to use the data. MH}
+Large tropical volcanic eruptions have received attention in the scientific community due to the wide range of effects they cause in the climate system. When ${SO_2}$ is injected into the atmosphere it is converted into sulfate aerosols which impose radiative forcing, most notably, surface cooling due to reflected short-wave radiation and stratospheric warming due to an absorption of longwave radiation in the lower stratosphere \cite{zanchettin2013background}. Together, this radiative forcing causes changes in the climate system including surface and sea surface temperatures, zonal and meridional winds, global precipitation patterns and more \cite{legrande2015volcanic}.  Such large perturbations in the climate system have the ability to cause major global change in climate patterns.
+
+One of these distinct patterns of the climatic response after eruptions is post eruptive winter warming \cite{zambri2017northern}. When an eruption occurs in the low latitude regions of the world, the stratospheric warming at the equator perturbs the global atmospheric circulation. This in turn can cause changes in circulation even in distantly connected regions such as high latitude North Atlantic Ocean Basin \cite{zambri2017northern}. The observed winter warming response is coincident with a strengthening of the polar vortex \cite{robock1995volcanic}, which causes fewer cold air mass outbreaks in the northern hemisphere, thus leading to an anomalously warm post-eruptive winter response.
+
+Pinatubo-like eruption simulations were run in GISS Model E2.1-R following protocol set forth by the Volcanic Model Intercomparison Project \cite{zanchettin2016model}. GISS model E2.1-R was run with a prescribed noninteractive (NINT) aerosol modulation and coupled with a dynamic ocean representation. A preindustrial control run was used to sample background North Atlantic Oscillation (NAO) and the El Nino Southern Oscillation (ENSO) phases using an area-weighted time series index for each winter. From the control time series model run years were chosen to sample from each condition (positive/negative/neutral phases) with 9 ensembles for each condition and 3 from each co-condition. 
+
+Analysis of model output was conducted by taking ensemble member anomalies from an equivalent control period. Ensemble group means (e.g. positive NAO) were analyzed for trends in the response of surface temperature, sea surface temperature, sea level pressure and wind anomalies. Results showed little correlation between the initial phase of ENSO at the time of eruption and these quantities of interest. The initial phase of NAO however caused distinct changes in surface temperature, sea level pressure and zonal wind anomalies particularly in the first winter after the eruption (which occurred in June for all ensembles.)
+
+The proposed research will expand upon and refine the methods of the described previous research. More advanced techniques will be used to sample from NAO conditions namely the principal component based Hurrell North Atlantic Oscillation Index- a time series of the leading Empirical Orthogonal Function in the North Atlantic Basin. A new set of ensemble members will be constructed sampling from positive, negative and neutral values of the NAO all under neutral ENSO conditions to eliminate variability due to ENSO in ensemble members. More advanced signal processing methods using Fourier transformations will also be used in order to process out seasonal variability of simulations and focus instead on the response which is sensitive to volcanic eruptions.
+
+After initial sampling and processing, sensitivity analysis will be used to quantify how sensitive the model is to initial NAO phase. Quantities of interest including geopotential heights and wind anomalies in the troposphere and stratosphere and sea level pressure in the North Atlantic basin will be analyzed in the NAO parameter space. A relative sensitivity index for each parameter will be used to measure the sensitivity of the polar vortex to initial NAO conditions.
+
+
 \subsubsection{Software}
 Our algorithms will be implemented in open source libraries for use by the modeling community.  The software will include the following routines:
 \begin{itemize}
@@ -718,7 +752,7 @@ This approach to adaptive sampling involves measuring the variation in predictio
 Some existing adaptive sampling schemes are based on minimizing the prediction error of the QOI.  This is a good philosophy, and one we embrace in this research.  However, as this approach is typically implemented, the surrogate models or their error bounds do not make sufficient use of the output data, $\by$, to be effective.   We illustrate this weakness here for a popular family of surrogate models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{RKHS or Kriging Surrogate Models} \label{sec:MinPredErr}
+\subsubsection{RKHS or Kriging Surrogate Models} \label{sec:RKHSKrigSurrModel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Suppose that the output map, $f$, belongs to an RKHS $\calf$.  A commonly used reproducing kernel is the following member of the Mat\'ern family:
@@ -835,7 +869,7 @@ Here we have considered the case $d=1$.  This new kernel maintains its propertie
 
 The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better and the error bound captures the true function better.  The next data site for function approximation, $x_{\ID,11}$, is in a region where $f$ varies greatly.  The next data site for optimization, $x_{\MIN,11}$,  is on the side of the observed minimum where $f$ fluctuates more.
 
-This example of \emph{modifying a well-known kernel so that data-based inference of the parameters produce a better approximation} and a better adaptive sampling scheme is proof of concept.  We plan to extend this idea to a more general multivariate setting.  Some of the challenges will be how to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
+This example of \emph{modifying a well-known kernel so that data-based inference of the parameters produce a better approximation} and a better adaptive sampling scheme is proof of concept.  We plan to extend this idea to a more general multivariate setting.  Some of the challenges will be to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
 
 Another area weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in  \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$.  We would rather that the definition of $\calc$ rely only on the design satisfying some modest properties, such as the $\bx_i$ filling  $\Omega$ relatively well.  This is also a question for research.
 
@@ -1013,6 +1047,7 @@ graphics, but there is potential for much wider application.  LlAJR has collabor
 \clearpage
 %\pagenumbering{arabic}
 \setcounter{page}{1}
+%\renewcommand{\thepage}{D-\arabic{page}}
 
 \bibliographystyle{spbasic.bst}
 
