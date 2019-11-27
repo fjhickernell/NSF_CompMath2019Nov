@@ -65,6 +65,8 @@
 \newcommand{\Rlang}{R\xspace}
 \newcommand{\Julia}{Julia\xspace}
 
+\newcommand{\fredparagraph}[1]{\paragraph*{\emph{#1}}}
+
 \textwidth6.4in
 \setlength{\oddsidemargin}{0in}
 \setlength{\evensidemargin}{0in}
@@ -370,10 +372,13 @@ Adaptive Multivariate Sampling to Accelerate  Discovery\\
 \end{center}
 \vspace{-2ex}
 
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{3}
 \tableofcontents
 
 \vspace{-6ex}
+
+
+\notes{Do we need to highlight the research questions in the Intellectual Merit section to distinguish between what has been done or what is already known and what we will be exploring?}
 
 \noindent \textbf{Notation}
 
@@ -538,15 +543,11 @@ Our goal is will be to collaborate with Hunke (see the letter of collaboration) 
     
   
 \underline{Volcanic Impact on North Atlantic Oscillation:}\notes{I'm writing to get a letter of collaboration for this project. This is a placeholder until I get the approval to use the data. JMH}
-Large tropical volcanic eruptions have received attention in the scientific community due to the wide range of effects they cause in the climate system. When ${SO_2}$ is injected into the atmosphere it is converted into sulfate aerosols which impose radiative forcing, most notably, surface cooling due to reflected short-wave radiation and stratospheric warming due to an absorption of longwave radiation in the lower stratosphere \cite{zanchettin2013background}. Together, this radiative forcing causes changes in the climate system including surface and sea surface temperatures, zonal and meridional winds, global precipitation patterns and more \cite{legrande2015volcanic}.  Such large perturbations in the climate system have the ability to cause major global change in climate patterns.
+Large tropical volcanic eruptions inject ${SO_2}$ into the atmosphere where it is converted into sulfate aerosols.  These aerosols reflect short-wave radiation and cause changes in the climate system including surface and sea surface temperatures, zonal and meridional winds, global precipitation patterns and more \cite{zanchettin2013background, legrande2015volcanic}.  Such large perturbations in the climate system have the ability to cause major global change in climate patterns.
 
-One of these distinct patterns of the climatic response after eruptions is post eruptive winter warming \cite{zambri2017northern}. When an eruption occurs in the low latitude regions of the world, the stratospheric warming at the equator perturbs the global atmospheric circulation. This in turn can cause changes in circulation even in distantly connected regions such as high latitude North Atlantic Ocean Basin \cite{zambri2017northern}. The observed winter warming response is coincident with a strengthening of the polar vortex \cite{robock1995volcanic}, which causes fewer cold air mass outbreaks in the northern hemisphere, thus leading to an anomalously warm post-eruptive winter response.
+We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide large-scale simulations using the The Goddard Institute for Space Studies (GISS) climate model E2.1-R to investigate the impact of volcanic eruptions on the climate
+\cite{zanchettin2016model}.  MH is mentoring Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies.  Last summer she was an undergraduate research intership at GISS and pa
 
-Pinatubo-like eruption simulations were run in GISS Model E2.1-R following protocol set forth by the Volcanic Model Intercomparison Project \cite{zanchettin2016model}. GISS model E2.1-R was run with a prescribed noninteractive (NINT) aerosol modulation and coupled with a dynamic ocean representation. A preindustrial control run was used to sample background North Atlantic Oscillation (NAO) and the El Nino Southern Oscillation (ENSO) phases using an area-weighted time series index for each winter. From the control time series model run years were chosen to sample from each condition (positive/negative/neutral phases) with 9 ensembles for each condition and 3 from each co-condition. 
-
-Analysis of model output was conducted by taking ensemble member anomalies from an equivalent control period. Ensemble group means (e.g. positive NAO) were analyzed for trends in the response of surface temperature, sea surface temperature, sea level pressure and wind anomalies. Results showed little correlation between the initial phase of ENSO at the time of eruption and these quantities of interest. The initial phase of NAO however caused distinct changes in surface temperature, sea level pressure and zonal wind anomalies particularly in the first winter after the eruption (which occurred in June for all ensembles.)
-
-The proposed research will expand upon and refine the methods of the described previous research. More advanced techniques will be used to sample from NAO conditions namely the principal component based Hurrell North Atlantic Oscillation Index- a time series of the leading Empirical Orthogonal Function in the North Atlantic Basin. A new set of ensemble members will be constructed sampling from positive, negative and neutral values of the NAO all under neutral ENSO conditions to eliminate variability due to ENSO in ensemble members. More advanced signal processing methods using Fourier transformations will also be used in order to process out seasonal variability of simulations and focus instead on the response which is sensitive to volcanic eruptions.
 
 After initial sampling and processing, sensitivity analysis will be used to quantify how sensitive the model is to initial NAO phase. Quantities of interest including geopotential heights and wind anomalies in the troposphere and stratosphere and sea level pressure in the North Atlantic basin will be analyzed in the NAO parameter space. A relative sensitivity index for each parameter will be used to measure the sensitivity of the polar vortex to initial NAO conditions.
 
@@ -756,7 +757,7 @@ Some existing adaptive sampling schemes are based on minimizing the prediction e
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Suppose that the output map, $f$, belongs to an RKHS $\calf$.  A commonly used reproducing kernel is the following member of the Mat\'ern family:
-\begin{equation} \label{MatKer}
+\begin{equation} \label{eq:MatKer}
     K(\bt,\bx) = (1 + \theta \norm[2]{\bt-\bx}) \exp(-\theta\norm[2]{\bt-\bx}),
 \end{equation}
 where $\theta$ is a parameter to be set or inferred.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs.  The minimum norm interpolant of $f$ in this $\calf$ is the surrogate model
@@ -801,14 +802,14 @@ To illustrate the RKHS approach, Fig.\ \ref{fig:sampleFun} displays the univaria
 \begin{equation} \label{eq:univarfun}
 f \colon x \mapsto \exp(-6x) \sin(8x+0.1)
 \end{equation}
-and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8,\linebreak 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{MatKer} with $\theta =1$.  
+and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8,\linebreak 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:MatKer} with $\theta =1$.  
 Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Sect.\ \ref{sec:OurPlan}. 
 
 \begin{figure}
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEAndMin.eps}
-    \caption{The left plot shows $f: x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate model prediction error bound, $\SURRERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\ID,11}$. The largest true error occurs far away from $x_{\ID,11}$.}
+    \caption{The left plot shows $f: x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{eq:MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate model prediction error bound, $\SURRERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\ID,11}$. The largest true error occurs far away from $x_{\ID,11}$.}
     \label{fig:sampleFun}
 \end{figure}
 
@@ -847,7 +848,7 @@ The shortcomings highlighted here do not speak against the idea of choosing to s
 
 Sect.\  \ref{sec:UnivarEx} highlights some of the drawbacks of sampling in a way to minimize prediction error arising from RKHS or kriging models.  While we value the underlying approach, the models and their uncertainties or errors are not well adapted to the functions being approximated or optimized.
 
-One improvement is to infer the value of $\theta$ inherent in the defintion of $K$ in \eqref{MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
+One improvement is to infer the value of $\theta$ inherent in the defintion of $K$ in \eqref{eq:MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
     \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
@@ -877,40 +878,33 @@ Another area weakness in the adaptive scheme outlined above is that the cone $\c
 \subsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\FJHNote{Needs fixing}
 To approximate or optimize a $d$-variate function using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
 \begin{equation*}
     f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
 \end{equation*}
-requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.
+requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple that we will explore.
 
-There are different ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fredparagraph{Coordinate Weights}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has shown that the growth in the sample size, $n$, required to solve a problem involving $d$ POIs to an error of $\varepsilon$ can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$ if the coordinates can be ordered so that their importance decays sufficiently fast.  
 
-
-
-
-
-
-\textbf{stopping here}
-
-
-of Although many of our key ideas can be illustrated by univariate function approximation, one key idea only makes sense in a multivariate setting.  
-Let $\calf$, be the finite dimensional Banach space of multi-linear functions:
-\begin{subequations} \label{ex:multilin}
-\begin{gather}
-    \calf = \left\{f:[0,1]^d \to \reals : f = \sum_{\bk \in \{0,1\}^d} \hf(\bk) u_{\bk} \right \}, 
-    \\ 
-    u_{\bk} := \prod_{k_\ell =1 }x_\ell, \quad 
-    \norm[\calf]{f} : = \Bignorm[1]{\bigl(\hf(\bk)/\lambda_\bk\bigr)_{\bk \in \{0,1\}^d}},  \quad \norm[\calg]{f} : = \norm[1]{\bigl(\hf(\bk))_{\bk \in \{0,1\}^d}},
-\end{gather}
-\end{subequations}
-for some prescribed set of weights, $(\lambda_\bk)_{\bk \in \{0,1\}^d}$, whose ordering, $\lambda_{\bk_1} \ge \lambda_{\bk_2} \ge \cdots \ge \lambda_{\bk_{2^d}}$, implies an ordering of the $\bk$.  For the sake of simplicity, suppose that you are able to sample the coefficients, $\hf(\bk)$.  In this case, the optimal approximation in the $\calg$-norm is $\APP(f,n) = \sum_{i=1}^n \hf(\bk_i) \bx_{\bk_i}$, and the error of this approximation is 
-\begin{equation}
-    \norm[\calg]{f - \APP(f,n)} = \norm[1]{\bigl(\hf(\bk_i) \bigr)_{i=n+1}^\infty} \le \lambda_{\bk_{n+1}} \norm[\calf]{f - \APP(f,n)} \le \lambda_{\bk_{n+1}} \norm[\calf]{f}.
+As an example, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
+\begin{equation} \label{eq:MatKer}
+    K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
 \end{equation}
+If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough.
 
-\repeatkeyidea{keyidealowdim}{\keyidealowdimtext}
-If the $\lambda_\bk$ are all unity, then all multilinear terms are equally important according to the definition of the $\calf$-norm, and a function with unit $\calf$-norm may require $2^d$ data to ensure that the error is less than $1$.  This requirement explodes exponentially with increasing $d$.  However, if not all coordinates are equally important, and multilinear terms involving several coordinates are even less important, e.g., $\lambda_{\bk} = \prod_{k_\ell =1} w_\ell$, with the coordinate weights, $w_\ell$, decaying quickly enough, then it can be shown that $\lambda_{\bk_{n+1}}$ decays with $n$ and the curse of dimensionality is overcome \cite{DinEtal20a}.  This idea is elaborated in Sect.\ ???
+For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will explore how to infer the coordinate weights from our exploratory sample.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fredparagraph{Active Subspaces}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+An alternative to permuting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of their importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also explore whether this approach can help us avoid the curse of dimensionality.
+
+For distance weighted least squares the common Euclidean distance becomes problematic for large $d$.  Therefore, in applying this algorithm we expect to employ some non-homogeneous concept of distance involving coordinate weights or identification of active subspaces.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Testing Adaptive Sampling via Practical Problems} \label{sec:TestBed}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -926,44 +920,38 @@ If the $\lambda_\bk$ are all unity, then all multilinear terms are equally impor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Contributions to Training, Mentoring and Other Human Resource Developments}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH leads a weekly research group meeting comprised of long-term and short-term student 
+FJH and JMH lead regular research group meetings at their respective instituions comprised of long-term and short-term student 
 collaborators, visitors, the curious, and special guests.  Ongoing work in early or polished stages is shared.  Papers of other authors are presented.  Mentoring takes place during these meetings as well as individually.
 
-\emph{Providing Research Experiences for Undergraduate and High School Students.} Students 
-should be introduced to research before graduate school so that they can learn how to 
-discover the unknown, something that is not necessarily taught in the classroom. We request funds 
+\fredparagraph{Providing Research Experiences for Undergraduate and High School Students.} We request funds 
 to 
-support two summer undergraduate students per year.  Our small summer research program has established some visibility 
-and is prompting inquiries from prospective participants well before we 
-even announce our latest 
-offerings. As in the past, we expect the NSF funds will serve as a catalyst for funds to 
+support two summer undergraduate students per year at Illinois Tech. As in the past, we expect the NSF funds will serve as a catalyst for funds to 
 support additional summer students. In choosing summer students we will make a deliberate effort to 
 build 
 a diverse research environment by targeting female and underrepresented minority students as well 
 as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also 
 welcome well-prepared high school students to join our research group.
 
-\emph{Preparing Students for Academic Careers.} Mentoring is a multi-faceted and 
+\fredparagraph{Preparing Students for Academic Careers.} Mentoring is a multi-faceted and 
 potentially long-term process continuing even after the mentee has moved on from Illinois Tech.  
-Our PhD students gain experience both research and mentoring the younger students in our 
+Our PhD students gain experience in both research and mentoring the younger students in our 
 research group.  We 
-continue contact with many of our former students.  In particular we continue to 
-collaborate with YD and Yiou Li (female).  We will continue to help our students prepare for 
+continue contact with many of our former students, in particular Yiou Li (female).  We will continue to help our students prepare for 
 academic careers and continue mentoring them after they leave Illinois Tech.
 
-\emph{Preparing Students for Industry Careers.}
+\fredparagraph{Preparing Students for Industry Careers.}
 We also help current students land 
 competitive jobs in the business world. Our training in the areas of computation and software 
 development gives our students the needed edge in comparison to other mathematics 
 graduates. For example, LlAJR and XZ are working in the financial services industry and  LJ is 
 working in marketing analytics.  All of them are developing and testing quantitatively sophisticated 
-and computationally intensive models.  LlAJR and LJ continue to collaborate with us on research.
+and computationally intensive models. 
 
-\emph{Supervising Visitors.}
-Both FJH and SCTC have strong connections to East Asia.  We have hosted several long-term 
-self-funded visitors in the past and plan to do so in the future.
+% \emph{Supervising Visitors.}
+% Both FJH and YD have strong connections to East Asia.  We have hosted several long-term 
+% self-funded visitors in the past and plan to do so in the future.
 
-\emph{Giving Tutorials and Invited Lectures.}
+\fredparagraph{Giving Tutorials and Invited Lectures.}
 We will continue providing lectures to students at various stages in their careers, ranging from high
 school to graduate school. These encourage students to enter STEM and encourage STEM students 
 to engage in research in general, and this research area in particular.
@@ -975,51 +963,33 @@ to engage in research in general, and this research area in particular.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The proposed research straddles mathematics, statistics, theoretical computer science, and 
-application areas.  The two PIs have complementary strengths that facilitate this interdisciplinary research.  FJH 
-has expertise in \QMC methods, kernel-based methods, information-based complexity 
-theory, tractability, and experimental design. SCTC has expertise in computer science and applications.  Our 
+application areas.  The PIs have complementary strengths that facilitate this interdisciplinary research.  YD has expertise in adaptive algorithms and software development.  FJH has expertise in adaptive algorithms, low discrepancy sampling, kernel-based methods, and tractability. JMH has expertise in modeling of large scale phenomena and algorithm development.  Our 
 expertise provides both an obligation and an opportunity to interact with a number of diverse 
 communities. We envision the following contributions:
 
-\emph{Disseminating Research}
+\fredparagraph{Disseminating Research and Writing Survey Papers}
 The research supported by this grant will result in publications in peer-reviewed journals in applied
 mathematics, computer science, statistics, and science/engineering. These 
-journals will include both those that emphasize theory and those that emphasize applications.
+journals will include both those that emphasize theory and those that emphasize applications.  The PIs will continue their practice of writing tutorial, survey, and encyclopedia articles.  These will make our findings accessible to a wider audience.
 
-\emph{Promoting Cones.} The idea of guaranteed, adaptive algorithms via cones of reasonable input 
-functions has broad potential application.  We will continue to promote this idea among numerical analysts 
-who 
-develop new algorithms and analyze their computational costs, as well as among information-based 
-complexity theorists who analyze the lower bounds on the complexity of numerical problems.  The recent work by Kunsch, Novak, and Rudolf \cite{KunEtal19a} shows that the idea of cones is catching on.
 
-\emph{Bridging Applied Mathematics and Statistics.}
-This project touches on topics that are of interest to the statistics community: kriging, Monte Carlo methods, probabilistic numerics, and design of experiments.  We have and will continue to engage the statistics community 
-by speaking a their conferences and departmental colloquia.
-
-\emph{Organizing and Presenting at Conferences.}
+\fredparagraph{Organizing and Presenting at Conferences}
 We and our students involved in this project will present our results at a variety of conferences and workshops.  These include: (i) specialized meetings focusing on approximation theory, complexity, 
 experimental design, Monte Carlo methods, and probabilistic numerics; (ii) the national meetings of AMS, SIAM, and the 
 statistical societies; and (iii) conferences devoted to application areas.  We are frequently invited to 
 speak at such conferences, which will give our results a prominent hearing. We will also continue to 
 organize specialized conferences or minisymposia within larger conferences.
 
-\emph{Writing Survey Papers.}
-FJH and SCTC will continue their practice of writing tutorial, survey, and encyclopedia articles.  These will make our findings accessible to a wider audience.
+\fredparagraph{Bridging Applied Mathematics and Statistics}
+This project touches on topics that are of interest to the statistics community: kriging, Monte Carlo methods, probabilistic numerics, and design of experiments.  We have and will continue to engage the statistics community 
+by speaking a their conferences and departmental colloquia.
 
-\iffalse
-\emph{Refreshing Course Syllabi.}
-MATH 565 (Monte Carlo Methods in Finance), taught every fall by FJH, has incorporated our new
-results on guaranteed (quasi-)Monte Carlo multivariate integration. In the future it will include our 
-new results on our guaranteed MLM and MDM (see Sect.\ \ref{SectMultiProb}).
+\fredparagraph{Establishing a Paradigm for Adaptive Algorithms} The idea of guaranteed, adaptive algorithms via cones of reasonable input 
+functions has broad potential application.  We will continue to promote this idea among numerical analysts 
+who 
+develop new algorithms and analyze their computational costs, as well as among information-based 
+complexity theorists who analyze the lower bounds on the complexity of numerical problems.  The recent work by Kunsch, Novak, and Rudolf \cite{KunEtal19a} shows that the idea of cones is catching on.
 
-As noted in Sect.\ \ref{TrapIllSect}, current texts propagate poor practices for 
-adaptive quadrature.  We will urge numerical analysis textbook authors and educators to change the 
-way that error estimation is taught based on our recent and proposed work.  These ideas will also 
-enter our more traditional numerical analysis courses such as MATH 350 (Intro to Computational 
-Math).  SCTC and FJH will continue to develop MATH 573 (Reliable Mathematical Software) as a 
-valuable course for our own students and an example that we wish to propagate to other 
-universities.
-\fi
 
 \emph{Creating Software and Collaborating with Software Developers.}
 As the complexity of large scale numerical computations increase rapidly, mundane operations such as integration and function approximation are taken for granted. We must construct reliable adaptive algorithms for these problems so that there are no unwelcome surprises for the practitioner when she takes them for granted.
