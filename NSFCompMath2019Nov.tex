@@ -637,7 +637,7 @@ FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms fo
 However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are \emph{locally adaptive}, meaning that the sampling density is non-uniform and influenced by the function data.  Qualitatively, the cone of functions for which these algorithms are guaranteed to succeed consists of functions where the maximum of the second derivative in a sub-interval is not drastically smaller than the larger of it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
 $\norm[\infty]{f''}$ for peaky functions.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\vspace{-1ex}
 	\includegraphics[width = 0.48\textwidth]{ProgramsImages/sampling-funappxg.png}
@@ -655,7 +655,7 @@ $\norm[\infty]{f''}$ for peaky functions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
 
-\begin{figure}[h] % MATLAB Driver: PlotPoints.m
+\begin{figure}[ht] % MATLAB Driver: PlotPoints.m
 	\centering
 	\includegraphics[width = 0.25\textwidth]{ProgramsImages/IIDPoints.eps} \quad
 	\includegraphics[width = 0.25\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \quad
@@ -876,9 +876,9 @@ Here we have considered the case $d=1$.  This new kernel maintains its propertie
 
 The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better and the error bound captures the true function better.  The next data site for function approximation, $x_{\ID,11}$, is in a region where $f$ varies greatly.  The next data site for optimization, $x_{\MIN,11}$,  is on the side of the observed minimum where $f$ fluctuates more.
 
-This example of \emph{modifying a well-known kernel so that data-based inference of the parameters produce a better approximation} and a better adaptive sampling scheme is proof of concept.  We plan to extend this idea to a more general multivariate setting.  Some of the challenges will be to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
+This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.}  Some of the challenges will be to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
 
-Another area weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in  \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$.  We would rather that the definition of $\calc$ rely only on the design satisfying some modest properties, such as the $\bx_i$ filling  $\Omega$ relatively well.  This is also a question for research.
+Another area weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in  \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$.  We will \emph{modify the definition of $\calc$ to depend only some modest quality measure of the design}, such as the $\bx_i$ filling  $\Omega$ relatively well.  This is also a question for research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
@@ -901,14 +901,14 @@ As an example, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as foll
 \end{equation}
 If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough.
 
-For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will explore how to infer the coordinate weights from our exploratory sample.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
+For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph*{Active Subspaces}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-An alternative to permuting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of their importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also explore whether this approach can help us avoid the curse of dimensionality.
+An alternative to permuting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of their importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also \emph{explore whether this approach can help us avoid the curse of dimensionality}.
 
-For distance weighted least squares the common Euclidean distance becomes problematic for large $d$.  Therefore, in applying this algorithm we expect to employ some non-homogeneous concept of distance involving coordinate weights or identification of active subspaces.
+For distance weighted least squares the common Euclidean distance becomes problematic for large $d$.  Therefore, in applying this algorithm we expect to \emph{employ some non-homogeneous concept of distance} involving coordinate weights or identification of active subspaces.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
