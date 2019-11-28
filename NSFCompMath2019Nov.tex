@@ -65,7 +65,7 @@
 \newcommand{\Rlang}{R\xspace}
 \newcommand{\Julia}{Julia\xspace}
 
-\newcommand{\fredparagraph}[1]{\paragraph*{\emph{#1}}}
+%\newcommand{\fredparagraph}[1]{\paragraph*{\emph{#1}}}
 
 \textwidth6.4in
 \setlength{\oddsidemargin}{0in}
@@ -313,6 +313,7 @@
 
 
 \setlist[description]{font=\normalfont\itshape, labelindent = 0.5cm}
+\setlist[itemize]{leftmargin=5ex}
 
 \makeatletter
 \newenvironment{varsubequations}[1]
@@ -404,7 +405,7 @@ $\calc$ & set of output maps for which our adaptive sampling schemes are valid; 
 \subsection{Our problem}
 
 Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
-an inexpensive representation of the simulation output (the identity map) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
+an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
 \begin{equation} \label{eq:ourQOIs}
     \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
@@ -418,13 +419,13 @@ Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)
 \end{itemize}   
 The $n$-dependence of $\mX$ and $\by$ is implicit.  
 
-Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. Adaptive sampling uses past data as a guide in choosing future data sites.   That is, $\bx_{n+1}$, depends on both $\mX$ and  $\by$ and is chosen to maximize the expected value, $\VAL$, it will bring to the $\APP$s:
+Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. Adaptive sampling uses past data to guide the choice of future data sites:   
 \begin{equation} \label{eq:nextsample}
     \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
-Here $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$, based on what has been already observed.  The $\VAL$ function is sometimes called an acquisition function and  typically depends on a measure of uncertainty or error in $\APP(n,\mX,\by)$.
+That is, $\bx_{n+1}$, depends on both $\mX$ and  $\by$ and $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the data already observed.  
 
-The uncertainty or error in $\APP(n,\mX,\by)$ must also be inferred from data, which mandates data-driven bounds error of the form 
+The $\VAL$ function is sometimes called an acquisition function and  typically depends on a measure of uncertainty or error in $\APP(n,\mX,\by)$, which must also be inferred from data.  This requires data-driven bounds error of the form 
 \begin{equation} \label{eq:errbd}
     \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
 \end{equation}
@@ -435,8 +436,8 @@ either absolutely or with high probability.  Here, $\norm[\calg]{\cdot}$ corresp
 
 The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and James ``Mac'' Hyman (JMH)---propose to find
 \begin{itemize}
-    \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small, which are based on
-    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations $\mX$ and the output data, $\by$, which depend on
+    \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small, 
+    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations $\mX$ and the output data, $\by$,
     \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for
     \item Precisely defined sets---which will turn out to be cones---of output maps, $\calc$.
 \end{itemize}
@@ -445,7 +446,7 @@ The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and James ``Mac'' Hyman (JMH)
 \subsection{Our plan} \label{sec:OurPlan}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Our plan follows the two-stage \emph{explore-exploit} sampling process and relies on surrogate models (meta-models, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, with data-based measures of uncertainty, denoted $\SURRERR(n,\mX,\by)$.  In the \emph{explore} stage, little or nothing is known of the output or the QOIs, and the sampling does not depend on output data.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over, $\Omega$ the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. 
+Our plan follows the two-stage \emph{explore-exploit} sampling process and relies on surrogate models (meta-models, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, with data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$.  In the \emph{explore} stage, little or nothing is known of the output or the QOIs, and the sampling does not depend on output data.  We sample $f$ on a relatively sparse, but space-filling, set of $n_0$ data sites over, $\Omega$ the region of feasible POIs.  This initial design must be large enough to detect important features of $f$ that influence $\QOI(f)$, but small enough to be economical. 
 
 Based on the initial sample of size $n=n_0$, we construct approximate QOIs, denoted generally by  $\APP(n,\mX,\by)$.  For the two QOIs in \eqref{eq:ourQOIs} these correspond to a surrogate model and the minimum output observed:
 \begin{equation} \label{eq:QOIhat}
@@ -454,7 +455,7 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
 
 We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from local least squares  or from kriging (or minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs)).  Other surrogate models are possible. We derive data-based measures of uncertainty for our surrogate models, $\SURRERR(n,\mX,\by)$ valid for sets of output maps $\calc$ such that 
 \begin{equation}
-    \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc
+    \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,
 \end{equation}
 either absolutely or with high probability.
 \begin{itemize}
@@ -463,7 +464,7 @@ either absolutely or with high probability.
 \end{itemize}
 Because the primary time cost in our problems is acquiring output data, we are not overly concerned about the time required to generate surrogate models and to assess their uncertainties.
 
-The \emph{exploit} stage uses surrogate models based on all past samples, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, to detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$.  For $\APPID$ the surrogate model needs to represent $f$ well throughout its domain, $\Omega$, while for $\APPMIN$ the surrogate model only needs to represent $f$ well near potential minima. This information is then used to optimize the placement of future samples that reduce the uncertainty in the subsequent  QOIs. 
+The \emph{exploit} stage uses surrogate models based on all past samples, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, to detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$.  For $\APPID$ the surrogate model needs to represent $f$ well throughout its domain, $\Omega$, while for $\APPMIN$ the surrogate model only needs to represent $f$ well near potential minima.
 
 The acquisition function, $\VAL(\bx,n,\mX, \by)$, guides us in choosing the next data site, $\bx_{n+1}$.  For function approximation, $\VAL(\bx,n,\mX, \by)$ corresponds to a pointwise error bound on the surrogate model, and for  minimization,  $\VAL(\bx,n,\mX, \by)$ corresponds to the expected improvement in the approximation to the minimum:
 \begin{subequations} \label{eq:QOIval}
@@ -490,8 +491,6 @@ The exploit stage repeats until the time budget is exhausted or the uncertainty 
 Because function approximation and optimization are homogeneous problems, i.e., $\QOI(cf) = c\QOI(f)$ for all $c \in \reals$, our algorithms and error bounds are also constructed to be homogeneous.  It then follows that our sets of functions $\calc$, for which the error bounds are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
 
 
-
-
 \iffalse
 One approach we are considering is create an ensemble of surrogate models by resampling the current samples.  That is, we iteratively 
 \begin{enumerate}
@@ -508,13 +507,18 @@ When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, 
 \fi
 
 \subsection{Our impact}
-\subsubsection{Theoretical advances}
-The theoretical advances for error estimates will extend mathematical foundation for adaptive sampling by 
+\subsubsection{Theoretical Advances}
+We will develop new tools for rigorously analyzing the error of our adaptive function and approximation algorithms.  
 \begin{itemize}
-\item Providing error bounds, $\ERR$, based on both the sample locations and function values and justified for input functions in $\calc$, and 
-\item Providing acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
+\item Rather than basing our analysis on some pre-set vector space, $\bigl(\calf,\norm[\calf]{\cdot}\bigr)$, of maps, $f$, with fixed smoothness or other properties, we will infer the norm best suited to the particular map $f$ from its output data, $(\mX,\by)$.  E.g., this might take the form of inferring the suitable reproducing/covariance kernel used to construct a surrogate model. 
+
+\item Our algorithms will be defined in terms of and constructed to succeed for sets (cones) $\calc$ of maps, $f$, amenable to adaptive sampling. But the definitions of $\calc$ will not depend on our algorithms or sampling schemes.
+
+\item We will derive rigorous error bounds, $\ERR$, based on both the sample locations and output data, which are justified for maps in $\calc$, and 
+
+\item We will povide  acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
 \end{itemize}
-Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic, applicable for the situation in which output data is expensive.
+Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic.  We are trying to get a good answer for a small number of data, and we are willing to bend over backwards to obtain it.  Our theory will lay out the conditions under which we can expect to succeed.
 
 \subsubsection{Algorithms}
 By utilizing adaptive sampling algorithms will create more computationally efficient algorithms, $\APP$.
@@ -626,7 +630,7 @@ include
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
+\paragraph*{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to meet the error tolerance.
 
@@ -646,7 +650,7 @@ $\norm[\infty]{f''}$ for peaky functions.
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
+\paragraph*[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
@@ -686,7 +690,7 @@ $\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the spac
 \log(n))$, making Bayesian cubature practical.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Multivariate Function Approximation} \label{sec:PrevFunAppx}
+\paragraph*{Multivariate Function Approximation} \label{sec:PrevFunAppx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 FJH, YD, and LlAJR and collaborators investigated the function approximation problems for Banach spaces, $\calf$, defined by general series representations \cite{DinHic20a,DinEtal20a}.  For example, the bases can be general multivariate polynomials.  Three different definitions of cone, $\calc$, of functions were defined, all describing a reasonable behavior of the series coefficients.  Adaptive function approximation algorithms were constructed for these three cones shown to be essentially optimal.  The shortcoming of this research is that the algorithms use series coefficients as data rather than function values. 
@@ -696,7 +700,7 @@ FJH, YD, and LlAJR and collaborators investigated the function approximation pro
 \subsection{Broader Impacts from Previous NSF Funding} \label{prevBIsect}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\emph{Publications, Conference Participation, Conference Organization, and Leadership.} Publications by GEF, FJH,  SCTC, students, and collaborators are listed at the beginning of this section.  We have spoken at many applied mathematics, statistics, 
+\paragraph*{Publications, Conference Participation, Conference Organization, and Leadership} Publications by GEF, FJH,  SCTC, students, and collaborators are listed at the beginning of this section.  We have spoken at many applied mathematics, statistics, 
 and computational science conferences and given colloquium/seminar talks to mathematics and 
 statistics departments.  FJH co-organized the 
 2016 Spring Research 
@@ -706,14 +710,14 @@ at MCQMC 2016
 was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program.   FJH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, FJH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
 Scientific Computation in 2017.  In 2018, FJH was appointed Vice Provost for Research.
 	
-\emph{\GAIL Software.} The results of this research have been implemented in 
+\paragraph*{\GAIL Software} The results of this research have been implemented in 
 \GAIL, our open source \MATLAB library hosted on
 Github. This software 
 has been implemented with input parsing, input validation, unit tests, inline documentation, and 
 demonstrations.  \GAIL makes it easier for practitioners to try our new adaptive algorithms.  SCTC has been key in this effort.  \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by FJH and YD.  
 %With the help of students, we are starting to port GAIL to Python and \Rlang.
 
-\emph{Boosting the STEM Workforce.} GEF, FJH, and SCTC mentored a number of 
+\paragraph*{Boosting the STEM Workforce.} GEF, FJH, and SCTC mentored a number of 
 research students associated with this project.  Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017).   GEF, FJH,  and SCTC have mentored many undergraduate students including more than a dozen 
 Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from Illinois Tech, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  All but one have enrolled in graduate programs.   As part of our team, all of
 these students have learned how to conduct theoretical and/or practical computational mathematics research.
@@ -887,7 +891,7 @@ To approximate or optimize a $d$-variate function using $n$ output data, where $
 requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple that we will explore.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\fredparagraph{Coordinate Weights}
+\paragraph*{Coordinate Weights}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has shown that the growth in the sample size, $n$, required to solve a problem involving $d$ POIs to an error of $\varepsilon$ can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$ if the coordinates can be ordered so that their importance decays sufficiently fast.  
 
@@ -900,7 +904,7 @@ If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI
 For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will explore how to infer the coordinate weights from our exploratory sample.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\fredparagraph{Active Subspaces}
+\paragraph*{Active Subspaces}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 An alternative to permuting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of their importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also explore whether this approach can help us avoid the curse of dimensionality.
 
@@ -916,7 +920,6 @@ For distance weighted least squares the common Euclidean distance becomes proble
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Broader Impacts of the Proposed Research}\label{SectBroad}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FJHNote{This is copied from my old proposal.  Must be revised.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -925,37 +928,39 @@ For distance weighted least squares the common Euclidean distance becomes proble
 FJH and JMH lead regular research group meetings at their respective instituions comprised of long-term and short-term student 
 collaborators, visitors, the curious, and special guests.  Ongoing work in early or polished stages is shared.  Papers of other authors are presented.  Mentoring takes place during these meetings as well as individually.
 
-\fredparagraph{Providing Research Experiences for Undergraduate and High School Students.} We request funds 
-to 
-support two summer undergraduate students per year at Illinois Tech. As in the past, we expect the NSF funds will serve as a catalyst for funds to 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Providing Research Experiences for Undergraduate and High School Students} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Our project will support two summer undergraduate students per year at Illinois Tech, or possibly at LANL. As in the past, we expect the NSF funds will serve as a catalyst for funds to 
 support additional summer students. In choosing summer students we will make a deliberate effort to 
 build 
 a diverse research environment by targeting female and underrepresented minority students as well 
 as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also 
 welcome well-prepared high school students to join our research group.
 
-\fredparagraph{Preparing Students for Academic Careers.} Mentoring is a multi-faceted and 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Preparing Students for Academic Careers} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mentoring is a multi-faceted and 
 potentially long-term process continuing even after the mentee has moved on from Illinois Tech.  
 Our PhD students gain experience in both research and mentoring the younger students in our 
 research group.  We 
 continue contact with many of our former students, in particular Yiou Li (female).  We will continue to help our students prepare for 
 academic careers and continue mentoring them after they leave Illinois Tech.
 
-\fredparagraph{Preparing Students for Industry Careers.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Preparing Students for Industry Careers}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 We also help current students land 
 competitive jobs in the business world. Our training in the areas of computation and software 
 development gives our students the needed edge in comparison to other mathematics 
 graduates. For example, LlAJR and XZ are working in the financial services industry and  LJ is 
-working in marketing analytics.  All of them are developing and testing quantitatively sophisticated 
-and computationally intensive models. 
+working in marketing analytics.  All of them are developing and testing quantitatively sophisticated and computationally intensive models. 
 
-% \emph{Supervising Visitors.}
-% Both FJH and YD have strong connections to East Asia.  We have hosted several long-term 
-% self-funded visitors in the past and plan to do so in the future.
-
-\fredparagraph{Giving Tutorials and Invited Lectures.}
-We will continue providing lectures to students at various stages in their careers, ranging from high
-school to graduate school. These encourage students to enter STEM and encourage STEM students 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Giving Tutorials and Invited Lectures}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We will continue providing lectures to students at various stages in their careers, ranging from high school to graduate school. These encourage students to enter STEM and encourage STEM students 
 to engage in research in general, and this research area in particular.
 
 
@@ -969,52 +974,41 @@ application areas.  The PIs have complementary strengths that facilitate this in
 expertise provides both an obligation and an opportunity to interact with a number of diverse 
 communities. We envision the following contributions:
 
-\fredparagraph{Disseminating Research and Writing Survey Papers}
-The research supported by this grant will result in publications in peer-reviewed journals in applied
-mathematics, computer science, statistics, and science/engineering. These 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Disseminating Research and Writing Survey Papers}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The research supported by this grant will result in publications in peer-reviewed journals in applied mathematics, computer science, statistics, and science/engineering. These 
 journals will include both those that emphasize theory and those that emphasize applications.  The PIs will continue their practice of writing tutorial, survey, and encyclopedia articles.  These will make our findings accessible to a wider audience.
 
 
-\fredparagraph{Organizing and Presenting at Conferences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Organizing and Presenting at Conferences}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 We and our students involved in this project will present our results at a variety of conferences and workshops.  These include: (i) specialized meetings focusing on approximation theory, complexity, 
 experimental design, Monte Carlo methods, and probabilistic numerics; (ii) the national meetings of AMS, SIAM, and the 
 statistical societies; and (iii) conferences devoted to application areas.  We are frequently invited to 
 speak at such conferences, which will give our results a prominent hearing. We will also continue to 
 organize specialized conferences or minisymposia within larger conferences.
 
-\fredparagraph{Bridging Applied Mathematics and Statistics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Bridging Applied Mathematics and Statistics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This project touches on topics that are of interest to the statistics community: kriging, Monte Carlo methods, probabilistic numerics, and design of experiments.  We have and will continue to engage the statistics community 
 by speaking a their conferences and departmental colloquia.
 
-\fredparagraph{Establishing a Paradigm for Adaptive Algorithms} The idea of guaranteed, adaptive algorithms via cones of reasonable input 
-functions has broad potential application.  We will continue to promote this idea among numerical analysts 
-who 
-develop new algorithms and analyze their computational costs, as well as among information-based 
-complexity theorists who analyze the lower bounds on the complexity of numerical problems.  The recent work by Kunsch, Novak, and Rudolf \cite{KunEtal19a} shows that the idea of cones is catching on.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Establishing a New Paradigm for Adaptive Algorithms} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The idea of adaptive algorithms where the sampling scheme and the norm of the input function adapts to the output data is uncommon in the computational mathematics literature.  The derivation of theory for adaptive algorithms based on cones is also new.  These ideas have potential applications to to other numerical problems beyond those studied in the proposed research.  We will continue to promote these ideas among numerical analysts and computational complexity theorists.  The recent work by Kunsch, Novak, and Rudolf \cite{KunEtal19a} shows that the idea of cones is catching on.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Creating Software and Collaborating with Software Developers}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Our algorithms will be implemented in freely available software on public repositories.  We will discuss with software developers whose packages have complementary capabilities how we might collaborate. We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG.  The \MATLAB \GAIL library \citep{ChoEtal19a}, developed by FJH, YD, and collaborators contains univariate function approximation and minimization algorithms, as well as multivariate integration algorithms.  A project to a community based quasi-Monte Carlo Python library QMCPy, is underway with corporate sponsorship.  
 
-\emph{Creating Software and Collaborating with Software Developers.}
-As the complexity of large scale numerical computations increase rapidly, mundane operations such as integration and function approximation are taken for granted. We must construct reliable adaptive algorithms for these problems so that there are no unwelcome surprises for the practitioner when she takes them for granted.
-
-We will continue to develop \GAIL \citep{ChoEtal17b} (now up to version 2.2).  The \GAIL software 
-will serve the wider community that relies on numerical approximation and integration algorithms.  It will 
-also demonstrate how adaptive algorithms ought to be implemented, which we hope will inspire and 
-inform those working on adaptive algorithms for other mathematical problems.  We will involve 
-students in porting \GAIL to other platforms, such as Python, \Rlang, and \Julia.  
-
-In the summer of 2018, we began engaging with other \QMC research groups about combining our software efforts.  These included the groups of Mike Giles (Oxford, Multi-Level Monte Carlo),  Frances Kuo (UNSW, \QMC generators, PDEs with random coefficients),  Dirk Nuyens (KU Leuven, \QMC generators, PDEs with random coefficients), and Christoph Schwab (ETH-Zurich, PDEs with random coefficients).  All of these groups have significant software development efforts, but our software libraries are not compatible with one another.  We have begun discussing a common framework for a shared community quasi-Monte Carlo software library, \QMCSoft.  If all groups would write their software to the specifications of this framework, then improvements and additions would immediately work with the other parts of the library.
-
-We will collaborate with these other research groups to move our software to this common framework.  Given the difficulty in agreeing upon one language, this may be a multi-language effort.  We will seek resources outside this proposal to support this effort.  As the \QMC community embraces \QMCSoft, we expect our core of contributors to grow.  Scholars who develop new \QMC algorithms or use \QMC in applications will be encouraged to add them to \QMCSoft.  
-
-We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG.  We have already and will continue 
-to discuss with software developers about good practices for adaptive algorithms.
-
-
-\emph{New Applications of \QMC.}
-The application of \QMC has focused on a few areas, such as financial modeling and computer 
-graphics, but there is potential for much wider application.  LlAJR has collaborated with Fermilab implementing \QMC algorithms, and we plan to continue.    New applications of \QMC are arising from \SAMSIQMC that we plan to pursue.  KZ is exploring how to use adaptive \QMC to more efficiently perform Bayesian inference.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Management and Collaboration}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where JMH has a courtesy appointment.  FJH will lead the effort at Illinois Tech, and JMH will lead the effort at Tulane.  FJH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models.  They will also lead the exploration of the data-inferred reproducing/covariance kernels.  JMH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap.  He will also lead the application of our new algorithms to the large-scale application problems.  
 
 The PhD student will be based at Illinois Tech during the academic year under the direct supervision of FJH and YD.  The PhD student will work on part of the algorithmic developments, its theoretical analysis, and its implementation in freely available software.  During the summer, the PhD student will join JMH in Los Alamos and be involved with testing our algorithms on challenging application problems.  The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting bite-sized aspects of the algorithms and their performance.

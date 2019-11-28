@@ -1093,9 +1093,14 @@
 \def\subsubsection{\@startsection{subsubsection}{3}%
   \z@{.5\linespacing\@plus0\linespacing}{-.5em}%
   {\normalfont\itshape}}
+% \def\paragraph{\@startsection{paragraph}{4}%
+%   \z@\z@{-\fontdimen2\font}%
+%   \normalfont}
+%Original above, 
+% modified below
 \def\paragraph{\@startsection{paragraph}{4}%
   \z@\z@{-\fontdimen2\font}%
-  \normalfont}
+  {\normalfont\itshape}}
 \def\subparagraph{\@startsection{subparagraph}{5}%
   \z@\z@{-\fontdimen2\font}%
   \normalfont}
