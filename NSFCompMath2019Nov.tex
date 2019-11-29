@@ -10,6 +10,8 @@
 \usepackage{algorithm, algorithmicx}
 \usepackage{anyfontsize}
 \usepackage{cleveref}
+\usepackage{wrapfig}
+\usepackage[font=small,labelfont=bf]{caption}
 %\usepackage[sort&compress]{natbib}
 
 \usepackage{algpseudocode}
@@ -379,7 +381,7 @@ Adaptive Multivariate Sampling to Accelerate  Discovery\\
 \vspace{-6ex}
 
 
-\notes{We will highlight the research questions in the Intellectual Merit section using \emph{\ldots}}
+\notes{We will highlight the research questions in the Intellectual Merit section using the $\backslash$emph command}
 
 \noindent \textbf{Notation}
 
@@ -398,14 +400,14 @@ $\ERR(n,\mX,\by)$ & data-driven error bound for $\APP(n,\mX,\by)$ that is valid 
 $\calc$ & set of output maps for which our adaptive sampling schemes are valid; $\calc \subset \calf$ \tabularnewline
 & \tabularnewline
 \end{longtable}
-
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Our problem}
 
 Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
-an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other possible QOIs include the location of the optimum output and (parametric) integration.}  
+an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other useful QOIs include the location of the optimum output and (parametric) integration.}  
 \begin{equation} \label{eq:ourQOIs}
     \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
@@ -415,7 +417,7 @@ Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)
 \begin{itemize}
     \item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of POI vectors or data sites, and
     
-    \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless) \emph{output} data.
+    \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless) \emph{output data}.
 \end{itemize}   
 The $n$-dependence of $\mX$ and $\by$ is implicit.  
 
@@ -423,13 +425,13 @@ Limited computer resources and the curse of dimensionality prevent acquiring a d
 \begin{equation} \label{eq:nextsample}
     \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
-That is, $\bx_{n+1}$, depends on both $\mX$ and  $\by$ and $\VAL(\bx,n,\mX, \by)$ measures the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the data already observed.  
+That is, $\bx_{n+1}$ maximizes $\VAL(\bx,n,\mX, \by)$, which is the the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the output data already observed, $\by$, at the sites $\mX$.  
 
-The $\VAL$ function is sometimes called an acquisition function and  typically depends on a measure of uncertainty or error in $\APP(n,\mX,\by)$, which must also be inferred from data.  This requires data-driven bounds error of the form 
+The $\VAL$ function may be called an acquisition function and typically depends on a measure of uncertainty or error in $\APP(n,\mX,\by)$, which must also be inferred from data.  This requires data-driven bounds error of the form 
 \begin{equation} \label{eq:errbd}
     \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
 \end{equation}
-either absolutely or with high probability.  Here, $\norm[\calg]{\cdot}$ corresponds to some function space norm for function approximation and the absolute value for minimization.  These error bounds in \eqref{eq:errbd} are valid for $\calc$,  precisely defined sets of well-behaved output maps, $f$, between the input POIs and the simulation outputs.  These error bounds allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
+either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$.  These error bounds in \eqref{eq:errbd} are valid for $\calc$,  precisely defined sets of well-behaved simulation output maps, $f$.  These error bounds allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
 
 
 \subsection{Our goal}
@@ -437,7 +439,7 @@ either absolutely or with high probability.  Here, $\norm[\calg]{\cdot}$ corresp
 The PIs---Yuhan Ding (YD), Fred J Hickernell (FJH) and James ``Mac'' Hyman (JMH)---propose to find
 \begin{itemize}
     \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small, 
-    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations $\mX$ and the output data, $\by$,
+    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations, $\mX$, and the output data, $\by$,
     \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for
     \item Precisely defined sets---which will turn out to be cones---of output maps, $\calc$.
 \end{itemize}
@@ -453,7 +455,36 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
     \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation}
 
-We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from local least squares  or from kriging (or minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs)).  Other surrogate models are possible. We derive data-based measures of uncertainty for our surrogate models, $\SURRERR(n,\mX,\by)$ valid for sets of output maps $\calc$ such that 
+
+We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from combining moving mesh distance-weighted least squares (DWLS) models \cite{mederos2003moving} and from kriging Gaussian Process models \cite{} based on minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs).  
+
+
+
+We define our DWLS function, $f_{ls}(\bx)$, by minimizing the $\sum w_i(\bx) (f_i - f_{ls}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernal weight, 
+$w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
+Here $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors.  The number of nearest neighbors will be greater than the number of basis functions used in the least-squares fit with polynomial with total degree.  Note that in $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially, $K_p={K_d + d \choose K_d} -1$.  
+We will typically use a DWLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+	  \begin{center}
+	\includegraphics[width = 0.5\textwidth]{ProgramsImages/bigsurT.pdf}
+	 \end{center}
+	\caption{The  DWLS linear quasi-interpolant of scattered data {$\color{red}*$} of  Big Sur sea bottom data \cite{franke1979critical}.
+	\label{DWLS}}
+\end{wrapfigure}
+Every time the DWLS interpolant is evaluated, we  solve a least squares systems that  weights the nearby points much more than the distant points.  For the problems we are considering, this additional computation is minimal compared to the expense of obtaining the sample values.  While global interpolants are very `stiff', the DWLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension.  
+ Figure \ref{DWLS} illustrates the flexibility of a linear DWLS fit fitting scattered data in two dimensions.  
+
+
+
+The DWLS function $f_{ls}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{ls}(\bx_i)$ will be represented by a Gaussian process kriging model $f_{k}(\bx)$.
+\notes{put in a description of kriging here}
+
+The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{ls}(x) + f_{k}(x)$.  
+%We recognize that other surrogate models are possible. 
+
+\notes{How about using $SM(n,\mX,\by)$ for the surrogate model and $SU(n,\mX,\by)$ for the surrogate model uncertainty to keep the notation simpler? MH}
+We derive data-based measures of uncertainty for our surrogate models, $\SURRERR(n,\mX,\by)$ valid for sets of output maps $\calc$ such that 
 \begin{equation}
     \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,
 \end{equation}
@@ -472,7 +503,7 @@ The acquisition function, $\VAL(\bx,n,\mX, \by)$, guides us in choosing the next
 \label{eq:idval}
      \IDVAL(\bx,n,\mX,\by) &= \SURRERR(n,\mX,\by)(\bx), \\
      \label{eq:minval}
-      \MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)], 
+      \MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)].
 \end{align}
 \end{subequations}
 The next data site, $\bx_{n+1}$ maximizes the acquisition function (see \eqref{eq:nextsample}).   The acquisition functions are related to the uncertainties or error bounds for the QOIs:
@@ -510,15 +541,15 @@ When the QOI is function approximation or optimization, then $\APP_{\btheta}(n, 
 \subsubsection{Theoretical Advances}
 We will develop new tools for rigorously analyzing the error of our adaptive function and approximation algorithms.  
 \begin{itemize}
-\item Rather than basing our analysis on some pre-set vector space, $\bigl(\calf,\norm[\calf]{\cdot}\bigr)$, of maps, $f$, with fixed smoothness or other properties, we will infer the norm best suited to the particular map $f$ from its output data, $(\mX,\by)$.  E.g., this might take the form of inferring the suitable reproducing/covariance kernel used to construct a surrogate model. 
+\item Rather than basing our analysis on some pre-set Banach space, $\bigl(\calf,\norm[\calf]{\cdot}\bigr)$, of maps, $f$, with fixed smoothness or other properties, we will infer the norm best suited to the particular map $f$ from its output data, $(\mX,\by)$.  E.g., this might take the form of inferring the suitable reproducing/covariance kernel used to construct a surrogate model. 
 
 \item Our algorithms will be defined in terms of and constructed to succeed for sets (cones) $\calc$ of maps, $f$, amenable to adaptive sampling. But the definitions of $\calc$ will not depend on our algorithms or sampling schemes.
 
-\item We will derive rigorous error bounds, $\ERR$, based on both the sample locations and output data, which are justified for maps in $\calc$, and 
+\item We will derive rigorous error bounds, $\ERR$, based on both the sample locations and output data, which are justified for maps in $\calc$. 
 
 \item We will povide  acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
 \end{itemize}
-Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic.  We are trying to get a good answer for a small number of data, and we are willing to bend over backwards to obtain it.  Our theory will lay out the conditions under which we can expect to succeed.
+We will adopt a deterministic perspective and/or a probabilistic numerics (Bayesian) perspective.  Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic.  We are trying to get a good answer for a small number of data, and we are willing to bend over backwards to obtain it.  Our theory will lay out the conditions under which we can expect to succeed.
 
 \subsubsection{Algorithms}
 By utilizing adaptive sampling algorithms will create more computationally efficient algorithms, $\APP$.
@@ -567,6 +598,8 @@ These methods assume that the influence of a function value decreases with dista
 The uncertainty in the interpolated values can be estimated by  by refitting the data, where the DWLS Gaussian weights are reweighted (multiplied) by Bayesian bootstrap weights.  
 
 In kriging,  the distance between the sample points defines the spatial correlation that can be used to predict variation in the surface. We will compare the DWLS with the DACE kriging MATLAB algorithm \cite{}. \notes{talk about variance estimation with kriging.  Do we want to talk about Gaussian process models? JMH}
+
+Let's mention UQLab \cite{UQLab2014}, emukit, \cite{emukit2019}, SUMO\cite{SUMO2010} ooDACE \cite{ooDACE2014}, CODES \cite{CODES2015}, and pySOT \cite{pySOT2015}.
 
 \item \underline{Adaptive samplers:}
 
@@ -843,7 +876,9 @@ The shortcomings highlighted here do not speak against the idea of choosing to s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Adaptive Sampling Schemes via Weighted Average of Models (Mac's Idea)} \label{sec:Bootstrap}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The DWLS minimizes the residual $\sum w_i(f_i - f_{ls}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{Rubin1981, Efron1982, Efron2016} we generate an ensemble of $B$ DWLS quasi-interpolants, $f_{ls}^b$, $b=1,B$ whee 
 
+these weight are reweighted by uniformly distributed samples $\bv$ the $n$ dimensional simplex.  That is, on each bootstrap integration we  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
