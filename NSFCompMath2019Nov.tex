@@ -526,7 +526,6 @@ By utilizing adaptive sampling algorithms will create more computationally effic
 \begin{description}
 \item[Function approximation] We will create a surrogate models, with uncertainty estimates, that represent the output well over the entire feasible range of POIs using a minimal number of samples.  This model can be used for global sensitivity analysis and dynamic (interactive) visualization of the response surface. 
 \item[Optimization] We will use our surrogate models to identify multiple local optima of the response function.  The local minima can then be used to identify as starting locations for gradient descent algorithms.
-%\item[Integration] The surrogate model can be used as a control variate to detrend the integrand and speed up cubature \cite{}.  
 \end{description}
 
 \subsubsection{Applications} \notes{JMH section}
@@ -582,8 +581,7 @@ In kriging,  the distance between the sample points defines the spatial correlat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Previous NSF-Funded Research,
 NSF-DMS-1522687\except{toc}{, \\ \emph{Stable, Efficient, Adaptive Algorithms for 
-Approximation and 
-Integration}, \\
+Approximation and Integration}, \\
 \$270,000, August 2015 -- July 2018}} \label{sec:Previous}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -668,7 +666,7 @@ The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL a
 
 The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed are those for which  the Fourier coefficients, $\bigabs{\hf(\bk(\kappa))}$ decay steadily, but not necessarily monotonically, in magnitude.  Fig.\ \ref{GoodBadWalshFig} displays a typical function inside $\calc$ and one outside $\calc$. Here $\bk(0), \bk(1), \ldots$ is a natural ordering of the $d$-dimensional wavenumbers.  The function lying outside the cone appears to have high frequency noise. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width = 0.23\textwidth] 
 	{ProgramsImages/FunctionWalshFourierCoeffDecay.eps} \ \ 
@@ -811,7 +809,7 @@ f \colon x \mapsto \exp(-6x) \sin(8x+0.1)
 and its surrogate model $\SURR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8,\linebreak 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:MatKer} with $\theta =1$.  
 Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Sect.\ \ref{sec:OurPlan}. 
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEAndMin.eps}
@@ -860,7 +858,7 @@ One improvement is to infer the value of $\theta$ inherent in the defintion of $
 \end{equation}
 For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unforutnately, the new surrogate model has similar deficiencies as the original one in Sect.\ \ref{sec:UnivarEx}, and the suggested next data site is at a place where the function approximation is already quite good.
 
-\begin{figure}
+\begin{figure}[ht]
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
