@@ -876,7 +876,7 @@ The shortcomings highlighted here do not speak against the idea of choosing to s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Adaptive Sampling Schemes via Weighted Average of Models (Mac's Idea)} \label{sec:Bootstrap}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The DWLS minimizes the residual $\sum w_i(f_i - f_{ls}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{Rubin1981, Efron1982, Efron2016} we generate an ensemble of $B$ DWLS quasi-interpolants, $f_{ls}^b$, $b=1,B$ whee 
+The DWLS minimizes the residual $\sum w_i(f_i - f_{ls}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{Rubin1981, Efron1982, Efron2016} we generate an ensemble of $B$ DWLS quasi-interpolants, $f_{ls}^b$, $b=1,B$. Each quasi-interpolant is determined by reweighted the DWLS weights by a factor 
 
 these weight are reweighted by uniformly distributed samples $\bv$ the $n$ dimensional simplex.  That is, on each bootstrap integration we  
 
