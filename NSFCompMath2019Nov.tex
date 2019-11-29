@@ -109,7 +109,7 @@
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\SOL}{SOL}
 \DeclareMathOperator{\APP}{\widehat{\QOI}}
-\DeclareMathOperator{\SURR}{SURR}
+\DeclareMathOperator{\SURR}{SM}
 \DeclareMathOperator{\ALG}{ALG}
 \DeclareMathOperator{\ERR}{ERR}
 \DeclareMathOperator{\VAL}{VAL}
@@ -121,8 +121,8 @@
 \DeclareMathOperator{\APPID}{\widehat{\ID}}
 \DeclareMathOperator{\MINVAL}{MINVAL}
 \DeclareMathOperator{\IDVAL}{IDVAL}
-\DeclareMathOperator{\SURRERR}{SERR}
-\DeclareMathOperator{\MINERR}{MINERR}
+\DeclareMathOperator{\SURRERR}{SU}
+\DeclareMathOperator{\MINERR}{MERR}
 \DeclareMathOperator{\IDERR}{IDERR}
 \DeclareMathOperator{\Prob}{\mathbb{P}}
 \DeclareMathOperator{\diag}{diag}
@@ -460,7 +460,7 @@ We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from combining movi
 
 
 
-We define our DWLS function, $f_{ls}(\bx)$, by minimizing the $\sum w_i(\bx) (f_i - f_{ls}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernal weight, 
+We define our DWLS function, $f_{LS}(\bx)$, by minimizing the $\sum w_i(\bx) (f_i - f_{LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernal weight, 
 $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
 Here $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors.  The number of nearest neighbors will be greater than the number of basis functions used in the least-squares fit with polynomial with total degree.  Note that in $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially, $K_p={K_d + d \choose K_d} -1$.  
 We will typically use a DWLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
@@ -477,10 +477,10 @@ Every time the DWLS interpolant is evaluated, we  solve a least squares systems 
 
 
 
-The DWLS function $f_{ls}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{ls}(\bx_i)$ will be represented by a Gaussian process kriging model $f_{k}(\bx)$.
+The DWLS function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
 \notes{put in a description of kriging here}
 
-The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{ls}(x) + f_{k}(x)$.  
+The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{LS}(x) + r_{K}(x)$.  
 %We recognize that other surrogate models are possible. 
 
 \notes{How about using $SM(n,\mX,\by)$ for the surrogate model and $SU(n,\mX,\by)$ for the surrogate model uncertainty to keep the notation simpler? MH}
@@ -599,13 +599,15 @@ The uncertainty in the interpolated values can be estimated by  by refitting the
 
 In kriging,  the distance between the sample points defines the spatial correlation that can be used to predict variation in the surface. We will compare the DWLS with the DACE kriging MATLAB algorithm \cite{}. \notes{talk about variance estimation with kriging.  Do we want to talk about Gaussian process models? JMH}
 
-Let's mention UQLab \cite{UQLab2014}, emukit, \cite{emukit2019}, SUMO\cite{SUMO2010} ooDACE \cite{ooDACE2014}, CODES \cite{CODES2015}, and pySOT \cite{pySOT2015}.
 
 \item \underline{Adaptive samplers:}
 
 \item \underline{Optimization:}
 
 \end{itemize}
+
+Let's mention UQLab \cite{UQLab2014}, emukit \cite{emukit2019}, SUMO\cite{SUMO2010}, ooDACE \cite{ooDACE2014}, CODES \cite{CODES2015}, and pySOT \cite{pySOT2015}.
+
 
 \subsubsection{Broader Impact}
 
@@ -874,11 +876,9 @@ The shortcomings highlighted here do not speak against the idea of choosing to s
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Adaptive Sampling Schemes via Weighted Average of Models (Mac's Idea)} \label{sec:Bootstrap}
+\subsection{Weighted Bayesian Bootstrap} \label{sec:Bootstrap}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The DWLS minimizes the residual $\sum w_i(f_i - f_{ls}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{Rubin1981, Efron1982, Efron2016} we generate an ensemble of $B$ DWLS quasi-interpolants, $f_{ls}^b$, $b=1,B$. Each quasi-interpolant is determined by reweighted the DWLS weights by a factor 
-
-these weight are reweighted by uniformly distributed samples $\bv$ the $n$ dimensional simplex.  That is, on each bootstrap integration we  
+The DWLS minimizes the residual $\sum w_i(\bx)(f_i - f_{LS}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer} we generate an ensemble of DWLS quasi-interpolants, $f_{LS}^b$, $b=1,B$. Each quasi-interpolant is defined by minimizing $\sum v_i^b w_i(\bx)(f_i - f_{LS}(\bx_i))^2$.   The reweighting factors, $v_i^b$, are the $i-th$ component of the $b=1,B$ sample $\bv^b$ that are uniformly distributed over the $n$ dimensional unit simplex, $\sum v_i^b = 1 $.  The distribution of the Bayesian DWLS bootstrap quasi-interpolants $\{f_{LS}^b \}_{b=1}^B$ can  be used to estimate the standard error in the DWLS approximation. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -887,11 +887,11 @@ these weight are reweighted by uniformly distributed samples $\bv$ the $n$ dimen
 
 Sect.\  \ref{sec:UnivarEx} highlights some of the drawbacks of sampling in a way to minimize prediction error arising from RKHS or kriging models.  While we value the underlying approach, the models and their uncertainties or errors are not well adapted to the functions being approximated or optimized.
 
-One improvement is to infer the value of $\theta$ inherent in the defintion of $K$ in \eqref{eq:MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
+One improvement is to infer the value of $\theta$ inherent in the definition of $K$ in \eqref{eq:MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
     \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
-For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unforutnately, the new surrogate model has similar deficiencies as the original one in Sect.\ \ref{sec:UnivarEx}, and the suggested next data site is at a place where the function approximation is already quite good.
+For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unfortunately, the new surrogate model has similar deficiencies as the original one in Sect.\ \ref{sec:UnivarEx}, and the suggested next data site is at a place where the function approximation is already quite good.
 
 \begin{figure}[ht]
     \centering
