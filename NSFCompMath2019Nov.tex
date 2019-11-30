@@ -459,7 +459,7 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
 
 ===
 
-Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Our approach resembles the moving least square reproducing kernel methods of \cite{liumovingpartI1197,limovingpartII1996}
+Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Our approach resembles the moving least square reproducing kernel methods of \cite{liumovingpartI1997,limovingpartII1996}
 
 It is common to model the trend as a low degree polynomial, however, we want to have a more flexible form for the trend with the goal of improved accuracy for a modest number of samples.  Therefore we will use distance weighted least squares \DWLS, also known as moving least squares,  to construct the surrogate trend, $\STREND(n,\mX,\by)$.  This is a quasi-interpolant, which will not fit the data exactly. See Sect.\ \ref{sec:Bootstrap} for details.
 
