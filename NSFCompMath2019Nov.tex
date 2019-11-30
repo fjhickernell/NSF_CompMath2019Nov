@@ -459,11 +459,11 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
 
 ===
 
-Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. 
+Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Our approach resembles the moving least square reproducing kernel methods of \cite{liumovingpartI1197,limovingpartII1996}
 
 It is common to model the trend as a low degree polynomial, however, we want to have a more flexible form for the trend with the goal of improved accuracy for a modest number of samples.  Therefore we will use distance weighted least squares \DWLS, also known as moving least squares,  to construct the surrogate trend, $\STREND(n,\mX,\by)$.  This is a quasi-interpolant, which will not fit the data exactly. See Sect.\ \ref{sec:Bootstrap} for details.
 
-The residuals or lack of fit to the data, $\br = \by - \by_T$, where $\by_T = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, will then be fit by, $\SVAR(n,\mX,\by)$, a kriging model assuming zero mean or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives are essentially equivalent in outcome.  Again, for the sake of flexibility, we will assume a more general form of the covariance/reproducing kernel than is typical.  The aim is again better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.
+The residuals or lack of fit to the data, $\br = \by - \by_T$, where $\by_T = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, will then be fit by, $\SVAR(n,\mX,\by)$, a kriging model assuming zero mean or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives are essentially equivalent in outcome.  Again, for the sake of flexibility, we will assume a more general form of the covariance/reproducing kernel than is typical.  The aim is again better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.  
 
 ===
 
