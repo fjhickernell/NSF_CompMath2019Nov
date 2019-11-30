@@ -207,6 +207,7 @@
 \newcommand{\bk}{{\boldsymbol{k}}}
 \newcommand{\bg}{{\boldsymbol{g}}}
 \newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\br}{{\boldsymbol{r}}}
 \newcommand{\bv}{{\boldsymbol{v}}}
 \newcommand{\bu}{{\boldsymbol{u}}}
 \newcommand{\by}{{\boldsymbol{y}}}
@@ -454,9 +455,19 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
     \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation}
 
-\FJHNote{Here are some thoughts.  May we define our surrogate as the sum of a trend and a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Then we will estimate $\STREND(n,\mX,\by)$ by \DWLS and $\SVAR(n,\mX,\by)$ by kriging.  We will initially propose a two-step process to get the surrogate model, but then later we may try to combine.  
+\FJHNote{Here are some thoughts.  
 
-Now the question I still have, is how will your Bayesian bootstrap be used in your \DWLS, since I do not see how it's uncertainty is needed.  I do like \DWLS approach because it gives us more flexibility than a polynomial, and I think that we should mention that.  Also, since \DWLS is a quai-interpolant, we can get a surrogate model that interpolates when we add in the $\SVAR(n,\mX,\by)$ term.   }
+===
+
+Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. 
+
+It is common to model the trend as a low degree polynomial, however, we want to have a more flexible form for the trend with the goal of improved accuracy for a modest number of samples.  Therefore we will use distance weighted least squares \DWLS, also known as moving least squares,  to construct the surrogate trend, $\STREND(n,\mX,\by)$.  This is a quasi-interpolant, which will not fit the data exactly. See Sect.\ \ref{sec:Bootstrap} for details.
+
+The residuals or lack of fit to the data, $\br = \by - \by_T$, where $\by_T = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, will then be fit by, $\SVAR(n,\mX,\by)$, a kriging model assuming zero mean or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives are essentially equivalent in outcome.  Again, for the sake of flexibility, we will assume a more general form of the covariance/reproducing kernel than is typical.  The aim is again better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.
+
+===
+
+Now the question I still have, is how will your Bayesian bootstrap be used in your \DWLS, since I do not see how it's uncertainty is needed.  I do like \DWLS approach because it gives us more flexibility than a polynomial, and I think that we should mention that.  Also, since \DWLS is a quasi-interpolant, we can get a surrogate model that interpolates when we add in the $\SVAR(n,\mX,\by)$ term.   }
 
 We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from combining moving mesh distance-weighted least squares (DWLS) models \cite{mederos2003moving} and from kriging Gaussian Process models \cite{} based on minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs).  
 
@@ -549,7 +560,7 @@ We will develop new tools for rigorously analyzing the error of our adaptive fun
 
 \item We will derive rigorous error bounds, $\ERR$, based on both the sample locations and output data, which are justified for maps in $\calc$. 
 
-\item We will povide  acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
+\item We will provide  acquisition functions, $\VAL$, based on both the sample locations and function values and justified for input functions in $\calc$, which indicate where the next data location should be.
 \end{itemize}
 We will adopt a deterministic perspective and/or a probabilistic numerics (Bayesian) perspective.  Rather than focus on asymptotic convergence rates, our theory will be pre-asymptotic.  We are trying to get a good answer for a small number of data, and we are willing to bend over backwards to obtain it.  Our theory will lay out the conditions under which we can expect to succeed.
 
@@ -622,7 +633,7 @@ In kriging,  the distance between the sample points defines the spatial correlat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Education}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The PIs will collaborating with a number of junior scholars, including students at the high school through PhD level.  Because this project spans theory, algorithms, applications, and software, we will be able to mentor our junior scholars in the areas that they have particular interest or ability, while helping
+The PIs will collaborating with a number of junior scholars, including students at the high school through PhD level.  Because this project spans theory, algorithms, applications, and software, we will be able to mentor our junior scholars in the areas that they have particular interest or ability, while helping them to understand the spectrum of expertise required to solve these kinds of problems.  The PIs will also engage in giving tutorials and teaching courses that will include our new results.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -888,7 +899,7 @@ The shortcomings highlighted here do not speak against the idea of choosing to s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Exploratory Sampling} \label{sec:exploreSample}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+For the initial exploratory sample of size $n_0$, we will likely use space filling samples such as 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Weighted Bayesian Bootstrap} \label{sec:Bootstrap}
