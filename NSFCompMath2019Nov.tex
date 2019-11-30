@@ -100,17 +100,16 @@
 \DeclareMathOperator{\erf}{erf}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator{\QOI}{QOI}
-\DeclareMathOperator{\POI}{POI}
-\DeclareMathOperator{\err}{err}
-\DeclareMathOperator{\oerr}{\overline{\err}}
-\DeclareMathOperator{\herr}{\widehat{\err}}
+\DeclareMathOperator{\QOI}{QOI} %Quantity of Interest
+\DeclareMathOperator{\POI}{POI} %Parameter of Interest
 \DeclareMathOperator{\Ans}{ANS}
 \DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\SOL}{SOL}
 \DeclareMathOperator{\APP}{\widehat{\QOI}}
-\DeclareMathOperator{\SURR}{SM}
-\DeclareMathOperator{\ALG}{ALG}
+\DeclareMathOperator{\SURR}{SM} %surrogate model
+\DeclareMathOperator{\STREND}{ST} %surrogate trend
+\DeclareMathOperator{\SVAR}{SV} %surrogate variation
+\newcommand{\DWLS}{\textrm{DWLS}\xspace} %distance weighted least squares, also known as moving least squares
+%\DeclareMathOperator{\ALG}{ALG}
 \DeclareMathOperator{\ERR}{ERR}
 \DeclareMathOperator{\VAL}{VAL}
 \DeclareMathOperator{\OPER}{OPER}
@@ -455,6 +454,9 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
     \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation}
 
+\FJHNote{Here are some thoughts.  May we define our surrogate as the sum of a trend and a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Then we will estimate $\STREND(n,\mX,\by)$ by \DWLS and $\SVAR(n,\mX,\by)$ by kriging.  We will initially propose a two-step process to get the surrogate model, but then later we may try to combine.  
+
+Now the question I still have, is how will your Bayesian bootstrap be used in your \DWLS, since I do not see how it's uncertainty is needed.  I do like \DWLS approach because it gives us more flexibility than a polynomial, and I think that we should mention that.  Also, since \DWLS is a quai-interpolant, we can get a surrogate model that interpolates when we add in the $\SVAR(n,\mX,\by)$ term.   }
 
 We focus on surrogate models, $\SURR(n,\mX,\by)$, that arise from combining moving mesh distance-weighted least squares (DWLS) models \cite{mederos2003moving} and from kriging Gaussian Process models \cite{} based on minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs).  
 
@@ -589,7 +591,14 @@ We will use our adaptive sampling to help guide the optimization of different mi
 In this example the mean-field DWLS model will identify the underlying trends in the predictions, and the kriging Gaussian Process model will quantify the aleatory uncertainty created by the stochastic events.
 
 \subsubsection{Software}
-Our algorithms will be implemented in open source libraries for use by the modeling community.  The software will include the following routines:
+There is considerable interest in the computational mathematics, computer science, and engineering communities in developing and using software for the adaptive design and analysis of computer experiments.  Examples of existing packages are the MATLAB libraries UQLab \cite{UQLab2014}, SUMO\cite{SUMO2010}, ooDACE \cite{ooDACE2014} (a successor to DACE \cite{dace2002}), and CODES \cite{CODES2015}, and the Python libraries emukit \cite{emukit2019} and pySOT \cite{pySOT2015}.  Many of these packages employ allow for trends and variation modeling via kriging, but not their not as flexible, as those we intend to develop.
+
+Our algorithms will be implemented in libraries on open source repositories for use by the modeling community.  We will compare the performance of our algorithms with existing software using test cases in the literature and on the large applications described above.  We will also explore collaborations with the developers of software libraries whose interests overlap ours so that we can leverage each others' strengths.
+
+\notes{Fred:  Is this enough detail for this subsection? other stuff commented out}
+
+\iffalse
+The software will include the following routines:
 \begin{itemize}
 \item \underline{Surrogate models:} We will consider surrogate models based on both distance weighted least squares (DWLS) quasi-interpolation methods and kriging.  
 These methods consider the distance and function values when estimating values in unknown areas. The interpolated values can be expressed as a weighted linear combination of the known sample values. 
@@ -606,11 +615,14 @@ In kriging,  the distance between the sample points defines the spatial correlat
 
 \end{itemize}
 
-Let's mention UQLab \cite{UQLab2014}, emukit \cite{emukit2019}, SUMO\cite{SUMO2010}, ooDACE \cite{ooDACE2014}, CODES \cite{CODES2015}, and pySOT \cite{pySOT2015}.
+\fi
 
+\notes{Fred:  Since software is broader impact, I thought that we could change the section title below.}
 
-\subsubsection{Broader Impact}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Education}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The PIs will collaborating with a number of junior scholars, including students at the high school through PhD level.  Because this project spans theory, algorithms, applications, and software, we will be able to mentor our junior scholars in the areas that they have particular interest or ability, while helping
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -665,39 +677,42 @@ include
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph*{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\vspace{-1ex}
+	\includegraphics[width = 0.4\textwidth]{ProgramsImages/sampling-funappxg.png}
+	\\
+	\includegraphics[width = 0.4\textwidth]{ProgramsImages/sampling-funming.png}
+
+	\vspace{-2ex}
+	\caption{The function data ({\color{MATLABOrange}$\bullet$}) for the locally adaptive 
+	function approximation (top) and minimization (bottom) algorithms in \cite{ChoEtal17a}.  Sampling is denser where $\abs{f''}$ is larger.  For miminization it is also denser where the function values are smaller. \label{localadaptfig}}
+\end{wrapfigure}
+
 FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant (equally spaced data sites), but the number of data sites is chosen adaptively to meet the error tolerance.
 
 However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are \emph{locally adaptive}, meaning that the sampling density is non-uniform and influenced by the function data.  Qualitatively, the cone of functions for which these algorithms are guaranteed to succeed consists of functions where the maximum of the second derivative in a sub-interval is not drastically smaller than the larger of it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
 $\norm[\infty]{f''}$ for peaky functions.
 
-\begin{figure}[ht]
-	\centering
-	\vspace{-1ex}
-	\includegraphics[width = 0.48\textwidth]{ProgramsImages/sampling-funappxg.png}
-	\quad
-	\includegraphics[width = 0.48\textwidth]{ProgramsImages/sampling-funming.png}
 
-	\vspace{-2ex}
-	\caption{The function data ({\color{MATLABOrange}$\bullet$}) for the locally adaptive 
-	function approximation (left) and minimization (right) algorithms in \cite{ChoEtal17a}.  The sample is denser where $\abs{f''}$ is larger.  For miminization it is also denser where the function values are smaller. \label{localadaptfig}}
-\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph*[QMCsec]{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
 
-\begin{figure}[ht] % MATLAB Driver: PlotPoints.m
+\begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
 	\centering
-	\includegraphics[width = 0.25\textwidth]{ProgramsImages/IIDPoints.eps} \quad
-	\includegraphics[width = 0.25\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \quad
-	\includegraphics[width = 0.25\textwidth]{ProgramsImages/SSobolPoints.eps} 
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/IIDPoints.eps} \ 
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \ 
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/SSobolPoints.eps} 
 	
 	\caption{IID data sites contrasted with two families of space filling data sites.\label{PtsFig}}
-\end{figure}
+\end{wrapfigure}
 
-The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
+The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/ digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.
 
 The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed are those for which  the Fourier coefficients, $\bigabs{\hf(\bk(\kappa))}$ decay steadily, but not necessarily monotonically, in magnitude.  Fig.\ \ref{GoodBadWalshFig} displays a typical function inside $\calc$ and one outside $\calc$. Here $\bk(0), \bk(1), \ldots$ is a natural ordering of the $d$-dimensional wavenumbers.  The function lying outside the cone appears to have high frequency noise. 
 
