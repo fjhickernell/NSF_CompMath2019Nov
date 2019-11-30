@@ -459,7 +459,7 @@ Based on the initial sample of size $n=n_0$, we construct approximate QOIs, deno
 
 ===
 
-Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Our approach resembles the moving least square reproducing kernel methods of \cite{liumovingpartI1997,limovingpartII1996}
+Our surrogate models will be comprised of a trend plus a variation, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. Our approach resembles the moving least square reproducing kernel methods of \cite{liumovingpartI1997,limovingpartII1996}.
 
 It is common to model the trend as a low degree polynomial, however, we want to have a more flexible form for the trend with the goal of improved accuracy for a modest number of samples.  Therefore we will use distance weighted least squares \DWLS, also known as moving least squares,  to construct the surrogate trend, $\STREND(n,\mX,\by)$.  This is a quasi-interpolant, which will not fit the data exactly. See Sect.\ \ref{sec:Bootstrap} for details.
 
@@ -893,13 +893,10 @@ The adaptive sampling rule outlined here performs poorly for this example for se
 The shortcomings highlighted here do not speak against the idea of choosing to sample next where the prediction error is largest.  Rather, our surrogate models and their uncertainties must become more sophisticated.  Remedies are proposed in Sects.\ \ref{sec:Bootstrap} and \ref{sec:kerinferdata}.
 
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Exploratory Sampling} \label{sec:exploreSample}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-For the initial exploratory sample of size $n_0$, we will likely use space filling samples such as 
+For the initial exploratory sample of size $n_0$, we will likely use space filling samples such as the low discrepancy samples depicted in Fig.\ \ref{PtsFig}.  These typically mimic the uniform distribution.  We will \emph{explore the effectiveness of transformations of uniform points to other distributions}, such as the arcsine transformation, which pushes points towards the boundaries.  In one dimension such transformations may improve the accuracy of interpolation.  In higher dimensions, it may or may not help \cite{HicLi12a}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Weighted Bayesian Bootstrap} \label{sec:Bootstrap}
@@ -943,22 +940,22 @@ Another area weakness in the adaptive scheme outlined above is that the cone $\c
 \subsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To approximate or optimize a $d$-variate function using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
+To approximate or optimize a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
 \begin{equation*}
     f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
 \end{equation*}
-requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which boil down to defining an $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple that we will explore.
+requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which involve restricting oneself to a $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple of ways that we will explore.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph*{Coordinate Weights}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has shown that the growth in the sample size, $n$, required to solve a problem involving $d$ POIs to an error of $\varepsilon$ can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$ if the coordinates can be ordered so that their importance decays sufficiently fast.  
+The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$.  If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if i) the POIs do not all contribute equally to the function being approximated, ii) the importance of each POI is is known, and iii) arranged in order of importance their importance decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
 
-As an example, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
+As an example of how this might occur, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
 \begin{equation} \label{eq:ProdMatKer}
     K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
 \end{equation}
-If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough.
+If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$.
 
 For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
 
