@@ -2,7 +2,7 @@
 % GitHub: https://github.com/fjhickernell/NSF_CompMath2018Nov
 % Overleaf: https://www.overleaf.com/9576964687whkhbmrrvhsd
 \documentclass[11pt]{NSFamsart}
-\usepackage{latexsym,amsfonts,amsmath,amsthm,epsfig,extdash,multirow}
+\usepackage{latexsym,amsfonts,amsmath,amsthm,epsfig,extdash,mathabx,multirow}
 \usepackage{stackrel,tabularx,mathtools,enumitem,longtable,xspace}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[numbers,sort&compress]{natbib}
@@ -303,18 +303,7 @@
 \newcommand{\inflate}{\fC}
 
 
-
-
 \definecolor{MATLABOrange}{rgb}{0.85,  0.325, 0.098}
-
-%\newtheorem{resproblem}{Research Problem}
-%\newtheorem{research}{Research Objectives}
-%\newtheorem{keyidea}{Key Idea}
-\newcounter{keyideabean}[section]
-\newenvironment{keyidea}{\refstepcounter{keyideabean}\par \smallskip
-   \noindent\begin{itshape}%
-   Key Idea~\thekeyideabean.\ignorespaces}%
-   {\end{itshape}\ignorespacesafterend}
 
 
 %\setcounter{page}{1}
@@ -337,34 +326,8 @@
 \makeatother
 
 
-%\newcommand{\smallerscoop}{\includegraphics[width=0.7cm]{ProgramsImages/IceCreamScoop.eps}\xspace}
-\newcommand{\smallerscoop}{\parbox{0.7cm}{\includegraphics[width=0.7cm]{ProgramsImages/IceCreamScoop.eps}}\xspace}
-\newcommand{\smallscoop}{\parbox{1cm}{\includegraphics[width=1cm]{ProgramsImages/IceCreamScoop.eps}}\xspace}
-\newcommand{\medscoop}{\parbox{1.8cm}{\includegraphics[width=1.8cm]{ProgramsImages/IceCreamScoop.eps}}\xspace}
-\newcommand{\meddanger}{\parbox{0.8cm}{\vspace{-0.3cm}\includegraphics[width=0.75cm]{ProgramsImages/dangersign.eps}}\xspace}
-\newcommand{\medcone}{\parbox{1.2cm}{\includegraphics[width=0.55cm,angle=270]{ProgramsImages/MediumWaffleCone.eps}}\xspace}
-\newcommand{\largercone}{\parbox{2.2cm}{\vspace*{-0.2cm}\includegraphics[width=1cm,angle=270]{ProgramsImages/MediumWaffleCone.eps}}\xspace}
-\newcommand{\largecone}{\parbox{1.54cm}{\vspace*{-0.2cm}\includegraphics[width=0.7cm,angle=270]{ProgramsImages/MediumWaffleCone.eps}}\xspace}
-\newcommand{\smallcone}{\parbox{0.7cm}{\includegraphics[width=0.32cm,angle=270]{ProgramsImages/MediumWaffleCone.eps}}\xspace}
-
-
 \newcommand{\FJHNote}[1]{{\color{blue}Fred: #1}}
 \newcommand{\JMHNote}[1]{{\color{green}Mac: #1}}
-
-\newcommand{\keyideainitialtext}{The initial design must be fill the domain, $\Omega$, well enough to detect significant fluctuations in the function.}
-\newcommand{\keyideafunctiontext}{The choice of the $n+1^{\text{st}}$ data site should depend meaningfully on output data, $\by$, not only on the location of the other sites.}
-\newcommand{\keyideaBayesiantext}{Bayesian numerical analysis provides an alternative to deterministic numerical analysis.  The two perspectives produce similar outcomes.  The Bayesian perspective permits inference.}
-\newcommand{\keyideaconetext}{Adaptive approximation algorithms are constructed for \emph{cones} of functions that are roughly approximated via a modest number of observations.}
-\newcommand{\keyidealowdimtext}{Avoiding the curse of dimensionality requires $f$ to have an inherent low dimensional structure.}
-
-
-\newcommand{\shortnoy}{For some adaptive sampling schemes, $\phi_{n+1}(\mX,\by) = \phi_{n+1}(\mX)$, meaning that these schemes are oblivious to the function values, $\by$.}
-
-\newcommand{\shortheuristic}{Adaptive sampling schemes that do depend on $\by$ are heuristic; they lack a theoretical basis.}
-
-
-\newcommand{\repeatkeyidea}[2]{\begin{itshape}Key Idea \ref{#1}. #2\end{itshape}}
-\newcommand{\repeatshort}[2]{Shortcoming\ref{#1}. #2}
 
 % Notes on the paper for communicating with coauthors
 \newif\ifnotesw \noteswtrue
@@ -379,13 +342,14 @@ Adaptive Multivariate Sampling to Accelerate  Discovery\\
 %Project Description
 }
 \end{center}
-\iffalse
 \vspace{-2ex}
 
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 \vspace{-6ex}
+
+\iffalse
 
 
 \notes{We will highlight the research questions in the Intellectual Merit section using the $\backslash$emph command}
@@ -422,7 +386,7 @@ an inexpensive representation of the simulation output (the identity) or the opt
 \begin{equation} \label{eq:ourQOIs}
     \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
-We propose to \emph{develop and analyze better methods based on adaptive sampling} to predict the QOIs when $d \in [10, 100]$ over a wide range of POIs and a small feasible number of simulations, $n$, say in the hundreds.  We consider the situation where the primary cost is in obtaining the samples, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the output to determine future sample locations. 
+We propose to \emph{develop and analyze better numerical algorithms based on adaptive sampling} to predict the QOIs when $d \in [10, 100]$ over a wide range of POIs and a small feasible number of simulations, $n$, say in the hundreds.  We consider the situation where the primary cost is in obtaining the samples, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the output to determine future sample locations, numerical approximations, or error bounds. 
 
 Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)$, where 
 \begin{itemize}
@@ -432,54 +396,33 @@ Numerical algorithms for approximating these QOIs take the form $\APP(n,\mX,\by)
 \end{itemize}   
 The $n$-dependence of $\mX$ and $\by$ is implicit.  
 
-Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. To economize on simulation time, it is important to choose the data sites judiciously. Adaptive sampling uses past data to guide the choice of future data sites:   
+Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. To economize on simulation time, it is important to choose the data sites judiciously. Adaptive sampling uses past data to guide the choice of future data sites by maximizing the acquisition function, $\VAL(\cdot,n,\mX, \by)$:   
 \begin{equation} \label{eq:nextsample}
     \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
-That is, $\bx_{n+1}$ maximizes $\VAL(\bx,n,\mX, \by)$, which is the the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the output data already observed, $\by$, at the sites $\mX$.  
-
-The acquisition function, $\VAL$, guides our future data site selections.  It typically depends on a data-driven measure of uncertainty or error in $\APP(n,\mX,\by)$: 
-\begin{equation} \label{eq:errbd}
-    \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
-\end{equation}
-either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$.  These error bounds are valid for $\calc$,  precisely defined sets of well-behaved simulation output maps, $f$.  No numerical algorithm succeeds for all $f$, and $\calc$ specifies those $f$ for which our algorithm does succeed. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
-
-
-%\subsection{Our goal}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\subsection{Our plan} \label{sec:OurPlan}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Here, $\VAL(\bx,n,\mX, \by)$ represents the the value to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the output data already observed, $\by$, at the sites $\mX$.  
 
 \paragraph*{Explore-Exploit with Surrogate Models} We use an \emph{explore-exploit} sampling process that relies on surrogate models (meta-models, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, and their data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$.  
 
-In the \emph{explore} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on previous samples.  We sample $f$ on a relatively sparse, relatively space-filling, set of $n_0$ data sites over $\Omega$, the region of feasible POIs.  We use  Sobol' points or other low discrepancy samples \cite{DicPil10a}, perhaps transformed to a non-uniform sampling distribution, such as the arcsine distribution. The sample in the explore stage must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$.
+In the \emph{explore} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on previous samples.  We sample $f$ on a relatively sparse, relatively space-filling, set of $n_0$ data sites over $\Omega$, the region of feasible POIs, perhaps transformed to a non-uniform sampling distribution, such as the arcsine distribution. The sample in the explore stage must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$.
 
-The \emph{exploit} stage uses all past samples to construct surrogate models, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, to detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$.  The uncertainties in the surrogate models inform the error bounds for the $\QOI$ in \eqref{eq:errbd} and the acquisition functions, which determine the next sample location.
+The \emph{exploit} stage uses all past samples to construct surrogate models, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, to detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$.  The uncertainties in the surrogate models inform the acquisition functions, which determine the next sample location.
 
-We express our surrogate models as the sum of a trend model and  variation model, i.e., $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$. 
+We express our surrogate models as $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$, the sum of a trend model and  variation model. 
 The trend model, $\STREND(n,\mX,\by)$, captures the underlying mean field of the simulation output $f$,  and  $\SVAR(n,\mX,\by)$ models the variation from this trend. 
 It is common to model the trend as global multivariate polynomial in low dimensions $(d<5)$. 
 However, the number of terms in multivariate polynomials may grow exponentially as $d$ increases.  We use  
-a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, limovingpartII1996, salehi2013generalized, mederos2003moving} for our trend model to help tame this curse of dimensionality and provide flexibility.  Linear nonparametric \MLS methods do not necessarily suffer from the curse of dimensional and are flexible in capturing nonpolynomial shapes in a response surface.  
-See Sect.\ \ref{sec:exploreSample} for details.  
+a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, limovingpartII1996, salehi2013generalized, mederos2003moving} for our trend model to help tame this curse of dimensionality and provide flexibility (see Sect.\ \ref{sec:trend}).  Linear nonparametric \MLS methods do not necessarily suffer from the curse of dimensional and are flexible in capturing nonpolynomial shapes in a response surface.  
+See Sect.\ \ref{sec:ourtrend} for details on our implementation.  
 
 \MLS methods are quasi-interpolants, since they do not fit the data exactly.  
-The residuals or lack of fit to the data, $\br = \by - \by_{\TREND}$, where $\by_{\TREND} = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$, are then be fit by $\SVAR(n,\mX,\by)$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives yield essentially equivalent outcomes.  Again, for the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical.  The aim is to obtain better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.  
+The residuals or lack of fit to the data, $\by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, are then be fit by $\SVAR(n,\mX,\by_{\VAR})$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant (see Sect.\ \ref{sec:varmodel}).  These two different perspectives yield essentially equivalent outcomes.  For the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical, so that we may obtain better accuracy under a stringent sample budget (see Sect.\ \ref{sec:kerinferdata}).  
 
 We assess the uncertainty in  our surrogate models, $\SURRERR(n,\mX,\by)$, using data-based measures for the output maps $\calc$ such that 
 \begin{equation} \label{eq:surrUncert}
-    \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,
+    \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,\ \bx \in \Omega,
 \end{equation}
-with either absolutely or with high probability.
-\begin{itemize}
-\item We measure the uncertainty in the trend model $\STREND(n,\mX,\by) $ via a weighted Bayesian bootstrap approach (Sect.\ \ref{sec:trend}). 
-%\notes{Not sure about this if we have thrown the uncertainty into $\SVAR$}
-\item In kriging variation model,  $\SVAR(n,\mX,\by)$, we use the data to infer the  covariance/reproducing kernel and to construct credible intervals (Sect.\ \ref{sec:kerinferdata}).
-\end{itemize}
-
-Because the identity map is homogeneous, i.e., $\ID(cf) = c\ID(f)$ for all $c \in \reals$, our surrogate models, $SM$, and surrogate uncertainties, $SU$, are also constructed to be homogeneous.  It then follows that the sets of functions, $\calc$, for which the error bounds \eqref{eq:surrUncert} are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
+with either absolutely or with high probability.  Our measure of uncertainty combines the uncertainty in the variation model combined with a weighted Bayesian bootstrap approach (see Sects.\ \ref{sec:varmodel} and \ref{sec:BayesianBootUncertainty}).  Identifying the appropriate sets $\calc$, which will turn out to be cones, is one of our research problems.
 
 \paragraph*{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
 For the two QOIs in \eqref{eq:ourQOIs} our approximations correspond to the surrogate model itself and the minimum output observed:
@@ -488,75 +431,58 @@ For the two QOIs in \eqref{eq:ourQOIs} our approximations correspond to the surr
 \end{equation}
 For $\APPID$ the surrogate model needs to represent $f$ well throughout its domain, $\Omega$, while for $\APPMIN$ the surrogate model only needs to represent $f$ well enough to identify potential minima.
 
-The acquisition function, $\VAL(\bx,n,\mX, \by)$, guides us in choosing the next data site, $\bx_{n+1}$.  For function approximation, $\VAL(\bx,n,\mX, \by)$ corresponds to a pointwise error bound for the surrogate model, and for  minimization,  $\VAL(\bx,n,\mX, \by)$ corresponds to the expected improvement in the approximation to the minimum:
-\begin{subequations} \label{eq:QOIval}
-\begin{align}
-\label{eq:idval}
-     \IDVAL(\bx,n,\mX,\by) &= \SURRERR(n,\mX,\by)(\bx), \\
-     \label{eq:minval}
-      \MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)].
-\end{align}
-\end{subequations}
-The next data site, $\bx_{n+1}$ maximizes the acquisition function (see \eqref{eq:nextsample}).   The acquisition functions are related to the uncertainties or error bounds for the QOIs:
-\begin{subequations} \label{eq:QOIerr}
-\begin{align}
-\label{eq:iderr}
-     \bignorm[\infty]{f - \APPID(n,\mX,\by)} &\le \norm[\infty]{\SURRERR(n,\mX,\by)} =: \IDERR(n,\mX,\by), \\
-     \label{eq:minerr}
-     \bigabs{\MIN(f) - \APPMIN(n,\mX,\by)} & \le \max_{\bx \in \Omega} \Bigl\{ \APPMIN(n,\mX,\by) - [f(\bx)- \SURRERR(n,\mX,\by)](\bx) \Bigr\} \\
-     \nonumber
-     & =: \MINERR(n,\mX,\by).
-\end{align}
-\end{subequations}
-The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
+The acquisition function, $\VAL(\cdot,n,\mX, \by)$, introduced above in \eqref{eq:nextsample}, which guides us in choosing the next data site, $\bx_{n+1}$ will depend on both our surrogate model and its uncertainty.  For function approximation, $\VAL(\bx,n,\mX, \by)$ corresponds to a pointwise error bound for the surrogate model, and for  minimization,  $\VAL(\bx,n,\mX, \by)$ corresponds to the expected improvement in the approximation to the minimum.  The precise definitions are below in  \eqref{eq:QOIval}.  The maximization of the acquisition function will be done over a large candidate set.
 
+The surrogate models and uncertainties also provide us uncertainties or error bounds for the QOIs, which in general, take the form
+\begin{equation} \label{eq:errbd}
+    \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
+\end{equation}
+again either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$.  These error bounds are valid for $\calc$,  precisely defined sets of well-behaved simulation output maps, $f$. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.  The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
 \paragraph*{Summary} 
-Our goals are to create better surrogate models, $\SURR$, and data-driven surrogate uncertainty measures, $\SURRERR$, especially in the case when $d$ is large and $n$ is small.  These require adaptive sampling to be more economical than what is presently available.  The end result will be
+Our goals are to create better surrogate models, $\SURR$, and data-driven surrogate uncertainty measures, $\SURRERR$, especially in the case when $d$ is large and $n$ is small.  These will require more flexible and data-driven models and correspondingly economical adaptive sampling schemes.  The end result will be
 \begin{itemize}
-    \item Better numerical approximations, $\APP$, for function approximation and optimization, especially in the case when $d$ is large and $n$ is small, 
-    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations, $\mX$, and the output data, $\by$,
-    \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for
-    \item Precisely defined sets, which will turn out to be cones, of output maps, $\calc$.
+    \item A methodology to combine the data-driven Bayesian bootstrap analysis for the surrogate trend model with Gaussian process variational modeling to quantify the overall uncertainty in the surrogate model for the $\APP$,
+    \item Better adaptive sampling acquisition functions, $\VAL$, that depend on both the past sample locations, $\mX$, and the output data, $\by$, and
+    \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for precisely defined sets, which will turn out to be cones, of output maps, $\calc$.
 \end{itemize}
+We will demonstrate the success of our algorithms on practical large-scale simulation applications and compare our results with those obtained by other available software libraries for surrogate modeling.  In the course of our research we will mentor students and early-career scholars. 
 
 \section{Adaptive Sampling Overview}
-Factoring  the surrogate model into the sum of a trend model and a variation model,  $\SURR = \STREND + \SVAR$, allows us to optimize each model independently.   
-The trend MLS model is evaluated at the original set of samples to define $\by_{\TREND} = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$.
-We then evaluate the residuals at the original samples, $\br:=\by-\by_{\TREND}$ and fit our variation model to these residuals $\SVAR(n,\mX,\br)$.
+In this section we provide more details and relevant notation to describe adaptive sampling from our perspective.  The initial sampling budget must be devoted to exploring $f$ over its domain, $\Omega$.  Without a wide-ranging exploration, important features might be missed.  Of course, if there is a priori knowledge about the output map $f$, that can be built into the exploratory stage, but we will ignore that factor.  After the exploration comes the exploitation stage, where the simulation output or function data, $\by$ is used to determine where future samples should be taken.
 
-Next, we generate a dense set of $n_c >> n$, candidate low discrepancy sampling points, 
-$\mX^c = \{ \bx^c \}_{i=1}^{n_c}$,  in the space of feasible POIs. 
-These are the POI values that will be considered for the next input sample evaluation.   
-The trend MLS model is evaluated at all of  the candidate samples to define  $\by^c_{\TREND} = \{ \STREND(n,\mX,\by)(\bx^c_i) \}_{i=1}^n$.
-The variation model then used to estimate the uncertainty at each of the candidate sample points.  
-\FJHNote{I think that the $\mX^c$ needs to be input into $\VAL(\cdot, n, \mX, \by)$.}
+A key feature of the exploitation stage is the surrogate model (metamodel, emulator, function approximation), that is base only on the data, $\mX$ representing the data sites, and $\by$ representing the output data.  In both the RKHS and kriging approaches to constructing surrogate models, there is a trend and a variation, an approach we adopt here:  
+\begin{equation*}
+    \SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by). 
+\end{equation*} 
+The trend, $\STREND(n,\mX,\by)$ is relatively simple function that fits the data roughly.  Rather than using a low degree polynomial, we use moving least squares (MLS) for to model the trend (Sect.\ \ref{sec:trend}).  The variation, $\SVAR(n,\mX,\by)$, models the difference between the function and the trend and provides interpolation.  We use reproducing/covariance kernels to construct the variation model (Sect.\ \ref{sec:varmodel}).  
 
-The above process is repeated using weighted Bayesian bootstrap resampling to create an ensemble of trend models by refit the MLS with random weights.
-We refit the residuals for each bootstrapped MLS model to obtain a distribution of uncertainty for the mean and variation of the surrogate model at each of the candidate points. 
-
-The distributions for the uncertainties at the candidate points are then used to define the acquisition function $\VAL$ to identify which of the candidate sample points most reduce the uncertainty in the predicted $\APP$. 
+The surrogate model for $f$ requires a measure of uncertainty, which we construct using uncertainty measures for $\SVAR(n,\mX,\by)$ in Sect.\ \ref{sec:varmodel} combined with a Bayesian bootstrap resample in Sect.\ \ref{sec:BayesianBootUncertainty}. We then exploit the surrogate model and its uncertainty to define the acquisition function, $\VAL(\cdot, n,\mX,\by)$  which guides as to where to sample next.  This is addressed in Sect.\ \ref{sec:acquire}.  In lieu of an exact maximization we evaluate  $\VAL(\cdot, n,\mX,\by)$ at a dense set of $n_c \gg n$ space filling points.
 
 Because the primary  cost in our problems is acquiring the sample data, we are not overly concerned about the time required to generate surrogate models and to assess their uncertainties.
 
 
-\subsection{The Initial Exploration Step: Sampling}
+\subsection{The Initial Exploration Step: Space Filling Sampling}
 
-The goal of the initial exploratory samples is to explore the space of feasible POIs, $\Omega$,  when little, or nothing, is known about the response QOIs. 
- We use  Sobol' points or other low discrepancy (space filling) samples \cite{DicPil10a} in $\Omega$, 
-  and  will compare the effectiveness of low discrepancy samples from either uniform and Chebyshev distributions.
-The  Chebyshev distribution pushes points towards the boundaries and is known to improve the accuracy of interpolation in one dimension.  
+\begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
+	\centering
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/IIDPoints.eps} \ 
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \ 
+	\includegraphics[width = 0.20\textwidth]{ProgramsImages/SSobolPoints.eps} 
+	
+	\caption{IID data sites contrasted with two families of space filling data sites.\label{PtsFig}}
+\end{wrapfigure}
+
+The goal of the initial exploratory samples is to explore the space of feasible POIs, $\Omega$,  when little, or nothing, is known about the response QOIs.  We use  Sobol' points or other low space filling data sites \cite{DicPil10a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts two families of space filling data sites with the IID data sites that cover the domain poorly. We  will compare the effectiveness of low discrepancy samples from either uniform and arcsine distributions.
+The arcsine distribution pushes points towards the boundaries and is known to improve the accuracy of interpolation in one dimension.  
 In higher dimensions, it may or may not help \cite{HicLi12a}.
-These initial sparse set of $n_0$ samples sites do not depend on $f$ or the QOIs and must be small enough to be economical, 
-but large enough to detect important features of $f$ that influence $\QOI(f)$.
- 
-The function $f$  is then evaluated at each of these samples and the QOIs evaluated.  
-On each iteration of the adaptive sampling algorithm, additional samples will be sequentially added to create a set of $n$ sample points.
+
+This exploratory set of $n_0$ samples sites does not depend on $f$ or the QOIs and must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation step.
 
 \subsection{The Exploitation Step:  Surrogate Model}
 
-In the exploitation step, we create surrogate models, $\SURR(\bx,n,\mX,\by)$, in $\Omega$ by combining a MLS model to capture the mean field behavior of the response surface with a 
-variation kriging Gaussian Process model to estimate the uncertainty in the model. 
+In the exploitation step, we create surrogate models, $\SURR(n,\mX,\by)$ defined on $\Omega$ by combining an MLS model to capture the mean field behavior of the response surface with a 
+variation RKHS minimum norm interpolant or kriging Gaussian Process model to estimate the variation in the model. 
  
 \subsubsection{The Trend Model} \label{sec:trend}
 We define our trend model as the MLS function,$\STREND(n,\mX,\by)(\bx) = f_{\LS}(\bx)$, by minimizing  $\sum w_i(\bx) (f_i - f_{\LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
@@ -624,7 +550,7 @@ where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because i
 \end{subequations}
 This data-driven error bound for the surrogate variation model is used to construct the  acquisition functions in \eqref{eq:QOIval} and error bounds in \eqref{eq:QOIerr} for the two QOIs in \eqref{eq:ourQOIs} with their approximations in \eqref{eq:QOIhat}.
 
-One may question why the surrogate error bound in \eqref{eq:DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f_{\VAR}$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The surrogate variation models for $f_{\VAR} \pm c f_\perp)$, must be the same for all $c$, while the values of $f_{\VAR} + c f_\perp)$ and  $f_{\VAR} - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate variation error bound cannot apply for all possible $f_{\VAR} + c f_\perp$.
+One may question why the surrogate error bound in \eqref{eq:DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f_{\VAR}$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The surrogate variation models for $f_{\VAR} \pm c f_\perp$, must be the same for all $c$, while the values of $f_{\VAR} + c f_\perp$ and  $f_{\VAR} - c f_\perp$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate variation error bound cannot apply for all possible $f_{\VAR} + c f_\perp$.
 
 The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$.  In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
 
@@ -641,15 +567,19 @@ Following the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootst
 \end{equation}
 where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functionss, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$.  
 
-For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$.  These lead to our final surrogate model and its uncertainty:
-\begin{subequations}
-\begin{gather}
-    \SURR^b(n,\mX,\by) = \STREND^b(n,\mX,\by) + \SVAR^b(n,\mX,\by - \by^b_{\TREND}), \\
-    \SURR(n,\mX,\by) = \frac 1B \sum_{b=1}^B \SURR^b(n,\mX,\by), \\
+For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$.  These lead to our final surrogate model and its uncertainty.
+The surrogate model for each Bayesian bootstrap model can be expressed as 
+\begin{equation*}
+    \SURR^b(n,\mX,\by) = \STREND^b(n,\mX,\by) + \SVAR^b(n,\mX,\by - \by^b_{\TREND}).
+\end{equation*}
+These can be averaged to define the mean surrogate model
+\begin{equation*}
+    \SURR(n,\mX,\by) = \frac 1B \sum_{b=1}^B \SURR^b(n,\mX,\by), 
+\end{equation*}
+and the uncertainty surrogate model defined as
+\begin{equation*}
     \SURRERR(n,\mX,\by) = \sqrt{\frac 1B \sum_{b=1}^B \bigl[ \SURR^b(n,\mX,\by) + \SVARERR^b(n,\mX,\by - \by^b_{\TREND}) - \SURR(n,\mX,\by) \bigr]^2} .
-\end{gather}
-\notes{FH Perhaps not the best}.
-\end{subequations}
+\end{equation*}
 
 
 \iffalse
@@ -666,12 +596,38 @@ We then $\SURR_b=\STREND_b + \SVAR_b$ these ensemble of uncertainties  at $\bx^c
 \fi
 
 
-\subsection{The Acquisition Step:  Uncertainty Quantification}
+\subsection{The Acquisition Step:  Uncertainty Quantification} \label{sec:acquire}
+\FJHNote{I will write something}
 
+\begin{subequations} \label{eq:QOIval}
+\begin{align}
+\label{eq:idval}
+     \IDVAL(\bx,n,\mX,\by) &= \SURRERR(n,\mX,\by)(\bx), \\
+     \label{eq:minval}
+      \MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)].
+\end{align}
+\end{subequations}
+The next data site, $\bx_{n+1}$ maximizes the acquisition function (see \eqref{eq:nextsample}).  
 
-\notes{FH Let's discuss}
+\begin{subequations} \label{eq:QOIerr}
+\begin{align}
+\label{eq:iderr}
+     \bignorm[\infty]{f - \APPID(n,\mX,\by)} &\le \norm[\infty]{\SURRERR(n,\mX,\by)} =: \IDERR(n,\mX,\by), \\
+     \label{eq:minerr}
+     \bigabs{\MIN(f) - \APPMIN(n,\mX,\by)} & \le \max_{\bx \in \Omega} \Bigl\{ \APPMIN(n,\mX,\by) - [f(\bx)- \SURRERR(n,\mX,\by)](\bx) \Bigr\} \\
+     \nonumber
+     & =: \MINERR(n,\mX,\by).
+\end{align}
+\end{subequations}
+The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
-\notes{MH Need to move stuff here}
+The acquisition function, $\VAL$, guides our future data site selections.  It typically depends on a data-driven measure of uncertainty or error in $\APP(n,\mX,\by)$: 
+\begin{equation} \label{eq:errbd}
+    \bignorm[\calg]{\QOI(f) - \APP(n,\mX,\by)} \le \ERR(n,\mX,\by) \qquad \forall f \in \calc,
+\end{equation}
+either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$.  These error bounds are valid for $\calc$,  precisely defined sets of well-behaved simulation output maps, $f$.  No numerical algorithm succeeds for all $f$, and $\calc$ specifies those $f$ for which our algorithm does succeed. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$.
+
+Once the best candidate sample is selected, then additional candidate samples can be generated nearby this location and the process iteratively repeated.  Alternatively, the best candidate could be used as a starting location for a numerical optimization algorithm to maximize $\VAL(\bx)$ for the next sample location.  We will consider both of these approaches. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intellectual Merit of the Proposed Research} \label{sec:Proposed}
@@ -693,11 +649,17 @@ Orthogonal arrays and Latin hypercube sampling are further examples of space fil
 Some existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}.  However, these approaches often tend to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful.  A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{??? Surrogate Trend Models} \label{sec:ourtrend}
+\subsection{Surrogate Trend Models} \label{sec:ourtrend}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Global surrogate models based on global parametric trends of the data can only capture multivariate response surfaces 
+Global surrogate models based can only capture the trends trends in a very limited class  multivariate response surfaces.  For example, in one-dimensional problems low-degree polynomials are able to capture simple trends in the data, but fail to accurately represent nonpolynomial shapes, such as Gaussian kernels or step functions.  Piecewise polynomial interpolants, such as cubic Hermite polynomials, can effectively represent these surfaces, but don't generalize easily to very high dimensions with scattered sample data.  
 
+The MLS quasi-interpolants are an effective alternative to piecewise polynomials in that the approximations are able to capture global nonpolynomial behavior.  The quasi-interpolant depends more on the nearby points than the more distant ones.  One of the challenges in MLS is to identify a robust methodology for picking the appropriate  length scale, $\sigma(\bx)$, for the MLS kernel.  
 
+Our current approach is to use the mean distance to the nearest $K_n$ neighbors of $\bx$, where $K_n$ is greater than the number of basis functions, $K_p$  in the local approximating function is based on empirical experiments.  
+That is, this heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well conditioned.  If the least squares problem is ill-conditioned, then the length scale is increased.  We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.
+
+Another shortcoming of the existing MLS quasi-interpolants is that they treat every coordinate direction the same.  
+\emph{We will extend the MLS to use the full covariance matrix in the multivariate Gaussian kernel based on the relative variation in underlying active dimensional analysis}. We will  describe some of these ideas in section \ref{sec:selectCoord}.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
@@ -788,6 +750,11 @@ For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weig
 
 
 \subsection{Theoretical Advances}
+\FJHNote{I will re-write.  Moving stuff here for now from other places.}
+
+Because the identity map is homogeneous, i.e., $\ID(cf) = c\ID(f)$ for all $c \in \reals$, our surrogate models, $\SURR$, and surrogate uncertainties, $\SURRERR$, are also constructed to be homogeneous.  It then follows that the sets of functions, $\calc$, for which the error bounds \eqref{eq:surrUncert} are guaranteed, are \emph{cones}, i.e., $f \in \calc \implies cf \in \calc$.
+
+
 We will develop new tools for rigorously analyzing the error of our adaptive function and approximation algorithms.  
 \begin{itemize}
 \item Rather than basing our analysis on some pre-set Banach space, $\bigl(\calf,\norm[\calf]{\cdot}\bigr)$, of maps, $f$, with fixed smoothness or other properties, we will infer the norm best suited to the particular map $f$ from its output data, $(\mX,\by)$.  E.g., this might take the form of inferring the suitable reproducing/covariance kernel used to construct a surrogate model. 
@@ -846,7 +813,7 @@ In this example the mean-field MLS model will identify the underlying trends in 
 
 
 \subsection{Software}
-There is considerable interest in the computational mathematics, computer science, and engineering communities in developing and using software for the adaptive design and analysis of computer experiments.  Examples of existing packages are the MATLAB libraries UQLab \cite{UQLab2014}, SUMO\cite{SUMO2010}, ooDACE \cite{ooDACE2014} (a successor to DACE \cite{dace2002}), and CODES \cite{CODES2015}, and the Python libraries emukit \cite{emukit2019} and pySOT \cite{pySOT2015}.  Many of these packages employ allow for trends and variation modeling via kriging, but not their not as flexible, as those we intend to develop.
+There is considerable interest in the computational mathematics, computer science, and engineering communities in developing and using software for the adaptive design and analysis of computer experiments.  Examples of existing packages are the MATLAB libraries UQLab \cite{UQLab2014}, SUMO\cite{SUMO2010}, ooDACE \cite{ooDACE2014} (a successor to DACE \cite{dace2002}), and CODES \cite{CODES2015}, and the Python libraries emukit \cite{emukit2019}, SMT \cite{SMT2019} and pySOT \cite{pySOT2015}.  Many of these packages employ allow for trends and variation modeling via kriging, but not their not as flexible, as those we intend to develop.
 
 Our algorithms will be implemented in libraries on open source repositories for use by the modeling community.  We will compare the performance of our algorithms with existing software using test cases in the literature and on the large applications described above.  We will also explore collaborations with the developers of software libraries whose interests overlap ours so that we can leverage each others' strengths.
 
@@ -1032,14 +999,7 @@ $\norm[\infty]{f''}$ for peaky functions.
 
 FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a}.  Fig.\ \ref{PtsFig} contrasts these two designs with independent and identically distributed (IID) data sites, which are not so space-filling.
 
-\begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
-	\centering
-	\includegraphics[width = 0.20\textwidth]{ProgramsImages/IIDPoints.eps} \ 
-	\includegraphics[width = 0.20\textwidth]{ProgramsImages/ShiftedLatticePoints.eps}  \ 
-	\includegraphics[width = 0.20\textwidth]{ProgramsImages/SSobolPoints.eps} 
-	
-	\caption{IID data sites contrasted with two families of space filling data sites.\label{PtsFig}}
-\end{wrapfigure}
+
 
 The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/ digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.  The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed are those for which  the Fourier coefficients decay steadily, but not necessarily monotonically, in magnitude.
 
@@ -1113,5 +1073,5 @@ these students have learned how to conduct theoretical and/or practical computat
 \renewcommand{\refname}{{\Large\textbf{References Cited}}}                   %%
 \renewcommand{\bibliofont}{\normalsize}
 
-\bibliography{DoE_MH,FJH23,FJHown23}}
+\bibliography{DoE_MH,FJH23,FJHown23,yuhan}}
 \end{document}
