@@ -516,18 +516,19 @@ Our goals are to create better surrogate models, $\SURR$, and data-driven surrog
 \section{Adaptive Sampling Overview}
 Factoring  the surrogate model into the sum of a trend model and a variation model,  $\SURR = \STREND + \SVAR$, allows us to optimize each model independently.   
 The trend MLS model is evaluated at the original set of samples to define $\by_T = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$.
-We then evaluate the residuals at the original samples, $\br:=\by-\by_T$ and fit our variation model to these residuals $\SVAR(n,\mX,\br)(\mX)$.
+We then evaluate the residuals at the original samples, $\br:=\by-\by_T$ and fit our variation model to these residuals $\SVAR(n,\mX,\br)$.
 
 Next, we generate a dense set of $n_c >> n$, candidate low discrepancy sampling points, 
-$\mX^c = \{ \bx^c \}_{i=1}^{n_c}$,  in the space of feasible POIs.  
+$\mX^c = \{ \bx^c \}_{i=1}^{n_c}$,  in the space of feasible POIs. 
 These are the POI values that will be considered for the next input sample evaluation.   
 The trend MLS model is evaluated at all of  the candidate samples to define  $\by^c_T = \{ \STREND(n,\mX,\by)(\bx^c_i) \}_{i=1}^n$.
+The variation model then used to estimate the uncertainty at each of the candidate sample points.  
+\FJHNote{I think that the $\mX^c$ needs to be input into $\VAL(\cdot, n, \mX, \by)$.}
 
-The variation model then used to estimate the uncertainty at each of the candidate sample points.  \FJHNote{I think that the $\mX^c$ needs to be input into $\VAL(\cdot, n, \mX, \by)$.}
-
-To estimate the uncertainty created by the data to define our trend model, we use a Bayesian bootstrap method to create an ensemble of trend models by refit the MLS with random weights.
+The above process is repeated using weighted Bayesian bootstrap resampling to create an ensemble of trend models by refit the MLS with random weights.
 We refit the residuals for each bootstrapped MLS model to obtain a distribution of uncertainty for the mean and variation of the surrogate model at each of the candidate points. 
-These distributions are then used to define the acquisition function $\VAL$ to identify which of the candidate sample points most reduce the uncertainty in the predicted $\APP$. 
+
+The distributions for the uncertainties at the candidate points are then used to define the acquisition function $\VAL$ to identify which of the candidate sample points most reduce the uncertainty in the predicted $\APP$. 
 
 Because the primary  cost in our problems is acquiring the sample data, we are not overly concerned about the time required to generate surrogate models and to assess their uncertainties.
 
@@ -551,10 +552,10 @@ In the exploitation step, we create surrogate models, $\SURR(\bx,n,\mX,\by)$, in
 variation kriging Gaussian Process model to estimate the uncertainty in the model. 
  
 \subsubsection{The Trend Model} \label{sec:trend}
-We define our MLS function, $f_{LS}(\bx)$, by minimizing the $\sum w_i(\bx) (f_i - f_{LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
+We define our trend model as the MLS function,$\STREND(n,\mX,\by)(\bx) = f_{LS}(\bx)$, by minimizing  $\sum w_i(\bx) (f_i - f_{LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
 Here $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors.  The number of nearest neighbors will be greater than the number of basis functions used in the least-squares fit with polynomial with total degree.  
 
-Note that in $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially, $K_p={K_d + d \choose K_d} -1$.  
+Note that in $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially as $K_p={K_d + d \choose K_d} -1$ and  will far exceed the number of samples for even modest degree polynomials in high dimensions.   
 We will typically use a MLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
 Figure \ref{MLS} illustrates the flexibility of a linear MLS fit fitting scattered data in two dimensions.  
 
@@ -574,12 +575,6 @@ The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{LS}(x) + r_{K}(
 
 After each iteration, we will also generate a set of $n_c>>n$ low discrepancy uniformly distributed samples $\mX^c = \{ \bx^c \}_{i=1}^{n_c}$ in $\Omega$ to be 
 considered for the next input POIs.  The MLS trend function $f_{LS}$ is evaluated at each of these candidate points to create a trend approximation $\hat \by = \{ f_{LS}(x^c_i \}_{i=1}^{n_c}$ for the response. 
-
-\paragraph*{Uncertainty Quantification of the Trend Model} 
-Weighted Bayesian Bootstrap
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The MLS minimizes the residual $\sum w_i(\bx)(f_i - f_{LS}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer} we generate an ensemble of MLS quasi-interpolants, $f_{LS}^b$, $b=1,B$. Each quasi-interpolant is defined by minimizing $\sum v_i^b w_i(\bx)(f_i - f_{LS}(\bx_i))^2$.   The reweighting factors, $v_i^b$, are the $i^{th}$ component of the $b=1,B$ sample $\bv^b$ that are uniformly distributed over the $n$ dimensional unit simplex, $\sum v_i^b = 1 $.  The ensemble of the Bayesian MLS bootstrap quasi-interpolants $\{f_{LS}^b \}_{b=1}^B$ are then used define multiple surrogate models and estimate the standard error in the $\APP$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging}  \label{sec:varmodel}
@@ -632,14 +627,10 @@ There are some weaknesses with the common RKHS/kriging approach.  The reproducin
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Bayesian Bootstrapping to Determine Surrogate Model Uncertainty} \label{sec:BayesianMaybe}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\FJHNote{Is this the place where we put the Bayesian bootstrap idea because it is applied to trend and variation models?}
 
+The trend model minimizes the residual $\sum w_i(\bx)(f_i - f_{LS}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer} we generate an ensemble of trend models, $f_{LS}^b$, $b=1,B$. Each trend model is defined by minimizing $\sum v_i^b w_i(\bx)(f_i - f_{LS}(\bx_i))^2$.   The reweighting factors, $v_i^b$, are the $i^{th}$ component of the $b=1,B$ sample $\bv^b$ that are uniformly distributed over the $n$ dimensional unit simplex, $\sum v_i^b = 1 $.  
 
-
-
-
-
+After each trend model is defined, we create the corresponding variation model and evaluate uncertainty at each of the candidate sample locations.  This data is then used as input for the Acquisition Function to identify what candidate sample is most likely to reduce the uncertainty in our QOIs. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -717,110 +708,44 @@ While space filling designs are useful for the exploration stage, they are inade
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Many existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}.  However, the tendency is often to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful.  A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Minimizing Prediction Error} \label{sec:MinPredErr}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Some existing adaptive sampling schemes are based on minimizing the prediction error of the QOI.  This is a good philosophy, and one we embrace in this research.  However, as this approach is typically implemented, the surrogate models or their error bounds do not make sufficient use of the output data, $\by$, to be effective.   We illustrate this weakness here for a popular family of surrogate models.
-
-\iffalse
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{RKHS or Kriging Surrogate Models} \label{sec:RKHSKrigSurrModel}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Suppose that the output map, $f$, belongs to an RKHS $\calf$.  A commonly used reproducing kernel is the following member of the Mat\'ern family:
-\begin{equation} \label{eq:MatKer}
-    K(\bt,\bx) = (1 + \theta \norm[2]{\bt-\bx}) \exp(-\theta\norm[2]{\bt-\bx}),
-\end{equation}
-where $\theta$ is a parameter to be set or inferred.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs.  The minimum norm interpolant of $f$ in this $\calf$ is the surrogate model
-\begin{equation} \label{appxExOne}
-    \SURR(n,\mX,\by) = \sum_{i=1}^n c_i K(\cdot, \bx_i), \quad \text{where } \bc = \mK^{-1} \by, \quad \mK = \mK(\mX) = \bigl( K(\bx_i,\bx_j) \bigr)_{i,j=1}^n, 
-\end{equation}
-which has a known pointwise error bound of
-\begin{align}
-\label{RKHSErrBd}
-    \abs{f(\bx) - \SURR(n,\mX,\by)(\bx)} & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f - \SURR(n,\mX,\by)} \\
-    \nonumber
-    & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f} \qquad \forall f \in \calf, \\
-    \nonumber
-    & \qquad \qquad \text{where }  \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
-\end{align}
-
-To make the error bound for the surrogate model data driven, let $\calc$ be the cone of functions whose norms are approximated modestly well by the norms of their surrogates:  
-\begin{align}  \label{RKHScone}
-    \calc &:= \Bigl\{f \in \calf : \norm[\calf]{f - \SURR(n,\mX,\by)} \le A_n \bignorm[\calf]{\SURR(n,\mX,\by)} \Bigr \} \\
-    \nonumber
-    & = \Bigl\{f \in \calf : \norm[\calf]{f}^2 \le (1 + A_n^2) \bignorm[\calf]{\SURR(n,\mX,\by)}^2 \Bigr \},
-\end{align}
-where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f \in \calc$, then $c f \in \calc$ for any real $c$.  The intuition in defining this cone is: \emph{what you cannot see is not much worse than what you can see}. All adaptive algorithms are based on this assumption.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SURR(n,\mX,\by)} = \sqrt{\by \mK^{-1} \by}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
-\begin{subequations} \label{eq:DataErrBd}
-\begin{gather}
-    \abs{f(\bx) - \SURR(n,\mX,\by)(\bx)} \le \SURRERR(,n,\mX,\by)(\bx) \qquad \forall f \in \calc, \\
-        \label{eq:DataErrBda} 
-   \text{where } \SURRERR(n,\mX,\by)(\bx) : = A_n \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by^T \mK^{-1} \by] }.
-\end{gather}
-\end{subequations}
-This data-driven error bound for the surrogate model now leads to acquisition functions in \eqref{eq:QOIval} and error bounds in \eqref{eq:QOIerr} for the two QOIs in \eqref{eq:ourQOIs} with their approximations in \eqref{eq:QOIhat}.
-
-One may question why the surrogate error bound in \eqref{eq:DataErrBd} only applies to some subset, $\calc$, of the space, $\calf$, of possible functions, $f$.  Since $\calf$ is infinite dimensional, no matter what $n$ output data are observed, there is always some $f_\perp \in\calf$ that is zero at every data site.  The numerical approximations, $\APP(f \pm c f_\perp)$, must be the same for all $c$, while the true solutions  $\QOI(f + c f_\perp)$ and  $\QOI(f - c f_\perp)$ can be made arbitrarily far apart for large enough $c$.  Thus, the same surrogate error bound cannot apply for all $f + c f_\perp$.
-
-The deterministic framework using RKHSs for $f$ has a parallel Bayesian interpretation promoted by Diaconis \cite{Dia88a} and pursued by many others \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}.  It assumes that $f$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero\footnote{There is also value in assuming a simple polynomial form for the mean, just as the RKHS approach may be extended to reproduce polynomials exactly. We will explore such ideas in our research.} and covariance kernel, $K$.  In this case the posterior mean of $f(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SURR(n,\mX,\by)$ as in \eqref{appxExOne}, and width of the pointwise credible interval for the surrogate model is the same as $\SURRERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A_{10} \approx 1$ determined by empirical Bayes.  In this research we will adopt the deterministic and/or Bayesian approach, depending on which better suits our needs.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\subsubsection{A Univariate Example of the RKHS/Kriging Approach} \label{sec:UnivarEx}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\fi
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Adaptive Sampling via Data-Based Kernel Inference} \label{sec:kerinferdata}
+\subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To illustrate the weaknesses of the typical RKHS approach in Sect.\ \ref{sec:varmodel} we consider the univariate function
+To illustrate some of the weaknesses of the typical RKHS/kriging approach in Sect.\ \ref{sec:varmodel} we consider the following univariate function, which has a mean value near zero:
 \begin{equation} \label{eq:univarfun}
-f_{\VAR} \colon x \mapsto \exp(-6x) \sin(8x+0.1)
+f_{\VAR} \colon x \mapsto \exp(-6x) \sin(8x+0.1) - 0.1,
 \end{equation}
-displayed in Fig.\ \ref{fig:sampleFun} and its surrogate model $\SVAR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:MatKer} with $\theta =1$.  
+This $f_{\VAR}$ is displayed in Fig.\ \ref{fig:sampleFun} along with its surrogate model $\SVAR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:MatKer} with $\theta =1$.  
 Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there.  If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4,  0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the explore stage highlighted in Sect.\ \ref{sec:OurPlan}. 
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
-    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEAndMin.eps}
-    \caption{The left plot shows $f: x \mapsto \exp(-6x) \sin(8x+0.1)$ and its surrogate model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{eq:MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate model prediction error bound, $\SURRERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest prediction error, $x_{\ID,11}$. The largest true error occurs far away from $x_{\ID,11}$.}
+    \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
+    \caption{The left plot shows $f_V$ in \eqref{eq:univarfun} and its surrogate variation model \eqref{appxExOne} using $10$ and $4$ data sites and the kernel \eqref{eq:MatKer} with $\theta = 1$. Too few date sites yields a poor approximation.  The right plot includes the surrogate variation uncertainty, $\SVARERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest uncertainty, $x_{11}$. The largest true error occurs far away from $x_{11}$.}
     \label{fig:sampleFun}
 \end{figure}
 
+\iffalse
 There is a substantial literature on $d$-dimensional space filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
+\fi
 
-The next data sites for both the function approximation and minimization problems using our adaptive rule \eqref{eq:nextsample} with the acquisition functions \eqref{eq:QOIval} and $A_{10}$ are plotted on the right in Fig.\ \ref{fig:sampleFun}.  Note that $x_{\ID, 11} = x_{\MIN, 11}$ and $f(x_{\ID, 11}) \approx \SURR(11,\mX,\by)(x_{\ID, 11})$, so  sampling at $x_{\ID, 11}$ does not help much.  
+For function approximation we should choose the next data site to have where the uncertainty in $f_{\VAR}$ is largest, which would be $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$ as depicted in Fig.\ \ref{fig:sampleFun}.  However, $f_{\VAR}(x_{11}) \approx \SVAR(11,\mX,\by)(x_{11})$, so sampling at $x_{11}$ does not help much.
 
-The adaptive sampling rule outlined here performs poorly for this example for several reasons.
-\begin{itemize}
-    \item The form of the kernel, $K$, is not influenced by the output data, $\by$.
-    
-    \item The pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$.  The fact that the function is observed to fluctuate more on the left does not influence this surrogate error bound, $\SURRERR(n,\mX,\by)$.  In fact, $\bx_{\ID,11}$ is not affected by $\by$ at all.
-    
-    \item As a consequence of the first two points, the surrogate error bound is tight on the left, but quite loose on the right. 
-\end{itemize}
-The shortcomings highlighted here do not speak against the idea of choosing to sample next where the prediction error is largest.  Rather, our surrogate models and their uncertainties must become more sophisticated.  Remedies are proposed in Sects.\ \ref{sec:Bootstrap} and \ref{sec:kerinferdata}.
-
-
-
-The Gaussian process kriging model is based on minimum norm interpolants in reproducing kernel Hilbert spaces (RKHSs).   
-Sect.\  \ref{sec:UnivarEx} highlights some of the drawbacks of sampling in a way to minimize prediction error arising from RKHS or kriging models.  While we value the underlying approach, the models and their uncertainties or errors are not well adapted to the functions being approximated or optimized.
+The surrogate variance model and its uncertainty are not satisfactory for several reasons: i) The form of the kernel, $K$, is not influenced by the output data, $\by$, ii) the pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$, and consequently, iii) the surrogate variation uncertainty is tight on the left, but quite loose on the right. 
 
 One improvement is to infer the value of $\theta$ inherent in the definition of $K$ in \eqref{eq:MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
     \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
-For the example $f$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unfortunately, the new surrogate model has similar deficiencies as the original one in Sect.\ \ref{sec:UnivarEx}, and the suggested next data site is at a place where the function approximation is already quite good.
+For the example $f_{\VAR}$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}.  Unfortunately, this new surrogate model has similar deficiencies as the original one, and the suggested next data site is at a place where the function approximation is already quite good.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
     \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
-    \caption{The left plot shows the function approximation with an error bound for the example $f$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$.  The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the surrogate error bound is much larger.  The right plot shows the the function approximation with the surrogate error bound for the example $f$ in \eqref{eq:univarfun} but for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$.  The approximation is much improved, especially for smaller $x$, and the error bound is much smaller.  The next data sites for function approximation and optimization are in locations that makes intuitive sense.}
+    \caption{The left plot shows the surrogate variation model with its uncertainty for the example $f_{\VAR}$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$.  The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the uncertainty is much larger.  The right plot shows the the surrogate variation model with its uncertainty now for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$.  The surrogate variation model is much improved, especially for smaller $x$, and the uncertainty is much smaller.  The next data site is in a location that makes intuitive sense.}
     \label{fig:InferKernel}
 \end{figure}
 
@@ -830,9 +755,9 @@ A more helpful approach is to generalize the Mat\'ern kernel as follows to allow
 \end{equation}
 Here we have considered the case $d=1$.  This new kernel maintains its properties of being symmetric and positive definite because all we have done is to multiply the original kernel by $g(t)g(x)$ for some function $g$.  Here $S$ is a parameter to be inferred.
 
-The right plot in Fig.\ \ref{fig:InferKernel} shows the minimum norm approximation and the approximate error bound for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer} and both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  The approximation fits the true function much better and the error bound captures the true function better.  The next data site for function approximation, $x_{\ID,11}$, is in a region where $f$ varies greatly.  The next data site for optimization, $x_{\MIN,11}$,  is on the side of the observed minimum where $f$ fluctuates more.
+The right plot in Fig.\ \ref{fig:InferKernel} shows the surrogate variation model and its uncertainty for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer}, with both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}.  Now, $\SVAR(10,\mX,\by)$ fits $f_{\VAR}$ much better and the uncertainty fits better.  The next data site, $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$, is in a region where $f_{\VAR}$ varies greatly. 
 
-This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.}  Some of the challenges will be to ensure that our modified kernels are not overfit and specifying a mathematically precise set of functions for which this approach is successful.
+This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.}  Some of the challenges will be to ensure that our modified kernels are not over-parameterized and specifying a mathematically precise set of functions for which this approach is successful.
 
 Another area weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in  \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$.  We will \emph{modify the definition of $\calc$ to depend only some modest quality measure of the design}, such as the $\bx_i$ filling  $\Omega$ relatively well.  This is also a question for research.
 
