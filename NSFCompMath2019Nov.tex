@@ -537,7 +537,7 @@ Because the primary  cost in our problems is acquiring the sample data, we are n
 
 The goal of the initial exploratory samples is to explore the space of feasible POIs, $\Omega$,  when little, or nothing, is known about the response QOIs. 
  We use  Sobol' points or other low discrepancy (space filling) samples \cite{DicPil10a} in $\Omega$, 
-  and  will compare low discrepancy samples from both uniform and Chebyshev distributions.
+  and  will compare the effectiveness of low discrepancy samples from either uniform and Chebyshev distributions.
 The  Chebyshev distribution pushes points towards the boundaries and is known to improve the accuracy of interpolation in one dimension.  
 In higher dimensions, it may or may not help \cite{HicLi12a}.
 These initial sparse set of $n_0$ samples sites do not depend on $f$ or the QOIs and must be small enough to be economical, 
@@ -554,13 +554,7 @@ variation kriging Gaussian Process model to estimate the uncertainty in the mode
 \subsubsection{The Trend Model} \label{sec:trend}
 We define our trend model as the MLS function,$\STREND(n,\mX,\by)(\bx) = f_{LS}(\bx)$, by minimizing  $\sum w_i(\bx) (f_i - f_{LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
 Here $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors.  The number of nearest neighbors will be greater than the number of basis functions used in the least-squares fit with polynomial with total degree.  
-
-Note that in $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially as $K_p={K_d + d \choose K_d} -1$ and  will far exceed the number of samples for even modest degree polynomials in high dimensions.   
-We will typically use a MLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
-Figure \ref{MLS} illustrates the flexibility of a linear MLS fit fitting scattered data in two dimensions.  
-
-Every time the MLS interpolant is evaluated, we  solve a least squares systems that  weights the nearby points much more than the distant points.
-For the problems we are considering,
+Every time the MLS interpolant is evaluated, we  solve a least squares systems that  weights the nearby points much more than the distant points.For the problems we are considering,
 \begin{wrapfigure}{r}{0.5\textwidth}
 	  \begin{center}
 	\includegraphics[width = 0.5\textwidth]{ProgramsImages/bigsurT.pdf}
@@ -568,7 +562,13 @@ For the problems we are considering,
 	\caption{The  MLS linear quasi-interpolant of scattered data {$\color{red}*$} of  Big Sur sea bottom data \cite{franke1979critical}.
 	\label{MLS}}
 \end{wrapfigure}
- this additional computation is minimal compared to the expense of obtaining the sample values.  While global interpolants are very `stiff', the MLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension.  
+this additional computation is minimal compared to the expense of obtaining the sample values.  
+
+While global interpolants are very `stiff', the MLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension.   
+In $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially as $K_p={K_d + d \choose K_d} -1$ and  will far exceed the number of samples for even modest degree polynomials in high dimensions.   
+We will typically use a MLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
+Figure \ref{MLS} illustrates the flexibility of a linear MLS fit fitting scattered data in two dimensions.  
+
  
 The MLS function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
 The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{LS}(x) + r_{K}(x)$.  
