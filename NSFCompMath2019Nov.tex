@@ -564,10 +564,11 @@ Every time the MLS interpolant is evaluated, we  solve a least squares systems t
 \end{wrapfigure}
 this additional computation is minimal compared to the expense of obtaining the sample values.  
 
-While global interpolants are very `stiff', the MLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension.   
+  
 In $d$ dimensions, the number of basis functions, $K_p$,  for a polynomial of degree $K_d$ grows exponentially as $K_p={K_d + d \choose K_d} -1$ and  will far exceed the number of samples for even modest degree polynomials in high dimensions.   
-We will typically use a MLS quadratic polynomial fit for low dimensional problems $d<10$, and linear fits for high-dimensional problems.    
-Figure \ref{MLS} illustrates the flexibility of a linear MLS fit fitting scattered data in two dimensions.  
+We will typically use a MLS quadratic basis functions for low dimensional problems $d<10$, and linear basis functions for high-dimensional problems.    
+While global interpolants are very `stiff', these MLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension. 
+Figure \ref{MLS} illustrates the flexibility of a  MLS with linear basis function fitting scattered data in two dimensions.  
 
  
 The MLS function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
