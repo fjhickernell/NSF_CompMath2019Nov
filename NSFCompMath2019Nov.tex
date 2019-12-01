@@ -69,10 +69,10 @@
 
 %\newcommand{\fredparagraph}[1]{\paragraph*{\emph{#1}}}
 
-\textwidth6.4in
+\textwidth6.5in
 \setlength{\oddsidemargin}{0in}
 \setlength{\evensidemargin}{0in}
-\textheight8.9in
+\textheight9.0in
 %\textheight9.1in
 
 \newtheorem{theorem}{theorem}
@@ -132,7 +132,9 @@
 \DeclareMathOperator{\avg}{avg}
 \DeclareMathOperator{\vol}{vol}
 \DeclareMathOperator{\cov}{cov}
+\newcommand{\TREND}{\textup{T}}
 \newcommand{\VAR}{\textup{V}}
+\newcommand{\LS}{\textup{LS}}
 
 
 
@@ -249,6 +251,8 @@
 \newcommand{\calg}{{\mathcal{G}}}
 \newcommand{\calgd}{{\calg_d}}
 \newcommand{\caln}{{\mathcal{N}}}
+\newcommand{\calp}{{\mathcal{P}}}
+\newcommand{\cals}{{\mathcal{S}}}
 \newcommand{\cL}{\mathcal{L}}
 \newcommand{\cP}{\mathcal{P}}
 \newcommand{\cT}{\mathcal{T}}
@@ -375,6 +379,7 @@ Adaptive Multivariate Sampling to Accelerate  Discovery\\
 %Project Description
 }
 \end{center}
+\iffalse
 \vspace{-2ex}
 
 \setcounter{tocdepth}{3}
@@ -409,7 +414,9 @@ $\calc$ & set of output maps for which our adaptive sampling schemes are valid; 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scientific Context, Key Ideas, and Timeliness of the Proposed Research}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \paragraph*{Our problem}
+\fi
 Each large-scale simulation for grand-challenge problems, such as modeling global climate change, can require hours or even days of high performance computation.  This simulation output can be viewed as a real-valued function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$.  The quantities of interest (QOIs) might be 
 an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other useful QOIs include the location of the optimum output and (parametric) integration.}  
 \begin{equation} \label{eq:ourQOIs}
@@ -459,7 +466,7 @@ a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, 
 See Sect.\ \ref{sec:exploreSample} for details.  
 
 \MLS methods are quasi-interpolants, since they do not fit the data exactly.  
-The residuals or lack of fit to the data, $\br = \by - \by_T$, where $\by_T = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$, are then be fit by $\SVAR(n,\mX,\by)$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives yield essentially equivalent outcomes.  Again, for the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical.  The aim is to obtain better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.  
+The residuals or lack of fit to the data, $\br = \by - \by_{\TREND}$, where $\by_{\TREND} = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$, are then be fit by $\SVAR(n,\mX,\by)$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant.  These two different perspectives yield essentially equivalent outcomes.  Again, for the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical.  The aim is to obtain better accuracy under a stringent sample budget. See Sect.\ \ref{sec:kerinferdata} for details.  
 
 We assess the uncertainty in  our surrogate models, $\SURRERR(n,\mX,\by)$, using data-based measures for the output maps $\calc$ such that 
 \begin{equation} \label{eq:surrUncert}
@@ -515,13 +522,13 @@ Our goals are to create better surrogate models, $\SURR$, and data-driven surrog
 
 \section{Adaptive Sampling Overview}
 Factoring  the surrogate model into the sum of a trend model and a variation model,  $\SURR = \STREND + \SVAR$, allows us to optimize each model independently.   
-The trend MLS model is evaluated at the original set of samples to define $\by_T = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$.
-We then evaluate the residuals at the original samples, $\br:=\by-\by_T$ and fit our variation model to these residuals $\SVAR(n,\mX,\br)$.
+The trend MLS model is evaluated at the original set of samples to define $\by_{\TREND} = \{ \STREND(n,\mX,\by)(\bx_i) \}_{i=1}^n$.
+We then evaluate the residuals at the original samples, $\br:=\by-\by_{\TREND}$ and fit our variation model to these residuals $\SVAR(n,\mX,\br)$.
 
 Next, we generate a dense set of $n_c >> n$, candidate low discrepancy sampling points, 
 $\mX^c = \{ \bx^c \}_{i=1}^{n_c}$,  in the space of feasible POIs. 
 These are the POI values that will be considered for the next input sample evaluation.   
-The trend MLS model is evaluated at all of  the candidate samples to define  $\by^c_T = \{ \STREND(n,\mX,\by)(\bx^c_i) \}_{i=1}^n$.
+The trend MLS model is evaluated at all of  the candidate samples to define  $\by^c_{\TREND} = \{ \STREND(n,\mX,\by)(\bx^c_i) \}_{i=1}^n$.
 The variation model then used to estimate the uncertainty at each of the candidate sample points.  
 \FJHNote{I think that the $\mX^c$ needs to be input into $\VAL(\cdot, n, \mX, \by)$.}
 
@@ -552,7 +559,7 @@ In the exploitation step, we create surrogate models, $\SURR(\bx,n,\mX,\by)$, in
 variation kriging Gaussian Process model to estimate the uncertainty in the model. 
  
 \subsubsection{The Trend Model} \label{sec:trend}
-We define our trend model as the MLS function,$\STREND(n,\mX,\by)(\bx) = f_{LS}(\bx)$, by minimizing  $\sum w_i(\bx) (f_i - f_{LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
+We define our trend model as the MLS function,$\STREND(n,\mX,\by)(\bx) = f_{\LS}(\bx)$, by minimizing  $\sum w_i(\bx) (f_i - f_{\LS}(\bx_i))^2$ over the available sample points.  The weights decrease as a function of distance from the location, $\bx$, where the function $\hat f$ will be evaluated.   We will initially use a Gaussian kernel weight,  $w_i(\bx) = e^{(\bx-\bx_i)^2/\sigma(x)^2}$.  
 Here $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors.  The number of nearest neighbors will be greater than the number of basis functions used in the least-squares fit with polynomial with total degree.  
 Every time the MLS interpolant is evaluated, we  solve a least squares systems that  weights the nearby points much more than the distant points.For the problems we are considering,
 \begin{wrapfigure}{r}{0.5\textwidth}
@@ -572,12 +579,9 @@ Figure \ref{MLS} illustrates the flexibility of a  MLS with linear basis functio
 
 
 After fitting the sample data, we will also generate a set of $n_c>>n$ low discrepancy uniformly distributed samples $\mX^c = \{ \bx^c \}_{i=1}^{n_c}$ in $\Omega$ to be 
-considered for the next input POIs.  The MLS trend function $f_{LS}$ is evaluated at each of these candidate points to create a trend approximation $\by^c = \{ f_{LS}(x^c_i \}_{i=1}^{n_c}$ for the response. 
+considered for the next input POIs.  The MLS trend function $f_{\LS}$ is evaluated at each of these candidate points to create a trend approximation $\by^c = \{ f_{\LS}(x^c_i \}_{i=1}^{n_c}$ for the response. 
  
-The trend function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point. The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
-The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{LS}(x) + r_{K}(x)$.  
-
-
+The trend function $f_{\LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point. We will then use the residuals at the data points $r_i = f_i - f_{\LS}(\bx_i)$ to create a model for variation in the trend model. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging}  \label{sec:varmodel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -588,7 +592,7 @@ Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$.  A commonly used reproducin
 \end{equation}
 where $\theta$ is a parameter to be set or inferred.  See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs.  The minimum norm interpolant of $f_{\VAR}$ in this $\calf$ using the residual data,
 \begin{equation*}
-    \by_{\VAR} = \by - \by_T, \qquad \text{where }\by_T = \bigl(\STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n \text{is the trend data},
+    \by_{\VAR} = \by - \by_{\TREND}, \qquad \text{where }\by_{\TREND} = \bigl(\STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n \text{is the trend data},
 \end{equation*}
 is the surrogate variation model
 \begin{equation} \label{appxExOne}
@@ -613,9 +617,9 @@ To make the error bound for the surrogate model data driven, let $\calc$ be the 
 where $A_n$ is positive, and fixed in advance.  This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$.  The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy.  The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
 \begin{subequations} \label{eq:DataErrBd}
 \begin{gather}
-    \abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc, \\
+    \abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by_{\VAR})(\bx) \qquad \forall f \in \calc, \\
         \label{eq:DataErrBda} 
-   \text{where } \SVARERR(n,\mX,\by)(\bx) : = A_n \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by_{\VAR}^T \mK^{-1} \by_{\VAR}] }.
+   \text{where } \SVARERR(n,\mX,\by_{\VAR})(\bx) : = A_n \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by_{\VAR}^T \mK^{-1} \by_{\VAR}] }.
 \end{gather}
 \end{subequations}
 This data-driven error bound for the surrogate variation model is used to construct the  acquisition functions in \eqref{eq:QOIval} and error bounds in \eqref{eq:QOIerr} for the two QOIs in \eqref{eq:ourQOIs} with their approximations in \eqref{eq:QOIhat}.
@@ -628,26 +632,44 @@ There are some weaknesses with the common RKHS/kriging approach.  The reproducin
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Bayesian Bootstrapping to Determine Surrogate Model Uncertainty} \label{sec:BayesianMaybe}
+\subsubsection{Bayesian Bootstrapping to Determine Surrogate Model Uncertainty} \label{sec:BayesianBootUncertainty}
+The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty.  However, given the small number of data used to construct our models and the relatively large number of POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness.  
 
-The trend model minimizes the residual $\sum w_i(\bx)(f_i - f_{LS}(\bx_i))^2$, where the weights, $w_i(\bx)$ depend on the location where the function will be evaluated. In the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer} we generate an ensemble of trend models, $f_{LS}^b$, $b=1,B$. Each trend model is defined by minimizing $\sum v_i^b w_i(\bx)(f_i - f_{LS}(\bx_i))^2$.   The reweighting factors, $v_i^b$, are the $i^{th}$ component of the $b=1,B$ sample $\bv^b$ that are uniformly distributed over the $n$ dimensional unit simplex, $\sum v_i^b = 1 $.  
+Following the Bayesian bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer}, we generate an ensemble of $B$ trend models, 
+\begin{equation}
+    \STREND^b(n,\mX,\by)(\bx) = f^b_{\LS}(\bx), \qquad \text{where } f^b_{\LS} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2,
+\end{equation}
+where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functionss, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$.  
 
-After each trend model is defined, we create the corresponding variation model and evaluate uncertainty at each of the candidate sample locations.  This data is then used as input for the Acquisition Function to identify what candidate sample is most likely to reduce the uncertainty in our QOIs. 
+For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$.  These lead to our final surrogate model and its uncertainty:
+\begin{subequations}
+\begin{gather}
+    \SURR^b(n,\mX,\by) = \STREND^b(n,\mX,\by) + \SVAR^b(n,\mX,\by - \by^b_{\TREND}), \\
+    \SURR(n,\mX,\by) = \frac 1B \sum_{b=1}^B \SURR^b(n,\mX,\by), \\
+    \SURRERR(n,\mX,\by) = \sqrt{\frac 1B \sum_{b=1}^B \bigl[ \SURR^b(n,\mX,\by) + \SVARERR^b(n,\mX,\by - \by^b_{\TREND}) - \SURR(n,\mX,\by) \bigr]^2} .
+\end{gather}
+\notes{FH Perhaps not the best}.
+\end{subequations}
 
 
+\iffalse
+, as in Sect.\ \ref{sec:varmodel},  After each trend model is defined, we create the corresponding variation model and evaluate uncertainty at each of the candidate sample locations.  This data is then used as input for the Acquisition Function to identify what candidate sample is most likely to reduce the uncertainty in our QOIs. 
 
 
-
-\subsection{The Acquisition Step:  Uncertainty Quantification}
 On every weighted bootstrap fit of the data, we define a surrogate model $\SURR_b$ by 
 \begin{enumerate}
-\item Fitting a trend model $\STREND_b(n,\mX,\by)$ to the available samples that minimizes $\sum v^b_iw_i(\bx)(f_i - f_{LS}(\bx_i))^2$ 
-\item Estimating the variation $\SVAR_b(n,\mX,\by - \by_T^b)$ on the residuals, $\by - \by_T^b$ with its uncertainty $\SURRERR_b(n,\mX,\by)$
+\item Fitting a trend model $\STREND_b(n,\mX,\by)$ to the available samples that minimizes $\sum v^b_iw_i(\bx)(f_i - f_{\LS}(\bx_i))^2$ 
+\item Estimating the variation $\SVAR_b(n,\mX,\by - \by_{\TREND}^b)$ on the residuals, $\by - \by_{\TREND}^b$ with its uncertainty $\SURRERR_b(n,\mX,\by)$
 \item Use the surrogate model, $\SURR_b=\STREND_b + \SVAR_b$, to quantify the uncertainty for the bootstrap surrogate model at each of the candidate points. 
 \end{enumerate}
 We then $\SURR_b=\STREND_b + \SVAR_b$ these ensemble of uncertainties  at $\bx^c$ to define the \VAR at the candidate points. 
+\fi
 
 
+\subsection{The Acquisition Step:  Uncertainty Quantification}
+
+
+\notes{FH Let's discuss}
 
 \notes{MH Need to move stuff here}
 
@@ -659,26 +681,23 @@ We then $\SURR_b=\STREND_b + \SVAR_b$ these ensemble of uncertainties  at $\bx^c
 \subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As a prelude to describing our proposed approach to adaptive sampling, we summarize the existing literature \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Adaptive Space Filling Designs}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-A number of popular adaptive design criteria are constructed based on an acquisition function, that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$.  Such adaptive designs fill in wholes in the existing design according to a particular criteria.  Some of these criteria include 
+We summarize the existing literature on adaptive sampling \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}. A number of popular adaptive design criteria are constructed based on an acquisition function, that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$.  Such adaptive designs fill in wholes in the existing design according to a particular criteria, including those below. 
 \begin{description}
     \item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (usually uniform) distribution \cite{FangEtal19a}.  Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}.  
     \item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$.  Minimax designs minimize this criterion.
     \item[Minimium distance between data sites]  Maximin designs maximize this criterion \cite{jin2002sequential}.
     \item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}.  They also typically assume a known Gaussian process model.
 \end{description}
-Orthogonal arrays and Latin hypercube sampling are further examples of space filling designs, although they are not usually constructed sequentially.  
+Orthogonal arrays and Latin hypercube sampling are further examples of space filling designs, although they are not usually constructed sequentially.  We will use space filling designs are useful for our exploration stage, but they are inadequate for the exploitation stage of our adaptive algorithms because they do not include the output data in a meaningful way.  
 
-While space filling designs are useful for the exploration stage, they are inadequate for the exploitation stage of our adaptive algorithms because they do not include the output data in a meaningful way.  
+Some existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}.  However, these approaches often tend to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful.  A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{??? Surrogate Trend Models} \label{sec:ourtrend}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Global surrogate models based on global parametric trends of the data can only capture multivariate response surfaces 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Many existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}.  However, the tendency is often to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful.  A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
