@@ -1,19 +1,20 @@
 %% Adaptive sampling and approximation example
 clearvars
 InitializeDisplay
-f = @(x) exp(-6*x).*sin(8*x+0.1);
+f = @(x) exp(-6*x).*sin(8*x+0.1) - 0.1;
 %f = @(x) f0(x);
-axisBox = [0 1 -0.2 0.6];
+axisBox = [0 1 -0.3 0.5];
 
 %% Plot function
 xData = [0:0.1:0.6 0.8:0.1:1]';
 fData = f(xData);
 xPlot = (0:0.002:1)';
 fPlot = f(xPlot);
+meanf = mean(fPlot)
 figure(1)
 plot(xPlot,fPlot,xData,fData,'.')
 xlabel('\(x\)')
-ylabel('\(f(x)\)')
+ylabel('\(f_{\mathrm{V}}(x)\)')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
@@ -32,7 +33,7 @@ fAppPlot = KPlotData*coeff;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-[lgd,icons] = legend(h,{'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)'});
+[lgd,icons] = legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)'});
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -50,7 +51,7 @@ fAppPlotSmall = KPlotSmallData*coeffSmall;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot,xPlot,fAppPlotSmall);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)', 'SM\((4)(x)\)'})
+legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)', 'SV\((4)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -73,11 +74,11 @@ hold on
 h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
-[lgd,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)', ...
-   'SM\((10)(x) \pm \)SU\((10)(x)\)', ...
-   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'});
-lgd.NumColumns = 2;
-legend('boxoff')
+[~,icons] = legend(h([1:4 6]),{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)', ...
+   'SV\((10)(x) \pm \)SVU\((10)(x)\)', ...
+   '\(\bigl(x_{11},f_{\mathrm{V}}(x_{11})\bigr)\)'}, ...
+   'box', 'off');
+icons(14).Children.MarkerSize = 15;
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
@@ -104,12 +105,12 @@ h = [h; scatter(xBad,fBad,200,MATLABPurple,'filled','d'); ...
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
 [~,icons,plts,txt] = legend(h([1:3 7 4 6 8]), ...
-   {'\(f(x)\)','\(f(x_i)\)',...
-   'SM\((10)(x)\)', ...
+   {'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)',...
+   'SV\((10)(x)\)', ...
    '\(\bigl(\widehat{x}_{\mathrm{MIN}},\widehat{\mathrm{MIN}}(10) \bigr)\)', ... 
-   'SM\((10)(x) \pm \)SU\((10)(x)\)', ...
-   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)', ...
-   '\(\bigl(x_{\mathrm{MIN},11},f(x_{\mathrm{MIN}, 11})\bigr)\)'});
+   'SV\((10)(x) \pm \)SVU\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f_{\mathrm{V}}(x_{\mathrm{ID},11})\bigr)\)', ...
+   '\(\bigl(x_{\mathrm{MIN},11},f_{\mathrm{V}}(x_{\mathrm{MIN}, 11})\bigr)\)'});
 legend('boxoff')
 icons(17).Children.MarkerSize = 15;
 icons(14).Children.MarkerSize = 20;
@@ -140,7 +141,7 @@ fOptAppPlot = KOptPlotData*coeffOpt;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptAppPlot);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)'})
+legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -164,9 +165,9 @@ hold on
 h = [h; scatter(xBadOpt,fBadOpt,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
-[~,icons] = legend(h([1:4 6]),{'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)', ...
-   'SM\((10)(x) \pm \)SU\((10)(x)\)', ...
-   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'}, ...
+[~,icons] = legend(h([1:4 6]),{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)', ...
+   'SV\((10)(x) \pm \)SVU\((10)(x)\)', ...
+   '\(\bigl(x_{11},f_{\mathrm{V}}(x_{11})\bigr)\)'}, ...
    'box','off');
 %lgd.NumColumns = 2;
 icons(14).Children.MarkerSize = 15;
@@ -207,7 +208,7 @@ fOptyAppPlot = KOptyPlotData*coeffOpty;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fOptyAppPlot);
 xlabel('\(x\)')
-legend(h,{'\(f(x)\)','\(f(x_i)\)','SM\((n)(x)\)'})
+legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((n)(x)\)'})
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
@@ -233,12 +234,13 @@ hold on
 h = [h; scatter(xBadOpty,fBadOpty,200,MATLABPurple,'filled','d')];
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
-lgd = legend(h([1:4 6]), ...
-   {'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)', ...
-   'SM\((10)(x) \pm \)SU\((10)(x)\)', ...
-   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)'});
+[~,icons] = legend(h([1:4 6]), ...
+   {'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)', ...
+   'SV\((10)(x) \pm \)SVU\((10)(x)\)', ...
+   '\(\bigl(x_{11},f_{\mathrm{V}}(x_{11})\bigr)\)'}, ...
+   'box', 'off');
 %lgd.NumColumns = 2;
-legend('boxoff')
+icons(14).Children.MarkerSize = 15;
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
@@ -264,11 +266,11 @@ h = [h; scatter(xBadOpty,fBadOpty,200,MATLABPurple,'filled','d'); ...
 set(h(4:5),'color',MATLABMaroon)
 xlabel('\(x\)')
 [~,icons] = legend(h([1:3 7 4 6 8]),...
-   {'\(f(x)\)','\(f(x_i)\)','SM\((10)(x)\)', ...
+   {'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)', ...
     '\(\bigl(\widehat{x}_{\mathrm{MIN}},\widehat{\mathrm{MIN}}(10) \bigr)\)', ... 
-  'SM\((10)(x) \pm \)SU\((10)(x)\)', ...
-   '\(\bigl(x_{\mathrm{ID},11},f(x_{\mathrm{ID},11})\bigr)\)', ...
-   '\(\bigl(x_{\mathrm{MIN},11},f(x_{\mathrm{MIN},11})\bigr)\)'}, ...
+  'SV\((10)(x) \pm \)SVU\((10)(x)\)', ...
+   '\(\bigl(x_{\mathrm{ID},11},f_{\mathrm{V}}(x_{\mathrm{ID},11})\bigr)\)', ...
+   '\(\bigl(x_{\mathrm{MIN},11},f_{\mathrm{V}}(x_{\mathrm{MIN},11})\bigr)\)'}, ...
    'box','off');
 %lgd.NumColumns = 2;
 %legend('boxoff')
@@ -279,5 +281,5 @@ axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
 pos = get(gcf,'Position');
 set(gcf,'Position',[pos(1:2) 1.4*pos(3:4)])
-print('-depsc','fandDataAndAppxAndRMSPEOpty.eps')
+print('-depsc','fandDataAndAppxAndRMSPEOptyAndMin.eps')
 
