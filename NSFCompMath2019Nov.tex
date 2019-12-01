@@ -635,36 +635,7 @@ The trend model minimizes the residual $\sum w_i(\bx)(f_i - f_{LS}(\bx_i))^2$, w
 After each trend model is defined, we create the corresponding variation model and evaluate uncertainty at each of the candidate sample locations.  This data is then used as input for the Acquisition Function to identify what candidate sample is most likely to reduce the uncertainty in our QOIs. 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\notes{Mac: The subsections on important coordinate directions need to go to section 3}
-\subsubsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To approximate or optimize a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands, the function $f$ cannot be fully $d$ dimensional.  For example, even a multilinear function,
-\begin{equation*}
-    f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
-\end{equation*}
-requires at least $n = 2^d$ output data to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which involve restricting oneself to a $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple of ways that we will explore.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph*{Coordinate Weights}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$.  If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if i) the POIs do not all contribute equally to the function being approximated, ii) the importance of each POI is is known, and iii) arranged in order of importance their importance decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
-
-As an example of how this might occur, one might modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
-\begin{equation} \label{eq:ProdMatKer}
-    K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
-\end{equation}
-If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$.
-
-For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph*{Active Subspaces}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-An alternative to permuting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of their importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also \emph{explore whether this approach can help us avoid the curse of dimensionality}.
-
-For distance weighted least squares the common Euclidean distance becomes problematic for large $d$.  Therefore, in applying this algorithm we expect to \emph{employ some non-homogeneous concept of distance} involving coordinate weights or identification of active subspaces.
 
 
 \subsection{The Acquisition Step:  Uncertainty Quantification}
@@ -761,6 +732,41 @@ The right plot in Fig.\ \ref{fig:InferKernel} shows the surrogate variation mode
 This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.}  Some of the challenges will be to ensure that our modified kernels are not over-parameterized and specifying a mathematically precise set of functions for which this approach is successful.
 
 Another area weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in  \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$.  We will \emph{modify the definition of $\calc$ to depend only some modest quality measure of the design}, such as the $\bx_i$ filling  $\Omega$ relatively well.  This is also a question for research.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Selecting Important Coordinate Directions to Avoid the Curse of Dimensionality} \label{sec:selectCoord}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Approximating optimizing a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands is infeasible if $f$ is fully $d$ dimensional.  For example, even a multilinear function,
+\begin{equation*}
+f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
+\end{equation*}
+requires at least $n = 2^d$ samples to approximate or optimize well.  Exponential growth in the sample size required for a reasonable solution is called the \emph{curse of dimensionality}.  There are several ways to overcome this curse, all of which involve restricting oneself to a $\calc$ of reasonable functions that have an essentially low-dimensional structure.  We highlight a couple of ways that we will explore.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Coordinate Ordering and Weights}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$.  If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if i) the POIs do not all contribute equally to the function being approximated, ii) the importance of each POI is is known, and iii) the importance of the POIs arranged in decreasing order decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
+
+
+As an example of how this might occur in kriging is to modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
+\begin{equation} \label{eq:ProdMatKer}
+K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
+\end{equation}
+If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI.  It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$.
+
+For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case.  Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}.  This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Active Subspaces}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+An alternative to permuting and weighting  the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance.  This approach described as identifying active subspaces and is championed in \cite{constantine2015active}.  We will also \emph{explore whether active subspaces can help us avoid the curse of dimensionality}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Nonhomogeneous Distance for MLS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weight assigned to the $i^{\text{th}}$ data is traditionally defined in terms of the Euclidean distance to that data site from to the location being approximated, i.e., $\norm[2]{\bx - \bx_i}$.  To avoid the curse of dimensionality we may \emph{employ some non-isotropic concept of distance} involving coordinate weights or identification of active subspaces.
+
 
 \subsection{Theoretical Advances}
 We will develop new tools for rigorously analyzing the error of our adaptive function and approximation algorithms.  
