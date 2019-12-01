@@ -559,7 +559,7 @@ Every time the MLS interpolant is evaluated, we  solve a least squares systems t
 	  \begin{center}
 	\includegraphics[width = 0.5\textwidth]{ProgramsImages/bigsurT.pdf}
 	 \end{center}
-	\caption{The  MLS linear quasi-interpolant of scattered data {$\color{red}*$} of  Big Sur sea bottom data \cite{franke1979critical}.
+	\caption{The  MLS  quasi-interpolant with linear basis functions of scattered data {$\color{red}*$} of  Big Sur sea bottom data \cite{franke1979critical}. The locally linear MLS trend model is able to fit very irregular surfaces.
 	\label{MLS}}
 \end{wrapfigure}
 this additional computation is minimal compared to the expense of obtaining the sample values.  
@@ -570,12 +570,13 @@ We will typically use a MLS quadratic basis functions for low dimensional proble
 While global interpolants are very `stiff', these MLS are flexible and can fit odd surfaces similar to how splines can approximate nonpolynomial shaped data in one dimension. 
 Figure \ref{MLS} illustrates the flexibility of a  MLS with linear basis function fitting scattered data in two dimensions.  
 
+
+After fitting the sample data, we will also generate a set of $n_c>>n$ low discrepancy uniformly distributed samples $\mX^c = \{ \bx^c \}_{i=1}^{n_c}$ in $\Omega$ to be 
+considered for the next input POIs.  The MLS trend function $f_{LS}$ is evaluated at each of these candidate points to create a trend approximation $\by^c = \{ f_{LS}(x^c_i \}_{i=1}^{n_c}$ for the response. 
  
-The MLS function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point.  The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
+The trend function $f_{LS}(\bx)$ is a quasi-interpolant because it does not exactly agree with the function values at each data point. The residual at the data points $r_i = f_i - f_{LS}(\bx_i)$ will be represented by a Gaussian process kriging model $r_{K}(\bx)$.
 The surrogate model is then defined as $\SURR(n,\mX,\by)(\bx)=f_{LS}(x) + r_{K}(x)$.  
 
-After each iteration, we will also generate a set of $n_c>>n$ low discrepancy uniformly distributed samples $\mX^c = \{ \bx^c \}_{i=1}^{n_c}$ in $\Omega$ to be 
-considered for the next input POIs.  The MLS trend function $f_{LS}$ is evaluated at each of these candidate points to create a trend approximation $\hat \by = \{ f_{LS}(x^c_i \}_{i=1}^{n_c}$ for the response. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging}  \label{sec:varmodel}
@@ -635,6 +636,7 @@ After each trend model is defined, we create the corresponding variation model a
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\notes{Mac: The subsections on important coordinate directions need to go to section 3}
 \subsubsection{Selecting Important Coordinate Directions} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -666,15 +668,13 @@ For distance weighted least squares the common Euclidean distance becomes proble
 
 
 \subsection{The Acquisition Step:  Uncertainty Quantification}
-
-
-For every weighted bootstrap sample, $\bv^b, \ldots, v_i^b$, $b = 1, \ldots, B$, we 
+On every weighted bootstrap fit of the data, we define a surrogate model $\SURR_b$ by 
 \begin{enumerate}
-\item Compute a trend model $\STREND_b(n,\mX,\by)$ that minimizes $\sum v^b_iw_i(\bx)(f_i - f_{LS}(\bx_i))^2$ 
-\item Compute a variation $\SVAR_b(n,\mX,\by - \by_T^b)$ on the residuals, $\by - \by_T^b$ with its uncertainty $\SURRERR_b(n,\mX,\by)$
-\item Use the trend and variation models to quantify the uncertainty for the bootstrap surrogate model at each of the candidate points. 
+\item Fitting a trend model $\STREND_b(n,\mX,\by)$ to the available samples that minimizes $\sum v^b_iw_i(\bx)(f_i - f_{LS}(\bx_i))^2$ 
+\item Estimating the variation $\SVAR_b(n,\mX,\by - \by_T^b)$ on the residuals, $\by - \by_T^b$ with its uncertainty $\SURRERR_b(n,\mX,\by)$
+\item Use the surrogate model, $\SURR_b=\STREND_b + \SVAR_b$, to quantify the uncertainty for the bootstrap surrogate model at each of the candidate points. 
 \end{enumerate}
-We then uses these ensemble of uncertainties  at $\bx^c$ to define the \VAR at the candidate points. 
+We then $\SURR_b=\STREND_b + \SVAR_b$ these ensemble of uncertainties  at $\bx^c$ to define the \VAR at the candidate points. 
 
 
 
