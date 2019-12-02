@@ -1,5 +1,5 @@
 \def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
-\begin{thebibliography}{91}
+\begin{thebibliography}{90}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{{#1}}
 \providecommand{\urlprefix}{URL }
@@ -35,6 +35,12 @@ Bengio Y, Delalleau O, Roux NL (2006) The curse of highly variable functions
 Bindel D, Eriksson D, Shoemaker C (2015) {pySOT}: {P}ython surrogate
   optimization toolbox. {\url{https://github.com/dme65/pySOT}}
 
+\bibitem[{Bouhlel et~al(2019)Bouhlel, Hwang, Bartoli, Lafage, Morlier, and
+  Martins}]{SMT2019}
+Bouhlel MA, Hwang JT, Bartoli N, Lafage R, Morlier J, Martins JRRA (2019) A
+  python surrogate modeling framework with derivatives. Advances in Engineering
+  Software p 102662, \doi{https://doi.org/10.1016/j.advengsoft.2019.03.005}
+
 \bibitem[{Briol et~al(2019)Briol, Oates, Girolami, Osborne, and
   Sejdinovic}]{BriEtal18a}
 Briol FX, Oates CJ, Girolami M, Osborne MA, Sejdinovic D (2019) Probabilistic
@@ -52,13 +58,6 @@ Burnaev E, Panov M (2015) Adaptive design of experiments based on gaussian
 Choi SCT, Ding Y, \HickernellFJ FJ, Tong X (2017) Local adaption for
   approximation and minimization of univariate functions. J Complexity
   40:17--33, \doi{10.1016/j.jco.2016.11.005}
-
-\bibitem[{Choi et~al({2013--2017})Choi, Ding, \HickernellFJ, Jiang, {Jim\'enez
-  Rugama}, Li, Jagadeeswaran, Tong, Zhang, Zhang, and Zhou}]{ChoEtal17b}
-Choi SCT, Ding Y, \HickernellFJ FJ, Jiang L, {Jim\'enez Rugama} {\relax Ll}A,
-  Li D, Jagadeeswaran R, Tong X, Zhang K, Zhang Y, Zhou X ({2013--2017})
-  {GAIL}: {G}uaranteed {A}utomatic {I}ntegration {L}ibrary (versions 1.0--2.2).
-  MATLAB software, \urlprefix\url{http://gailgithub.github.io/GAIL_Dev/}
 
 \bibitem[{Choi et~al({2013--2019})Choi, Ding, \HickernellFJ, Jiang, {Jim\'enez
   Rugama}, Li, Jagadeeswaran, Tong, Zhang, Zhang, and Zhou}]{ChoEtal19a}
@@ -175,11 +174,12 @@ Forrester AIJ, S\'obester A, Keane AJ (2008) Engineering Design via Surrogate
 
 \bibitem[{Franke(1979)}]{franke1979critical}
 Franke R (1979) A critical comparison of some methods for interpolation of
-  scattered data. Tech. rep., NAVAL POSTGRADUATE SCHOOL MONTEREY CA
+  scattered data. Tech. rep., Naval Postgraduate School, Monterey, CA
 
 \bibitem[{Fu et~al(2017)Fu, Couplet, and Bousquet}]{fu2017adaptive}
 Fu S, Couplet M, Bousquet N (2017) An adaptive kriging method for solving
-  nonlinear inverse statistical problems. Environmetrics 28(4):e2439
+  nonlinear inverse statistical problems. Environmetrics 28(4):e2439,
+  \doi{10.1002/env.2439}
 
 \bibitem[{Gilquin et~al(2017)Gilquin, {Jim\'enez Rugama}, Arnaud,
   \HickernellFJ, Monod, and Prieur}]{GilEtal16a}
@@ -279,9 +279,8 @@ Jin R, Chen W, Sudjianto A (2002) On sequential sampling for global
 Johnson T, Fasshauer GE, \HickernellFJ FJ (2018+) Characterizing reproducing
   kernel {H}ilbert spaces. In preparation
 
-\bibitem[{Joseph(2016)}]{Jos16a}
-Joseph VR (2016) Space-filling designs for computer experiments: A review.
-  Qual\ Engineering 28:28--35
+\bibitem[{Kelley(1999)}]{kelley1999iterative}
+Kelley CT (1999) Iterative methods for optimization. SIAM
 
 \bibitem[{Kleijnen and {van Beers}(2004)}]{kleijnen2004application}
 Kleijnen JPC, {van Beers} WCM (2004) Application-driven sequential designs for
@@ -321,6 +320,12 @@ Liu WK, Li S, Belytschko T (1997) Moving least-square reproducing kernel
   methods {(I)} {M}ethodology and convergence. Comput Methods Appl Mech Engrg
   143:113--154
 
+\bibitem[{Lophaven et~al(2002)Lophaven, Nielsen, and S{\o}ndergaard}]{dace2002}
+Lophaven SN, Nielsen HB, S{\o}ndergaard J (2002) Aspects of the {Matlab}
+  toolbox {DACE}. Tech. rep., Informatics and Mathematical Modelling, Technical
+  University of Den- mark, DTU, Richard Petersens Plads, Building 321, DK-2800
+  Kgs.\ Lyngby
+
 \bibitem[{Marelli and Sudret(2014)}]{UQLab2014}
 Marelli S, Sudret B (2014) {UQLab}: {A} framework for uncertainty
   quantification in {MATLAB}. In: The 2nd International Conference on
@@ -341,8 +346,8 @@ McCourt M, Fasshauer GE (2017) Stable likelihood computation for {Gaussian}
   {Differential} {Equations}, and {Data} {Science}: {Novel} {Methods} in
   {Harmonic} {Analysis}, vol~2, Basel, Birk\"auser, pp 917--942
 
-\bibitem[{McCourt et~al(2018+)McCourt, Fasshauer, and Kozak}]{MCCEtal19a}
-McCourt MJ, Fasshauer GE, Kozak D (2018+) A nonstationary designer space-time
+\bibitem[{McCourt et~al(2018)McCourt, Fasshauer, and Kozak}]{MCCEtal19a}
+McCourt MJ, Fasshauer GE, Kozak D (2018) A nonstationary designer space-time
   kernel. In: 32nd Conference on Neural Information Processing Systems (NIPS
   2018)
 
@@ -358,10 +363,10 @@ Mishra PK, Nath SK, Sen MK, Fasshauer GE (2018) Hybrid {Gaussian}-cubic radial
   basis function for scattered data interpolation. Comput\ Geosciences
   22:1203--1218, \doi{10.1007/s10596-018-9747-3}
 
-\bibitem[{Mishra et~al(2018+)Mishra, Fasshauer, Sen, and Ling}]{MisEtal19a}
-Mishra PK, Fasshauer GE, Sen MK, Ling L (2018+) A stabilized radial
-  basis-finite difference (rbf-fd) method with hybrid kernels. Comput\ Math\
-  Appl To appear
+\bibitem[{Mishra et~al(2019)Mishra, Fasshauer, Sen, and Ling}]{MisEtal19a}
+Mishra PK, Fasshauer GE, Sen MK, Ling L (2019) A stabilized radial basis-finite
+  difference (rbf-fd) method with hybrid kernels. Comput\ Math\ Appl
+  77:2354--2368, \doi{10.1016/j.camwa.2018.12.027}
 
 \bibitem[{Novak and Wo{\'{z}}niakowski(2008)}]{NovWoz08a}
 Novak E, Wo{\'{z}}niakowski H (2008) Tractability of Multivariate Problems
@@ -422,19 +427,9 @@ Ritter K (2000) Average-Case Analysis of Numerical Problems, Lecture Notes in
 \bibitem[{Rubin(1981)}]{rubin1981bayesian}
 Rubin DB (1981) The bayesian bootstrap. The annals of statistics pp 130--134
 
-\bibitem[{S.~N.~Lophaven and S{\o}ndergaard(2002)}]{dace2002}
-S~N~Lophaven HBN, S{\o}ndergaard J (2002) Aspects of the {Matlab} toolbox
-  {DACE}. Tech. rep., Informatics and Mathematical Modelling, Technical
-  University of Den- mark, DTU, Richard Petersens Plads, Building 321, DK-2800
-  Kgs.\ Lyngby
-
 \bibitem[{Salehi and Dehghan(2013)}]{salehi2013generalized}
 Salehi R, Dehghan M (2013) A generalized moving least square reproducing kernel
   method. Journal of Computational and Applied Mathematics 249:120--132
-
-\bibitem[{Santner et~al(2003)Santner, Williams, and Notz}]{SanWilNot03}
-Santner TJ, Williams BJ, Notz WI (2003) The Design \& Analysis of Computer
-  Experiments. Springer-Verlag, New York
 
 \bibitem[{Schaback and Wendland(2006)}]{SchWen06a}
 Schaback R, Wendland H (2006) Kernel techniques: From machine learning to

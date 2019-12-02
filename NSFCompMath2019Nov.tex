@@ -420,7 +420,7 @@ We will demonstrate the success of our algorithms on practical large-scale simul
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this section we provide the details and relevant notation to describe the proposed adaptive sampling methodology. The initial sampling budget must be devoted to exploring $f$ over its domain, $\Omega$.  Without a wide-ranging exploration, important features might be missed.  If there is a priori knowledge about the output map $f$, that can be built into the exploration stage, but we will ignore that possibility.  After exploration comes the exploitation stage, where the simulation output or function data, $\by$, is used to determine where future samples should be taken.
 
-A key feature of the exploitation stage is the surrogate model (metamodel, emulator, function approximation). We constuct our surrogate model as the sum of a  trend model and a variational model:  
+A key feature of the exploitation stage is the surrogate model (metamodel, emulator, function approximation). We construct our surrogate model as the sum of a  trend model and a variational model:  
 \begin{equation*}
     \SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by). 
 \end{equation*} 
@@ -478,7 +478,7 @@ this additional computation is minimal compared to the expense of obtaining the 
 
   
 If $\calp$ consists of all polynomials of total degree up to $k$, then $\dim(\calp)$ grows as ${k + d \choose k}$ and  will far exceed $n$ for even modest $k$ and high $d$.   We will typically choose $\calp$ to be quadratic polynomials for low dimensional problems $d<10$, and linear basis functions for high-dimensional problems.    
-Polynomial approximants are very `stiff', these MLS approximnants are flexible and can fit odd surfaces similar to the way splines can approximate nonpolynomial shaped data in one dimension. 
+Polynomial approximants are very `stiff', these MLS approximants are flexible and can fit odd surfaces similar to the way splines can approximate nonpolynomial shaped data in one dimension. 
 Figure \ref{MLS} illustrates the flexibility of a  MLS with linear basis function fitting scattered data in two dimensions.  
 
 
@@ -539,7 +539,7 @@ In our weighted Bayesian bootstrap algorithm, we generate an ensemble of $B$ tre
 \begin{equation}
     \STREND^b(n,\mX,\by)(\bx) = f^b_{\LS,\bx}(\bx), \qquad \text{where } f^b_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2,
 \end{equation}
-where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functionss, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$.  We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
+where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functions, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$.  We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
 
 For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$.  These lead to our final surrogate model and its uncertainty.
 The surrogate model for each Bayesian bootstrap model can be expressed as 
@@ -736,33 +736,32 @@ Our adaptive sampling algorithms will create  computationally efficient algorith
 We will collaborate with modeling teams and apply our methodologies to guide both deterministic and stochastic large-scale simulations of climate change models and stochastic network models to predict disease transmission. 
 
 
-\underline{Los Alamos Sea Ice Model}
+\Upara{Los Alamos Sea Ice Model}
 Accurate climate predictions depend on understanding role the that sea ice plays and how the ice couples with the ocean and atmospheric models.
 %About nine million square miles of sea ice float on top of the world‚Äö√Ñ√∂ high-latitude seas and oceans. Sea ice helps keep polar regions cool. It is constantly in motion and constantly changing internally. It influences Earth‚Äö√Ñ√∂ climate, wildlife, and people who must contend with it year-round. Sea ice makes navigation difficult, creating challenges for commercial shipping, mining and energy development, fishing, hunting, tourism, scientific research, military bases, and defense operations.  
 We will collaborate with Elizabeth Hunke (Los Alamos National Laboratory) to apply our methodology to predicting the sea ice environment.   Hunke is the principal developer of the Los Alamos sea ice model (CICE) \cite{hunke2017cice, hunke2010cice}. This model incorporates physical effects of the atmosphere and ocean on the ice, and accounts for the physical feedback mechanisms between the sea ice and the full Earth climate system models. Each CICE simulation can take hours to run, even on the world's fastest computers.
 
 %Under the influence of wind and ocean currents, the  fresh ice moves on the ocean surface, and melts.  The melting creates a layer of fresher water that disrupts the ocean convection and vertical motion.  This effect could modify the global ‚Äö√Ñ√∂‚àö√ë‚àö‚à´conveyor belt‚Äö√Ñ√∂‚àö√ë‚àöœÄ (Gulf Stream) of heat moving through the world‚Äö√Ñ√∂‚àö√ë‚àö¬•s oceans and disrupt the entire Earth's environment. 
    
-Hunke and her colleagues have conduced 150 CICE model runs selected to space filling in the 39 dimensional  space of feasible  parameters.   Of these, only about 100 of the runs were successful, due to parameter induced instabilities.  They then added an additional 400 low discrepancy Sobol samples in regions where the simulation was stable.  In their preliminary studies, they confirmed that creating surrogate models for high-dimensional function, such as their 39 dimensional sample space, is difficult and not practical using standard approaches \cite{bengio2006curse, o2010oxford}.  We will use our two-part surrogate model to identify the active parameters \cite{constantine2014active} and predict the response between the sample points.  
+Hunke and her colleagues have conduced 150 CICE model runs selected to space filling in the 39 dimensional  space of feasible  parameters.   Of these, only about 100 of the runs were successful, due to parameter induced instabilities.  They then added an additional 400 low discrepancy Sobol' samples in regions where the simulation was stable.  In their preliminary studies, they confirmed that creating surrogate models for high-dimensional function, such as their 39 dimensional sample space, is difficult and not practical using standard approaches \cite{bengio2006curse, o2010oxford}.  We will use our two-part surrogate model to identify the active parameters \cite{constantine2014active} and predict the response between the sample points.  
 We will collaborate with Hunke to quantify the sensitivity of the model predictions for sea ice coverage and volume with respect to 39 model parameters.  We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
     
   
-\underline{Volcanic Impact on North Atlantic Oscillation:}
+\Upara{Volcanic Impact on North Atlantic Oscillation}
 Large volcanic eruptions inject massive amounts of SO${}_2$ into the upper atmosphere where it is converted into sulfate aerosols.  These aerosols reflect short-wave radiation and cause changes in the surface and sea surface temperatures, upper atmospheric winds, and  global precipitation patterns \cite{zanchettin2013background, legrande2015volcanic}.  
 These large perturbations can lead to  major changes in global climate patterns.
 
 We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide sampling large-scale simulations using the The Goddard Institute for Space Studies (GISS) large-scale climate model E2.1-R to investigate the impact of volcanic eruptions on the climate
 \cite{zanchettin2016model}.  MH is mentoring Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies.  Last summer she worked at GISS with Tsigaridis and LeGrande as an undergraduate research intern and will be collaborating with us to quantify the sensitivity of model model predictions to the initial state of the North Atlantic Oscillation. Other quantities of interest include the geopotential heights and upper atmosphere wind anomalies and sea level pressure in the North Atlantic basin. 
 
-\underline{Stochastic Network Model for Spread of Sexually Transmitted Diseases:}  The previous climate models are deterministic models, where multiple simulates with the same parameter values predict identical results. 
-For the past six years, MH has been collaborating with the Tulane School of 
 \begin{wrapfigure}{r}{0.3\textwidth}
-	  \begin{center}
-	\includegraphics[width = 0.3\textwidth]{ProgramsImages/sexualNetworkNOLA}
-	 \end{center}
+	\begin{center}
+		\includegraphics[width = 0.3\textwidth]{ProgramsImages/sexualNetworkNOLA}
+	\end{center}
 	\caption{Heterosexual network for stochastic simulation of STD transmission.}
 	\label{netmodel}
-\end{wrapfigure}
+\end{wrapfigure}\Upara{Stochastic Network Model for Spread of Sexually Transmitted Diseases}  The previous climate models are deterministic models, where multiple simulates with the same parameter values predict identical results. 
+For the past six years, MH has been collaborating with the Tulane School of 
 Public Health and Tropical Medicine to develop a stochastic Monte Carlo Markov Chain agent-based model for the transmission of sexually transmitted diseases (STDs) in New Orleans \cite{azizi2018using}.  
 The STIs spread through a dynamic heterosexual bipartite network of up to 200,000 nodes and includes treatment, contact tracing, condom use, and partner notification. The network changes each day as people change their short-term and long-term partnerships.  
 Since the partnership network and disease transmission is modeled as a stochastic process, multiple simulations with the same parameter values produce a multivariate  distribution of QOIs.  Each ensemble of runs can take hours on the Tulane Cypress 300+ TFlop supercomputer. 
@@ -787,7 +786,7 @@ The PIs will collaborate with a number of junior scholars, including students at
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Mentoring}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH and JMH lead regular research group meetings at their respective institutions comprised of long-term and short-term student 
+FJH and MH lead regular research group meetings at their respective institutions comprised of long-term and short-term student 
 collaborators, visitors, the curious, and special guests.  Ongoing work in early or polished stages is shared.  Papers of other authors are presented.  Mentoring takes place during these meetings as well as individually.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -832,7 +831,7 @@ to engage in research in general, and this research area in particular.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \Upara{Crossing Disciplinary Boundaries} The proposed research straddles mathematics, statistics, theoretical computer science, and 
-application areas.  The PIs have complementary strengths that facilitate this interdisciplinary research.  YD has expertise in adaptive algorithms and software development.  FJH has expertise in adaptive algorithms, low discrepancy sampling, kernel-based methods, and tractability. JMH has expertise in modeling of large scale phenomena and algorithm development.  Our 
+application areas.  The PIs have complementary strengths that facilitate this interdisciplinary research.  YD has expertise in adaptive algorithms and software development.  FJH has expertise in adaptive algorithms, low discrepancy sampling, kernel-based methods, and tractability. MH has expertise in modeling of large scale phenomena and algorithm development.  Our 
 expertise provides both an obligation and an opportunity to interact with a number of diverse 
 communities.
 
@@ -871,9 +870,9 @@ Our algorithms will be implemented in freely available software on public reposi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Management and Collaboration}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where JMH has visiting scientist appointment.  FJH will lead the effort at Illinois Tech, and JMH will lead the effort at Tulane.  FJH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models.  They will also lead the exploration of the data-inferred reproducing/covariance kernels.  JMH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap.  He will also lead the application of our new algorithms to the large-scale application problems.  
+This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where MH has visiting scientist appointment.  FJH will lead the effort at Illinois Tech, and MH will lead the effort at Tulane.  FJH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models.  They will also lead the exploration of the data-inferred reproducing/covariance kernels.  MH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap.  He will also lead the application of our new algorithms to the large-scale application problems.  
 
-The PhD student will be based at Illinois Tech during the academic year under the direct supervision of FJH and YD.  The PhD student will work on part of the algorithmic developments, its theoretical analysis, and its implementation in freely available software.  During the summer, the PhD student will join JMH in Los Alamos and be involved with testing our algorithms on challenging application problems.  The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting bite-sized aspects of the algorithms and their performance.
+The PhD student will be based at Illinois Tech during the academic year under the direct supervision of FJH and YD.  The PhD student will work on part of the algorithmic developments, its theoretical analysis, and its implementation in freely available software.  During the summer, the PhD student will join MH in Los Alamos and be involved with testing our algorithms on challenging application problems.  The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting bite-sized aspects of the algorithms and their performance.
 
 Our research groups will meet regularly via video conference and in person a couple of times per year at one of our campuses or at conferences.
 
