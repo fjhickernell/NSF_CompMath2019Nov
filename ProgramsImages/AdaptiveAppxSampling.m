@@ -33,7 +33,8 @@ fAppPlot = KPlotData*coeff;
 figure
 h = plot(xPlot,fPlot,xData,fData,'.',xPlot,fAppPlot);
 xlabel('\(x\)')
-[lgd,icons] = legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)','SV\((10)(x)\)'});
+[lgd,icons] = legend(h,{'\(f_{\mathrm{V}}(x)\)','\(f_{\mathrm{V}}(x_i)\)', ...
+   'SV\((10)(x)\)'});
 legend('boxoff')
 axis(axisBox)
 set(gca,'PlotBoxAspectRatio',[1.5 1 1]);
