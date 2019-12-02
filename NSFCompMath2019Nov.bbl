@@ -1,5 +1,5 @@
 \def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}\def\Ignore#1{}\def\notesupp#1{}\providecommand{\HickernellFJ}{Hickernell\xspace}
-\begin{thebibliography}{71}
+\begin{thebibliography}{90}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{{#1}}
 \providecommand{\urlprefix}{URL }
@@ -22,10 +22,24 @@ Aute V, Saleh K, Abdelaziz O, Azarm S, Radermacher R (2013) Cross-validation
   of deterministic computer simulations. Structural and Multidisciplinary
   Optimization 48(3):581--605
 
+\bibitem[{Azizi et~al(2018)Azizi, Dewar, and Mac~Hyman}]{azizi2018using}
+Azizi A, Dewar J, Mac~Hyman J (2018) Using an agent-based sexual-network model
+  to guide mitigation efforts for controlling chlamydia. bioRxiv p 233239
+
 \bibitem[{Bengio et~al(2006)Bengio, Delalleau, and Roux}]{bengio2006curse}
 Bengio Y, Delalleau O, Roux NL (2006) The curse of highly variable functions
   for local kernel machines. In: Advances in neural information processing
   systems, pp 107--114
+
+\bibitem[{Bindel et~al(2015)Bindel, Eriksson, and Shoemaker}]{pySOT2015}
+Bindel D, Eriksson D, Shoemaker C (2015) {pySOT}: {P}ython surrogate
+  optimization toolbox. {\url{https://github.com/dme65/pySOT}}
+
+\bibitem[{Bouhlel et~al(2019)Bouhlel, Hwang, Bartoli, Lafage, Morlier, and
+  Martins}]{SMT2019}
+Bouhlel MA, Hwang JT, Bartoli N, Lafage R, Morlier J, Martins JRRA (2019) A
+  python surrogate modeling framework with derivatives. Advances in Engineering
+  Software p 102662, \doi{https://doi.org/10.1016/j.advengsoft.2019.03.005}
 
 \bibitem[{Briol et~al(2019)Briol, Oates, Girolami, Osborne, and
   Sejdinovic}]{BriEtal18a}
@@ -45,11 +59,11 @@ Choi SCT, Ding Y, \HickernellFJ FJ, Tong X (2017) Local adaption for
   approximation and minimization of univariate functions. J Complexity
   40:17--33, \doi{10.1016/j.jco.2016.11.005}
 
-\bibitem[{Choi et~al({2013--2017})Choi, Ding, \HickernellFJ, Jiang, {Jim\'enez
-  Rugama}, Li, Jagadeeswaran, Tong, Zhang, Zhang, and Zhou}]{ChoEtal17b}
+\bibitem[{Choi et~al({2013--2019})Choi, Ding, \HickernellFJ, Jiang, {Jim\'enez
+  Rugama}, Li, Jagadeeswaran, Tong, Zhang, Zhang, and Zhou}]{ChoEtal19a}
 Choi SCT, Ding Y, \HickernellFJ FJ, Jiang L, {Jim\'enez Rugama} {\relax Ll}A,
-  Li D, Jagadeeswaran R, Tong X, Zhang K, Zhang Y, Zhou X ({2013--2017})
-  {GAIL}: {G}uaranteed {A}utomatic {I}ntegration {L}ibrary (versions 1.0--2.2).
+  Li D, Jagadeeswaran R, Tong X, Zhang K, Zhang Y, Zhou X ({2013--2019})
+  {GAIL}: {G}uaranteed {A}utomatic {I}ntegration {L}ibrary (versions 1.0--2.3).
   MATLAB software, \urlprefix\url{http://gailgithub.github.io/GAIL_Dev/}
 
 \bibitem[{Clancy et~al(2014)Clancy, Ding, Hamilton, \HickernellFJ, and
@@ -68,11 +82,24 @@ Constantine PG, Dow E, Wang Q (2014) Active subspace methods in theory and
   practice: applications to kriging surfaces. SIAM Journal on Scientific
   Computing 36(4):A1500--A1524
 
+\bibitem[{Cools and Nuyens(2016)}]{CooNuy16a}
+Cools R, Nuyens D (eds) (2016) {M}onte {C}arlo and Quasi-{M}onte {C}arlo
+  Methods: {MCQMC}, {L}euven, {B}elgium, {A}pril 2014, Springer Proceedings in
+  Mathematics and Statistics, vol 163, Springer-Verlag, Berlin
+
+\bibitem[{Couckuyt et~al(2014)Couckuyt, Dhaene, and Demeester}]{ooDACE2014}
+Couckuyt I, Dhaene T, Demeester P (2014) {ooDACE Toolbox}: {A} flexible
+  object-oriented kriging implementation. J Mach\ Learn\ Res 15:3183--3186
+
 \bibitem[{Diaconis(1988)}]{Dia88a}
 Diaconis P (1988) {B}ayesian numerical analysis. In: Gupta SS, Berger JO (eds)
   Statistical Decision Theory and Related Topics {IV}, {P}apers from the 4th
   {P}urdue Symp., {W}est {L}afayette, {I}ndiana 1986, vol~1, Springer-Verlag,
   New York, pp 163--175
+
+\bibitem[{Dick and Pillichshammer(2010)}]{DicPil10a}
+Dick J, Pillichshammer F (2010) Digital Nets and Sequences: Discrepancy Theory
+  and Quasi-{M}onte {C}arlo Integration. Cambridge University Press, Cambridge
 
 \bibitem[{Dick et~al(2013)Dick, Kuo, and Sloan}]{DicEtal14a}
 Dick J, Kuo F, Sloan IH (2013) High dimensional integration --- the
@@ -97,6 +124,15 @@ Ding Y, \HickernellFJ FJ, Kritzer P, Mak S (2019+{\natexlab{b}}) Adaptive
   approximation for multivariate linear problems with inputs lying in a cone.
   In: \HickernellFJ FJ, Kritzer P (eds) Multivariate Algorithms and
   Information-Based Complexity, DeGruyter, Berlin/Boston, to appear
+
+\bibitem[{Efron and Hastie(2016)}]{efron2016computer}
+Efron B, Hastie T (2016) Computer age statistical inference, vol~5. Cambridge
+  University Press
+
+\bibitem[{Efron and Tibshirani(1986)}]{efron1986bootstrap}
+Efron B, Tibshirani R (1986) Bootstrap methods for standard errors, confidence
+  intervals, and other measures of statistical accuracy. Statistical science pp
+  54--75
 
 \bibitem[{Fang et~al(2019)Fang, Liu, Qin, and Zhou}]{FangEtal19a}
 Fang KT, Liu MQ, Qin H, Zhou YD (2019) Theory and Application of Uniform
@@ -136,9 +172,14 @@ Fornberg B, Flyer N (2015) A Primer on Radial Basis Functions with Applications
 Forrester AIJ, S\'obester A, Keane AJ (2008) Engineering Design via Surrogate
   Modelling. Wiley, Chichester
 
+\bibitem[{Franke(1979)}]{franke1979critical}
+Franke R (1979) A critical comparison of some methods for interpolation of
+  scattered data. Tech. rep., Naval Postgraduate School, Monterey, CA
+
 \bibitem[{Fu et~al(2017)Fu, Couplet, and Bousquet}]{fu2017adaptive}
 Fu S, Couplet M, Bousquet N (2017) An adaptive kriging method for solving
-  nonlinear inverse statistical problems. Environmetrics 28(4):e2439
+  nonlinear inverse statistical problems. Environmetrics 28(4):e2439,
+  \doi{10.1002/env.2439}
 
 \bibitem[{Gilquin et~al(2017)Gilquin, {Jim\'enez Rugama}, Arnaud,
   \HickernellFJ, Monod, and Prieur}]{GilEtal16a}
@@ -146,6 +187,12 @@ Gilquin L, {Jim\'enez Rugama} {\relax Ll}A, Arnaud E, \HickernellFJ FJ, Monod
   H, Prieur C (2017) Iterative construction of replicated designs based on
   {S}obol' sequences. C\ R\ Math\ Acad\ Sci\ Paris 355:10--14,
   \doi{10.1016/j.crma.2016.11.013}
+
+\bibitem[{Gorissen et~al(2010)Gorissen, Crombecq, Couckuyt, Dhaene, and
+  Demeester}]{SUMO2010}
+Gorissen D, Crombecq K, Couckuyt I, Dhaene T, Demeester P (2010) A surrogate
+  modeling and adaptive sampling toolbox for computer based design. J Mach\
+  Learn\ Res 11:2051--2055
 
 \bibitem[{Gramacy and Lee(2008)}]{gramacy2008adaptive}
 Gramacy RB, Lee HK (2008) Adaptive design of supercomputer experiments. arXiv
@@ -165,10 +212,8 @@ Gramacy RB, Lee HK (2008) Adaptive design of supercomputer experiments. arXiv
 
 \bibitem[{\HickernellFJ and {Jim\'enez Rugama}(2016)}]{HicJim16a}
 \HickernellFJ FJ, {Jim\'enez Rugama} {\relax Ll}A (2016) Reliable adaptive
-  cubature using digital sequences. In: Cools R, Nuyens D (eds) {M}onte {C}arlo
-  and Quasi-{M}onte {C}arlo Methods: {MCQMC}, {L}euven, {B}elgium, {A}pril
-  2014, Springer-Verlag, Berlin, Springer Proceedings in Mathematics and
-  Statistics, vol 163, pp 367--383, arXiv:1410.8615 [math.NA]
+  cubature using digital sequences. In:  \cite{CooNuy16a}, pp 367--383,
+  arXiv:1410.8615 [math.NA]
 
 \bibitem[{\HickernellFJ et~al(2018{\natexlab{a}})\HickernellFJ, Choi, Jiang,
   and {Jim\'enez Rugama}}]{HicEtal18a}
@@ -189,7 +234,8 @@ Gramacy RB, Lee HK (2008) Adaptive design of supercomputer experiments. arXiv
 \bibitem[{\HickernellFJ et~al(2019)\HickernellFJ, Kritzer, and
   Wo\'{z}niakowski}]{HicKriWoz19a}
 \HickernellFJ FJ, Kritzer P, Wo\'{z}niakowski H (2019) Exponential tractability
-  of linear tensor product problems. In: 2018 MATRIX Annals, to appear
+  of linear tensor product problems. In: 2018 MATRIX Annals, MATRIX Book
+  Series, Springer Nature Switzerland AG, to appear
 
 \bibitem[{Hong and \HickernellFJ(2003)}]{HonHic00a}
 Hong HS, \HickernellFJ FJ (2003) Algorithm 823: Implementing scrambled digital
@@ -219,10 +265,8 @@ Jagadeeswaran R, \HickernellFJ FJ (2019) Fast automatic {B}ayesian cubature
 
 \bibitem[{{Jim\'enez Rugama} and \HickernellFJ(2016)}]{JimHic16a}
 {Jim\'enez Rugama} {\relax Ll}A, \HickernellFJ FJ (2016) Adaptive
-  multidimensional integration based on rank-1 lattices. In: Cools R, Nuyens D
-  (eds) {M}onte {C}arlo and Quasi-{M}onte {C}arlo Methods: {MCQMC}, {L}euven,
-  {B}elgium, {A}pril 2014, Springer-Verlag, Berlin, Springer Proceedings in
-  Mathematics and Statistics, vol 163, pp 407--422, arXiv:1411.1966
+  multidimensional integration based on rank-1 lattices. In:  \cite{CooNuy16a},
+  pp 407--422, arXiv:1411.1966
 
 \bibitem[{Jin et~al(2002)Jin, Chen, and Sudjianto}]{jin2002sequential}
 Jin R, Chen W, Sudjianto A (2002) On sequential sampling for global
@@ -235,9 +279,8 @@ Jin R, Chen W, Sudjianto A (2002) On sequential sampling for global
 Johnson T, Fasshauer GE, \HickernellFJ FJ (2018+) Characterizing reproducing
   kernel {H}ilbert spaces. In preparation
 
-\bibitem[{Joseph(2016)}]{Jos16a}
-Joseph VR (2016) Space-filling designs for computer experiments: A review.
-  Qual\ Engineering 28:28--35
+\bibitem[{Kelley(1999)}]{kelley1999iterative}
+Kelley CT (1999) Iterative methods for optimization. SIAM
 
 \bibitem[{Kleijnen and {van Beers}(2004)}]{kleijnen2004application}
 Kleijnen JPC, {van Beers} WCM (2004) Application-driven sequential designs for
@@ -247,6 +290,10 @@ Kleijnen JPC, {van Beers} WCM (2004) Application-driven sequential designs for
 Kunsch RJ, Novak E, Rudolf D (2019) Solvable integration problems and optimal
   sample size selection. J\ Complexity 53:40--67
 
+\bibitem[{Lacaze and Missoum(2015)}]{CODES2015}
+Lacaze S, Missoum S (2015) {CODES}: {A} toolbox for computational design.
+  {\url{http://http://www.codes.arizona.edu/toolbox/}}
+
 \bibitem[{LeGrande and Anchukaitis(2015)}]{legrande2015volcanic}
 LeGrande AN, Anchukaitis KJ (2015) Volcanic eruptions and climate. Past Global
   Changes Magazine: Volcanoes and Climate 23:46--7
@@ -255,9 +302,35 @@ LeGrande AN, Anchukaitis KJ (2015) Volcanic eruptions and climate. Past Global
 Li D (2016) Reliable quasi-{M}onte {C}arlo with control variates. Master's
   thesis, Illinois Institute of Technology
 
+\bibitem[{Li and Liu(1996)}]{limovingpartII1996}
+Li S, Liu WK (1996) Moving least-square reproducing kernel methods {Part II}:
+  {F}ourier analysis. Comput Methods Appl Mech Engrg 139:159--193
+
+\bibitem[{Li and \HickernellFJ(2014)}]{HicLi12a}
+Li Y, \HickernellFJ FJ (2014) Design of experiments for linear regression
+  models when gradient information is available. J Statist\ Plann\ Inference
+  144:141--151, \doi{10.1016/j.jspi.2013.01.010}
+
 \bibitem[{Liu(2018)}]{Liu17a}
 Liu J (2018) Adaptive quadrature with a general error criterion. Master's
   thesis, Illinois Institute of Technology
+
+\bibitem[{Liu et~al(1997)Liu, Li, and Belytschko}]{liumovingpartI1997}
+Liu WK, Li S, Belytschko T (1997) Moving least-square reproducing kernel
+  methods {(I)} {M}ethodology and convergence. Comput Methods Appl Mech Engrg
+  143:113--154
+
+\bibitem[{Lophaven et~al(2002)Lophaven, Nielsen, and S{\o}ndergaard}]{dace2002}
+Lophaven SN, Nielsen HB, S{\o}ndergaard J (2002) Aspects of the {Matlab}
+  toolbox {DACE}. Tech. rep., Informatics and Mathematical Modelling, Technical
+  University of Den- mark, DTU, Richard Petersens Plads, Building 321, DK-2800
+  Kgs.\ Lyngby
+
+\bibitem[{Marelli and Sudret(2014)}]{UQLab2014}
+Marelli S, Sudret B (2014) {UQLab}: {A} framework for uncertainty
+  quantification in {MATLAB}. In: The 2nd International Conference on
+  Vulnerability and Risk Analysis and Management {(ICVRAM 2014)}, ASCE Library,
+  pp 2554--2563, \urlprefix\url{https://www.uqlab.com}
 
 \bibitem[{Martin et~al(2018)Martin, Elsherbeni, Fasshauer, and
   Hadi}]{MarEtal18a}
@@ -273,10 +346,16 @@ McCourt M, Fasshauer GE (2017) Stable likelihood computation for {Gaussian}
   {Differential} {Equations}, and {Data} {Science}: {Novel} {Methods} in
   {Harmonic} {Analysis}, vol~2, Basel, Birk\"auser, pp 917--942
 
-\bibitem[{McCourt et~al(2018+)McCourt, Fasshauer, and Kozak}]{MCCEtal19a}
-McCourt MJ, Fasshauer GE, Kozak D (2018+) A nonstationary designer space-time
+\bibitem[{McCourt et~al(2018)McCourt, Fasshauer, and Kozak}]{MCCEtal19a}
+McCourt MJ, Fasshauer GE, Kozak D (2018) A nonstationary designer space-time
   kernel. In: 32nd Conference on Neural Information Processing Systems (NIPS
   2018)
+
+\bibitem[{Mederos et~al(2003)Mederos, Velho, and
+  De~Figueiredo}]{mederos2003moving}
+Mederos B, Velho L, De~Figueiredo LH (2003) Moving least squares
+  multiresolution surface approximation. In: 16th Brazilian Symposium on
+  Computer Graphics and Image Processing (SIBGRAPI 2003), IEEE, pp 19--26
 
 \bibitem[{Mishra et~al(2018)Mishra, Nath, Sen, and
   Fasshauer}]{mishra_hybrid_2018}
@@ -284,10 +363,10 @@ Mishra PK, Nath SK, Sen MK, Fasshauer GE (2018) Hybrid {Gaussian}-cubic radial
   basis function for scattered data interpolation. Comput\ Geosciences
   22:1203--1218, \doi{10.1007/s10596-018-9747-3}
 
-\bibitem[{Mishra et~al(2018+)Mishra, Fasshauer, Sen, and Ling}]{MisEtal19a}
-Mishra PK, Fasshauer GE, Sen MK, Ling L (2018+) A stabilized radial
-  basis-finite difference (rbf-fd) method with hybrid kernels. Comput\ Math\
-  Appl To appear
+\bibitem[{Mishra et~al(2019)Mishra, Fasshauer, Sen, and Ling}]{MisEtal19a}
+Mishra PK, Fasshauer GE, Sen MK, Ling L (2019) A stabilized radial basis-finite
+  difference (rbf-fd) method with hybrid kernels. Comput\ Math\ Appl
+  77:2354--2368, \doi{10.1016/j.camwa.2018.12.027}
 
 \bibitem[{Novak and Wo{\'{z}}niakowski(2008)}]{NovWoz08a}
 Novak E, Wo{\'{z}}niakowski H (2008) Tractability of Multivariate Problems
@@ -316,6 +395,12 @@ O'Hagan A, West M (2010) The Oxford handbook of applied Bayesian analysis.
 Owhadi H, Scovel C, Sh\"afer F (2019) Statistical numerical approximation.
   Notices Amer\ Math\ Society 66:1608--1617
 
+\bibitem[{Paleyes et~al(2019)Paleyes, Pullin, Mahsereci, Lawrence, and
+  Gonz{\'a}lez}]{emukit2019}
+Paleyes A, Pullin M, Mahsereci M, Lawrence N, Gonz{\'a}lez J (2019) Emulation
+  of physical processes with emukit. In: Second Workshop on Machine Learning
+  and the Physical Sciences, NeurIPS
+
 \bibitem[{Rashidinia et~al(2016)Rashidinia, Fasshauer, and
   Khasi}]{rashidinia_stable_2016}
 Rashidinia J, Fasshauer GE, Khasi M (2016) A stable method for the evaluation
@@ -339,9 +424,12 @@ Rasmussen CE, Williams C (2006) Gaussian Processes for Machine Learning. MIT
 Ritter K (2000) Average-Case Analysis of Numerical Problems, Lecture Notes in
   Mathematics, vol 1733. Springer-Verlag, Berlin
 
-\bibitem[{Santner et~al(2003)Santner, Williams, and Notz}]{SanWilNot03}
-Santner TJ, Williams BJ, Notz WI (2003) The Design \& Analysis of Computer
-  Experiments. Springer-Verlag, New York
+\bibitem[{Rubin(1981)}]{rubin1981bayesian}
+Rubin DB (1981) The bayesian bootstrap. The annals of statistics pp 130--134
+
+\bibitem[{Salehi and Dehghan(2013)}]{salehi2013generalized}
+Salehi R, Dehghan M (2013) A generalized moving least square reproducing kernel
+  method. Journal of Computational and Applied Mathematics 249:120--132
 
 \bibitem[{Schaback and Wendland(2006)}]{SchWen06a}
 Schaback R, Wendland H (2006) Kernel techniques: From machine learning to
@@ -389,9 +477,7 @@ Zhou X (2015) Function approximation with kernel methods. PhD thesis, Illinois
 
 \bibitem[{Zhou and \HickernellFJ(2016)}]{ZhoHic15a}
 Zhou X, \HickernellFJ FJ (2016) Tractability of the radial function
-  approximation problem with kernels of a product form. In: Cools R, Nuyens D
-  (eds) {M}onte {C}arlo and Quasi-{M}onte {C}arlo Methods: {MCQMC}, {L}euven,
-  {B}elgium, {A}pril 2014, Springer-Verlag, Berlin, Springer Proceedings in
-  Mathematics and Statistics, vol 163, pp 583--598, arXiv:1411.0790 [math.NA]
+  approximation problem with kernels of a product form. In:  \cite{CooNuy16a},
+  pp 583--598, arXiv:1411.0790 [math.NA]
 
 \end{thebibliography}
