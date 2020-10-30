@@ -53,6 +53,28 @@
 \headsep-0.6in
 %\headsep-0.45in
 
+\newcommand{\FH}{\hyperlink{FHlink}{FH}\xspace}
+\newcommand{\MH}{\hyperlink{MHlink}{MH}\xspace}
+\newcommand{\SM}{\hyperlink{SMlink}{SM}\xspace}
+\newcommand{\SCTC}{\hyperlink{SCTClink}{SCTC}\xspace}
+\newcommand{\AO}{\hyperlink{AOlink}{AO}\xspace}
+\newcommand{\MM}{\hyperlink{MMlink}{MM}\xspace}
+\newcommand{\TS}{\hyperlink{TSlink}{TS}\xspace}
+\newcommand{\GEF}{\hyperlink{GEFlink}{GEF}\xspace}
+\newcommand{\YD}{\hyperlink{YDlink}{YD}\xspace}
+\newcommand{\JR}{\hyperlink{JRlink}{JR}\xspace}
+\newcommand{\LlAJR}{\hyperlink{LlAJRlink}{LlAJR}\xspace}
+\newcommand{\LJ}{\hyperlink{LJlink}{LJ}\xspace}
+\newcommand{\XT}{\hyperlink{XTlink}{XT}\xspace}
+\newcommand{\KZ}{\hyperlink{KZlink}{KZ}\xspace}
+\newcommand{\DL}{\hyperlink{DLlink}{DL}\xspace}
+\newcommand{\XZ}{\hyperlink{XZlink}{KZ}\xspace}
+\newcommand{\JL}{\hyperlink{JLlink}{JL}\xspace}
+\newcommand{\YZ}{\hyperlink{YZlink}{YZ}\xspace}
+\newcommand{\AS}{\hyperlink{ASlink}{AS}\xspace}
+\newcommand{\CLT}{\hyperlink{CLTlink}{CLT}\xspace}
+\newcommand{\PN}{\hyperlink{PNlink}{PN}\xspace}
+
 %%list of acronyms with links
 \newcommand{\QMCSoft}{QMCSoft\xspace}
 \newcommand{\GAIL}{GAIL\xspace}
@@ -77,7 +99,7 @@
 \newtheorem{theorem}{theorem}
 
 
-\providecommand{\FJHickernell}{Hickernell}
+\providecommand{\FHickernell}{Hickernell}
 \newcommand{\hf}{\widehat{f}}
 \newcommand{\hg}{\widehat{g}}
 \newcommand{\hI}{\hat{I}}
@@ -378,7 +400,7 @@ an inexpensive representation of the simulation output (the identity) or the opt
 \begin{equation} \label{eq:ourQOIs}
 \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
-We propose to \emph{develop and analyze better numerical algorithms based on adaptive sampling} to predict the QOIs when $d$ may be as large as $100$ over a wide range of POIs and a small feasible number of simulations, $n$, say in the hundreds. We consider the situation where the primary cost is in obtaining the samples, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the output to determine future sample locations, numerical approximations, or error bounds. 
+We,  \hypertarget{YDlink}{Yuhan Ding} (\YD\footnote{Initials of personnel are hyperlinks to their full names.}, co-PI from Illinois Tech), \hypertarget{FHlink}{Fred Hickernell} (\FH, PI from Illinois Tech), \hypertarget{MHlink}{James ``Mac'' Hyman} (\MH, PI from Tulane U),  propose to \emph{develop and analyze better numerical algorithms based on adaptive sampling} to predict the QOIs when $d$ may be as large as $100$ over a wide range of POIs and a small feasible number of simulations, $n$, say in the hundreds. We consider the situation where the primary cost is in obtaining the samples, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the output to determine future sample locations, numerical approximations, or error bounds. 
 
 The QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where 
 \begin{itemize}
@@ -812,7 +834,7 @@ The PIs will collaborate with junior scholars, including students at the high sc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Mentoring}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH and MH lead regular research group meetings at their respective institutions comprised of long-term and short-term student collaborators, visitors, the curious, and special guests. Ongoing work in early or polished stages is shared. Papers of other authors are presented. Mentoring takes place during these meetings, as well as individually.
+\FH and MH lead regular research group meetings at their respective institutions comprised of long-term and short-term student collaborators, visitors, the curious, and special guests. Ongoing work in early or polished stages is shared. Papers of other authors are presented. Mentoring takes place during these meetings, as well as individually.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Providing Research Experiences for Undergraduate and High School Students} 
@@ -849,7 +871,7 @@ to engage in research in general and this research area in particular.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \Upara{Crossing Disciplinary Boundaries} The proposed research straddles mathematics, statistics, theoretical computer science, and 
-application areas. The PIs have complementary strengths that facilitate this interdisciplinary research. YD has expertise in adaptive algorithms and software development. FJH has expertise in adaptive algorithms, low discrepancy sampling, kernel-based methods, and tractability. MH has expertise in modeling of large scale phenomena and algorithm development. Our expertise provides both an obligation and an opportunity to interact with a number of diverse communities.
+application areas. The PIs have complementary strengths that facilitate this interdisciplinary research. YD has expertise in adaptive algorithms and software development. \FH has expertise in adaptive algorithms, low discrepancy sampling, kernel-based methods, and tractability. MH has expertise in modeling of large scale phenomena and algorithm development. Our expertise provides both an obligation and an opportunity to interact with a number of diverse communities.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Disseminating Research and Writing Survey Papers}
@@ -878,27 +900,128 @@ The idea of adaptive algorithms where the sampling scheme and the norm of the in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Creating Software and Collaborating with Software Developers}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Our algorithms will be implemented in freely available software on public repositories. We will discuss with software developers whose packages have complementary capabilities how we might collaborate. We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG. The \MATLAB \GAIL library \citep{ChoEtal19a}, developed by FJH, YD, and collaborators, contains univariate function approximation and minimization algorithms, as well as multivariate integration algorithms. A project to a community-based quasi-Monte Carlo Python library QMCPy, is underway with corporate sponsorship. 
+Our algorithms will be implemented in freely available software on public repositories. We will discuss with software developers whose packages have complementary capabilities how we might collaborate. We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG. The \MATLAB \GAIL library \citep{ChoEtal19a}, developed by \FH, YD, and collaborators, contains univariate function approximation and minimization algorithms, as well as multivariate integration algorithms. A project to a community-based quasi-Monte Carlo Python library QMCPy, is underway with corporate sponsorship. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Management and Collaboration}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where MH has a visiting scientist appointment. FJH will lead the effort at Illinois Tech, and MH will lead the effort at Tulane. FJH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models. They will also lead the exploration of the data-inferred reproducing/covariance kernels. MH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap. He will also lead the application of our new algorithms to the large-scale application problems. 
+This research will be primarily conducted at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where MH has a visiting scientist appointment. \FH will lead the effort at Illinois Tech, and MH will lead the effort at Tulane. \FH and YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models. They will also lead the exploration of the data-inferred reproducing/covariance kernels. MH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap. He will also lead the application of our new algorithms to the large-scale application problems. 
 
-The PhD student will be based at Illinois Tech during the academic year under the direct supervision of FJH and YD. The PhD student will collaborate with us on algorithmic developments, its theoretical analysis, and its implementation in freely available software. During the summer, the PhD student will join MH in Los Alamos and be involved with testing our algorithms on challenging application problems. The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting, bite-sized aspects of the algorithms and their performance.
+The PhD student will be based at Illinois Tech during the academic year under the direct supervision of \FH and YD. The PhD student will collaborate with us on algorithmic developments, its theoretical analysis, and its implementation in freely available software. During the summer, the PhD student will join MH in Los Alamos and be involved with testing our algorithms on challenging application problems. The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting, bite-sized aspects of the algorithms and their performance.
 
 Our research groups will meet regularly via video conference and in person a couple of times per year at one of our campuses or at conferences.
 
+\section{Results from Prior NSF Support} \label{sec:prior_work}
+
+\subsection{NSF-DMS-1522687\except{toc}{, \emph{Stable, Efficient, Adaptive Algorithms for
+			Approximation and Integration},
+		\$270,000, August 2015 -- July 2018}
+} \label{sec:PreviousFred}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hypertarget{GEFlink}{Gregory E.\ Fasshauer} (\GEF, co-PI) and \FH (PI) led this project, along with  \hypertarget{SCTClink}{Sou-Cheng Terrya Choi} (\SCTC, Senior Personnel).  Other major contributors were \FH's research students  \YD (PhD 2015), \hypertarget{LlAJRlink}{Llu\'is Antoni Jim\'enez Rugama} (\LJ, 2016),
+\LlAJR (PhD 2016), \hypertarget{DLlink}{Da Li} (\DL, MS 2016), \hypertarget{JLlink}{Jiazhen Liu} (\JL, MS 2018), JR (PhD 2019), \hypertarget{XTlink}{Xin Tong} (\XT, MS 2014, PhD 2020 @ University of Illinois at Chicago), \hypertarget{KZlink}{Kan Zhang} \KZ, PhD student), \hypertarget{YZlink}{Yizhi Zhang} (\YZ, PhD 2018), and \hypertarget{XZlink}{Xuan Zhou} (\XZ, PhD 2015).  Articles, theses,
+software, and preprints supported in
+part by this
+grant
+include
+\cite{ala_augmented_2017,
+	ChoEtal17a,
+	ChoEtal20a,
+	Din15a,
+	DinHic20a,
+	GilEtal16a,
+	Hic17a,
+	HicJag18b,
+	HicJim16a,
+	HicEtal18a,
+	HicEtal17a,
+	HicKriWoz19a,
+	RatHic19a,
+	GilJim16b,
+	JimHic16a,
+	JohFasHic18a,
+	Li16a,
+	Liu17a,
+	MarEtal18a,
+	mccourt_stable_2017,
+	MCCEtal19a,
+	mishra_hybrid_2018,
+	MisEtal19a,
+	rashidinia_stable_2016,
+	rashidinia_stable_2018,
+	Zha18a,
+	Zha17a,
+	Zho15a,
+	ZhoHic15a}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Intellectual Merit from Prior NSF Support}
+\label{previousmeritsubsec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\phantom{a}
+
+\iffalse
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\vspace{-1ex}
+	\includegraphics[width = 0.4\textwidth]{ProgramsImages/sampling-funappxg.png}
+	\\
+	\includegraphics[width = 0.4\textwidth]{ProgramsImages/sampling-funming.png}
+	
+	\vspace{-2ex}
+	\caption{The function data ({\color{MATLABOrange}$\bullet$}) for the locally adaptive
+		function approximation (top) and minimization (bottom) algorithms in \cite{ChoEtal17a}.  Sampling is denser where $\abs{f''}$ is larger.  For minimization it is also denser where the function values are smaller. \label{localadaptfig}}
+\end{wrapfigure}
+\fi
+
+\Upara{Adaptive Algorithms for Univariate Problems}
+\FH, \SCTC, \YD, \XT, \YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  The function approximation and optimization algorithms constructed by \FH, \SCTC, \YD, and \XT in \cite{ChoEtal17a} are \emph{locally adaptive}---the nonuniform sampling density is influenced by the function data.  For function approximation, the computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  The $1/2$-quasinorm $\norm[1/2]{f''}$ may be much smaller than
+$\norm[\infty]{f''}$ for peaky functions.
+
+
+\Upara{Globally Adaptive Cubature Based on LD Sequences}
+\FH, \LlAJR, \DL, and \JR developed globally adaptive algorithms for approximating $\int_{[0,1]^d} f(\bx) \, \dif \bx$ based on LD sequences \cite{HicJim16a,HicEtal17a,JimHic16a}.  These stopping criteria are now in QMCPy. Two common LD sequences are integration lattice nodes and digital sequences \cite{DicEtal14a}.  The error bounds underlying the adaptive cubatures developed by \FH, \LlAJR, \DL track the  Fourier coefficients of the sampled function values on these LD sequences.  \FH and \JR base their automatic Bayesian cubature on credible intervals, where the hyper-parameters of the priors are treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation.   \FH and \JR chose covariance kernels that matched the LD sequences and reduced the computational cost to $\Order(n \log(n))$, making Bayesian cubature practical.
+
+\Upara{Multivariate Function Approximation}
+\FH, \YD, and \LlAJR and collaborators investigated function approximation problems for Banach spaces, $\calf$, defined by series representations \cite{DinHic20a,DinEtal20a}.  For example, the bases can be general multivariate polynomials.  Different definitions of a cone, $\calc$, of functions were defined, all describing a reasonable behavior of the series coefficients.  Adaptive function approximation algorithms constructed were shown to be essentially optimal.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Broader Impacts from Prior NSF Support} \label{prevBIsect}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\phantom{a}
+
+\Upara{Publications, Conference Participation, Conference Organization, and Leadership} Publications by \GEF, \FH,  \SCTC, students, and collaborators are listed above.  We have spoken at many applied mathematics, statistics,
+and computational science conferences and given colloquium/seminar talks to mathematics and
+statistics departments.  \FH co-organized the
+2016 Spring Research
+Conference, a long-running annual industrial statistics conference.   \FH gave an invited tutorial
+at MCQMC 2016
+\cite{Hic17a}, a biennial conference for which he serves on the steering committee.  \FH
+was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program.   \FH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, \FH was appointed the director of Illinois Tech's new Center for Interdisciplinary
+Scientific Computation in 2017.  In 2018, \FH was appointed Vice Provost for Research.
+
+\Upara{\GAIL Software} The results of this research have been implemented in
+\GAIL, our open source \MATLAB library hosted on
+Github. This software
+has input parsing, input validation, unit tests, inline documentation, and
+demonstrations.  \GAIL makes it easier for practitioners to try our new adaptive algorithms.  \SCTC has been key in this effort.  \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by \FH and \YD.
+%With the help of students, we are starting to port GAIL to Python and \Rlang.
+
+\Upara{Boosting the STEM Workforce} \GEF, \FH, and \SCTC mentored a number of
+research students associated with this project.  Female students include \YD, \LJ, \JL, \XT, and Xiaoyang Zhao (MS 2017).   Mentees include undergraduate students involved more than a dozen
+Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from Illinois Tech, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  All but one of these eight have enrolled in graduate programs.   All students have learned how to conduct theoretical and/or practical computational mathematics research.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results of Prior NSF-Funded Research}
 
-\subsection{Prior NSF Support for Fred J. Hickernell}  FJH was the PI,  Gregory E.\ Fasshauer (GEF) was co-PI, and  Sou-Cheng Terrya Choi (SCTC) contributed as senior personnel on 
+\subsection{Prior NSF Support for Fred J. Hickernell}  \FH was the PI,  Gregory E.\ Fasshauer (GEF) was co-PI, and  Sou-Cheng Terrya Choi (SCTC) contributed as senior personnel on 
 NSF-DMS-1522687, \emph{Stable, Efficient, Adaptive Algorithms for 
 Approximation and Integration}, 
 \$270,000, August 2015 -- July 2018.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Other major contributors were FJH's research students Yuhan Ding (YD, PhD 2015), Lan Jiang (LJ, PhD 2016), 
+Other major contributors were \FH's research students Yuhan Ding (YD, PhD 2015), Lan Jiang (LJ, PhD 2016), 
 Llu\'is Antoni Jim\'enez Rugama (LlAJR, PhD 2016), Da Li (DL, MS 2016), Jiazhen Liu (JL, MS 2018), Jagadeeswaran Rathinavel (JR, 
 PhD student), Xin Tong (XT, MS 2014, PhD student, University of Illinois at Chicago), Kan Zhang (KZ, PhD student), Yizhi Zhang (YZ, PhD 2018), and Xuan Zhou (XZ, PhD 2015).  Articles, theses,  
 software, and preprints supported in 
@@ -957,9 +1080,9 @@ include
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Adaptive Algorithms for Univariate Problems} \label{sec:localadpat}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant, but the number of data sites is chosen adaptively to meet the error tolerance.
+\FH, STSC, YD, XT, YZ and collaborators developed several adaptive algorithms for univariate integration, function approximation, and optimization \cite{ChoEtal17a,HicEtal14b,  Din15a, Ton14a, Zha18a}.  Most of these algorithms are \emph{globally adaptive}---the sampling density is constant, but the number of data sites is chosen adaptively to meet the error tolerance.
 
-However, the function approximation and integration algorithms constructed by FJH, SCTC, YD, and XT in \cite{ChoEtal17a} are \emph{locally adaptive}, meaning that the sampling density is non-uniform and influenced by the function data.  Qualitatively, the cone of functions for which these algorithms are guaranteed to succeed consists of functions where the maximum of the second derivative in a sub-interval is not drastically smaller than the larger of it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
+However, the function approximation and integration algorithms constructed by \FH, SCTC, YD, and XT in \cite{ChoEtal17a} are \emph{locally adaptive}, meaning that the sampling density is non-uniform and influenced by the function data.  Qualitatively, the cone of functions for which these algorithms are guaranteed to succeed consists of functions where the maximum of the second derivative in a sub-interval is not drastically smaller than the larger of it's minimum value to the immediate left or right.  For function approximation, the adaptive sample is denser where $\abs{f''}$ is larger, as shown in Fig.\ \ref{localadaptfig}.  This locally adaptive function approximation algorithm has a computational cost of $\Order\left(\sqrt{\norm[1/2]{f''}/\varepsilon} \right)$, where $\varepsilon$ is the error tolerance, and is essentially optimal.  An intriguing aspect is the appearance of the $1/2$-quasinorm $\norm[1/2]{f''}$, which may be much smaller than 
 $\norm[\infty]{f''}$ for peaky functions.
 
 
@@ -968,13 +1091,13 @@ $\norm[\infty]{f''}$ for peaky functions.
 \Upara{Globally Adaptive Cubature Based on Space-Filling Designs} \hypertarget{QMClink}{}
 \label{sec:QMC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-FJH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a} (see   Fig.\ \ref{PtsFig}). 
+\FH, LlAJR, DL, and JR developed globally adaptive algorithms for approximating $d$-dimensional integrals,  $\int_{[0,1]^d} f(\bx) \, \dif \bx$, based on space-filling designs \cite{HicJim16a,HicEtal17a,JimHic16a}.  Two common space-filling or low discrepancy designs are integration lattice nodes and digital sequences \cite{DicEtal14a} (see   Fig.\ \ref{PtsFig}). 
 
-The error bounds underlying the adaptive cubatures developed by FJH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/ digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.  The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed are those for which  the Fourier coefficients decay steadily, but not necessarily monotonically, in magnitude.
+The error bounds underlying the adaptive cubatures developed by \FH, LlAJR, DL are based on the Fourier coefficients of the sampled function values on these space-filling designs.  The Fourier  \{complex exponential/Walsh functions\} bases are chosen to match the \{lattices/ digital sequences\}  designs, which makes the cubature error bounds possible.  The globally adaptive cubatures increase $n$ by powers of two until the error bounds are no greater than the error tolerance, $\varepsilon$.  The cones, $\calc$, of integrands for which these adaptive cubatures are guaranteed are those for which  the Fourier coefficients decay steadily, but not necessarily monotonically, in magnitude.
 
-FJH and JR  assumed that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $K:[0,1]^d \times [0,1]^d \to \reals$.  The same space-filling designs are used as are pictured in Fig.\ \ref{PtsFig}.  A $99\%$ credible interval for the integral is constructed.  The sample size, $n$, is increased until the half-width is no greater than the error tolerance, $\varepsilon$, the algorithm terminates.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $K$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}. The major contribution of FJH and JR is to speed up the computational cost required by this Bayesian cubature.  Bayesian cubature requires operations
+\FH and JR  assumed that the integrand is an instance of a Gaussian process with constant mean $m$, and covariance kernel, $K:[0,1]^d \times [0,1]^d \to \reals$.  The same space-filling designs are used as are pictured in Fig.\ \ref{PtsFig}.  A $99\%$ credible interval for the integral is constructed.  The sample size, $n$, is increased until the half-width is no greater than the error tolerance, $\varepsilon$, the algorithm terminates.  The hyper-parameters, $m$ and the parameters defining the covariance kernel, $K$, may be treated by empirical Bayes (maximum likelihood estimation), full Bayes, and/or cross-validation \cite{RatHic19a}. The major contribution of \FH and JR is to speed up the computational cost required by this Bayesian cubature.  Bayesian cubature requires operations
 involving the Gram matrix $\mK$ defined in \eqref{appxExOne}, and ordinarily these operations  have a cost of
-$\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the space-filling designs and reduced the computational cost to $\Order(n 
+$\Order(n^3)$.  \FH and JR chose covariance kernels, $K$, which matched the space-filling designs and reduced the computational cost to $\Order(n 
 \log(n))$, making Bayesian cubature practical.
 
 
@@ -983,22 +1106,22 @@ $\Order(n^3)$.  FJH and JR chose covariance kernels, $K$, which matched the spac
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \phantom{a}
 
-\Upara{Publications, Conference Participation, Conference Organization, and Leadership} Publications by GEF, FJH, SCTC, students, and collaborators are listed at the beginning of this section. We have spoken at many applied mathematics, statistics, 
-and computational science conferences and given colloquium/seminar talks to mathematics and statistics departments. FJH co-organized the 
-2016 Spring Research Conference, a long-running annual industrial statistics conference. FJH gave an invited tutorial
+\Upara{Publications, Conference Participation, Conference Organization, and Leadership} Publications by GEF, \FH, SCTC, students, and collaborators are listed at the beginning of this section. We have spoken at many applied mathematics, statistics, 
+and computational science conferences and given colloquium/seminar talks to mathematics and statistics departments. \FH co-organized the 
+2016 Spring Research Conference, a long-running annual industrial statistics conference. \FH gave an invited tutorial
 at MCQMC 2016
-\cite{Hic17a}, a biennial conference for which he serves on the steering committee. FJH 
-was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program. FJH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, FJH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
-Scientific Computation in 2017. In 2018, FJH was appointed Vice Provost for Research.
+\cite{Hic17a}, a biennial conference for which he serves on the steering committee. \FH 
+was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program. \FH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity. In recognition of his research leadership, \FH was appointed the director of Illinois Tech's new Center for Interdisciplinary 
+Scientific Computation in 2017. In 2018, \FH was appointed Vice Provost for Research.
 \Upara{\GAIL Software} The results of this research have been implemented in 
 \GAIL, our open source \MATLAB library hosted on
 Github. This software 
 has been implemented with input parsing, input validation, unit tests, inline documentation, and 
-demonstrations. \GAIL makes it easier for practitioners to try our new adaptive algorithms. SCTC has been key in this effort. \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by FJH and YD. 
+demonstrations. \GAIL makes it easier for practitioners to try our new adaptive algorithms. SCTC has been key in this effort. \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by \FH and YD. 
 %With the help of students, we are starting to port GAIL to Python and \Rlang.
 
-\Upara{Boosting the STEM Workforce} GEF, FJH, and SCTC mentored a number of 
-research students associated with this project. Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017). GEF, FJH, and SCTC have mentored many undergraduate students including more than a dozen 
+\Upara{Boosting the STEM Workforce} GEF, \FH, and SCTC mentored a number of 
+research students associated with this project. Female students mentored include YD, LJ, JL, XT, and Xiaoyang Zhao (MS 2017). GEF, \FH, and SCTC have mentored many undergraduate students including more than a dozen 
 Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from Illinois Tech, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines. All but one have enrolled in graduate programs. As part of our team, all of
 these students have learned how to conduct theoretical and/or practical computational mathematics research.
 
