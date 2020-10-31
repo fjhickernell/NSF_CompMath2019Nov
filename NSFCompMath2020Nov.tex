@@ -465,9 +465,11 @@ We assume that $\calc$ is a subset of $\calf$ an infinite dimensional vector spa
 
 The candidate set must only include functions whose norms can be well approximated from the data, $(\mX, \by)$.  Otherwise, again there would be a peaky $g \in \calc$ with large $\norm[\calf]{g}$ and $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  While some might choose $\calc$ to include only functions with $\calf$-norm no greater than $R$, we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm.
 
-For our problems of interest there is a possible curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ is $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  The only way to avoid this curse is for our algorithm to identify a subspace of $\calf$ with low effective dimension, $d'$, where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Set.\ \ref{sec:selectCoord}).  Our $\calc$ will exclude functions with high effective dimension.
+For our problems of interest there is a possible curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ is $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  The only way to avoid this curse is for our algorithm to identify a subspace of $\calf$ with low effective dimension, $d'$, where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Set.\ \ref{sec:selectCoord}).  Our $\calc$ will include only functions with low effective dimension.
 
-On the other hand, we would like the candidate set, $\calc$ to be as large as possible to give our algorithm wider applicability.  To satisfy these opposing criteria our candidate set must be defined to algorithm must guide us to .}
+Although the candidate set, $\calc$, must be small enough, we also want it be as large as possible to give our algorithm wider applicability.  To do this, we will allow $\calf$ to be the union of build into our algorithm the flexibility to choose among different possible low dimensional structures in different possible vectors spaces, $\calf_\btheta$.
+
+}
 
 \Upara{Summary} 
 Our goals are to create better surrogate models and data-driven surrogate uncertainty measures for high- dimensional problems with relatively few samples. We will develop and analyze flexible data-driven models and correspondingly economical adaptive sampling schemes. We propose to create
