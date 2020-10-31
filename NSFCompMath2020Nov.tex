@@ -455,15 +455,15 @@ The surrogate models also provide estimates for the uncertainty in the $\APP$ mo
 again either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$. These error bounds will be shown to be valid for $\calc$, precisely defined sets of well-behaved simulation output maps, $f$. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$. The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
 \FJHNote{\Upara{The Candidate Set, $\calc$} 
-For an error bound of the form \eqref{eq:errbd}  to even be possible, the $\QOI$ of any two functions in $\calc$ sharing the same data must not differ by much, specifically, 
+For an error bound of the form \eqref{eq:errbd}  to be possible, the $\QOI$ of any two functions in $\calc$ sharing the same data must not differ by much, specifically, 
 \begin{equation} \label{eq:Csmall}
 	\bignorm[\calg]{\QOI(f) - \QOI(g)} \le 2 \ERR(n,\mX,\by) \qquad \forall f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by.
 \end{equation}
 This follows from the triangle inequality and the fact that $f$ and $g$ share the same approximation $\APP(n,\mX,\by)$. So, $\calc$ must be small enough, and the adaptive sampling procedure must be clever enough to keep $\ERR(n,\mX,\by)$ reasonably small (with respect to the size of the function data, $\by$).  
 
-We assume that $\calc$ is a subset of $\calf$ an infinite dimensional vector space of $d$-variate functions for which our approximation,  $\APP(n,\mX,\by)$, comes with an error bound $\ERR(n,\mX,\by)$. We cannot choose $\calc = \calf$ because then there would surely be some $g \in \calc$ with $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  E.g., $g$ could have all the smoothness desired but be quite peaky.
+We assume that $\calc$ is a subset of $\calf$ an infinite dimensional vector space of $d$-variate functions. We cannot choose $\calc = \calf$ because then there would be some $g \in \calc$ with $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  E.g., $g$ might be quite peaky.
 
-The candidate set must only include functions whose norms can be well approximated from the data, $(\mX, \by)$.  Otherwise, again there would be a peaky $g \in \calc$ with large $\norm[\calf]{g}$ and $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  While some might choose $\calc$ to include only functions with $\calf$-norm no greater than $R$, we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm.
+The candidate set must only include functions whose norms can be bound in terms of the data, $(\mX, \by)$. The error-driven bound on the norm is needed for $\ERR(n,\mX,\by)$.  If norms of functions in $\calc$ cannot be well approximated, again a peaky $g$ with large $\norm[\calf]{g}$ and $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  While some might choose $\calc$ to include only functions with $\calf$-norm no greater than $R$, we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm.
 
 For our problems of interest there is a possible curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ is $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  The only way to avoid this curse is for our algorithm to identify a subspace of $\calf$ with low effective dimension, $d'$, where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Set.\ \ref{sec:selectCoord}).  Our $\calc$ will include only functions with low effective dimension.
 
