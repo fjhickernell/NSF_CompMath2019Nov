@@ -455,7 +455,7 @@ The surrogate models also provide estimates for the uncertainty in the $\APP$ mo
 again either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$. These error bounds will be shown to be valid for $\calc$, precisely defined sets of well-behaved simulation output maps, $f$. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$. The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
 \FJHNote{\Upara{The Candidate Set, $\calc$} 
-For an error bound of the form \eqref{eq:errbd}  to be possible, the $\QOI$ of any two functions in $\calc$ sharing the same data must not differ by much, specifically, 
+For error bound \eqref{eq:errbd}  to be possible, the $\QOI$ of any two functions in $\calc$ that share the same data must not differ by much, specifically, 
 \begin{equation} \label{eq:Csmall}
 	\bignorm[\calg]{\QOI(f) - \QOI(g)} \le 2 \ERR(n,\mX,\by) \qquad \forall f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by.
 \end{equation}
