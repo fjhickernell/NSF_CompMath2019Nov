@@ -360,7 +360,7 @@
 {\color{red}
 Issues raised by the NSF Panelists for the 2019 proposal:
 \begin{itemize}
-	\item Exploratory sampling in high dimensions
+	\item Exploratory sampling in high dimensions (Fred added some)
 	\item The length scale in high dimensions
 	\item Active subspaces, more detail needed, how do we do it (Mac will write it)
 	\item Do we make our reproducing kernel  dependent on $(t - x)^T \Sigma (t-x)$, where $\Sigma$ is not necessarily diagaonal
@@ -376,8 +376,11 @@ Issues raised by the NSF Panelists for the 2019 proposal:
 Other issues for us
 \begin{itemize}
 	\item Do we stick with MLS for the trend?
+	\item Do we showcase the Matern somewhat smooth kernel or the Gaussian kernel?
 	\item We really need to emphasize the need to identify the need to find a low-dimensional 
 	\item Try an artificial function with just a few active subspaces
+	\item \checkmark Fred cut down prior support
+	
 \end{itemize}
 }
 
@@ -691,7 +694,7 @@ Global parametric surrogate models can capture the trend of a multivariate respo
 The MLS quasi-interpolants are an effective alternative to piecewise polynomials in high dimensions. The MLS also local low-degree polynomials to capture global nonpolynomial behavior. The additional computational cost to solve for the local MLS coefficients is small compared to the cost of generating new samples. 
 
 One of the challenges in MLS is to identify a robust methodology for picking the appropriate length scale, $\sigma(\bx)$, for the MLS kernel. Our current approach is to define this length scale as the mean distance to the nearest $K_n$ neighbors of $\bx$, where $K_n$ is greater than $\dim(\calp)$, the dimension of the space of local approximants.
-This heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well-conditioned. If the least squares problem is ill-conditioned, then the length scale is increased. \emph{We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.}  We will also investigate the local scaling approach of \cite{ZelPer05a}
+This heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well-conditioned. If the least squares problem is ill-conditioned, then the length scale is increased. \emph{We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.}  We will also investigate the local scaling approach of \cite{ZelPer05a}.
 
 Another shortcoming of the existing MLS quasi-interpolants is that they treat every coordinate direction the same. 
 \emph{We will extend the MLS to use the full covariance matrix in the multivariate Gaussian kernel based on the relative variation in underlying active dimensional analysis}. We will describe some of these ideas in section \ref{sec:selectCoord}. 
@@ -754,6 +757,8 @@ Another weakness in the adaptive scheme outlined above is that the cone $\calc$ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Selecting Important Coordinate Directions to Avoid the Curse of Dimensionality} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\FJHNote{I can try to unify this and add more.}
 
 Approximating optimizing a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands is infeasible if $f$ is fully $d$ dimensional. For example, even a multilinear function,
 \begin{equation*}
