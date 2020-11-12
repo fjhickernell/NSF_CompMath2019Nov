@@ -26,7 +26,7 @@ figure
 plot(xIID(:,1),xIID(:,2),'.','color',MATLABBlue)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('IID Data Sites')
+title('Uniform IID Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc IIDPoints.eps
@@ -48,10 +48,21 @@ figure
 plot(xSSobol(:,1),xSSobol(:,2),'.','color',MATLABPurple)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Digital Sequence Data Sites')
+title('Uniform Sobol'' Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc SSobolPoints.eps
+
+xChebSSobol = (1+sin(pi*(-1/2 + xSSobol)))/2;
+figure
+plot(xChebSSobol(:,1),xChebSSobol(:,2),'.','color',MATLABPurple)
+xlabel('\(x_{i1}\)')
+ylabel('\(x_{i2}\)')
+title('Arcsine Sobol'' Data Sites')
+axis square
+set(gca,'xtick',tick,'ytick',tick)
+print -depsc ChebSSobolPoints.eps
+
 
 %% Plot Lattice Points
 rng(47)
@@ -62,8 +73,32 @@ figure
 plot(sxlat(:,1),sxlat(:,2),'.','color',MATLABGreen)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Lattice Data Sites')
+title('Uniform Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc ShiftedLatticePoints.eps
+
+%% Kernel Space Filling Designs
+d = 4;
+xkernel = zeros(n,d);
+xkernel(1,:) = 0.5*ones(1,d);
+theta = -ones(1,d);
+kernel = @(t,x) MaternKernelOne(t,x);
+meval = 16;
+xeval = seqFixedDes([1 2^meval], d);
+for i = 2:n
+   [Kmat, Kdateval, Kdiageval] = KMP(xkernel(1:i-1,:), xeval, kernel);
+   [~, ~, whKX] = powerfun(Kmat, Kdateval, Kdiageval);
+   xkernel(i,:) = xeval(whKX,:);
+end
+figure
+plot(xkernel(:,1),xkernel(:,2),'.','color',MATLABGreen)
+xlabel('\(x_{i1}\)')
+ylabel('\(x_{i2}\)')
+title('Kernel Based Data Sites')
+axis square
+set(gca,'xtick',tick,'ytick',tick)
+print -depsc KernelSpaceFillingPoints.eps
+
+
 
