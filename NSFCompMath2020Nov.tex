@@ -362,8 +362,8 @@ Issues raised by the NSF Panelists for the 2019 proposal:
 \begin{itemize}
 	\item Exploratory sampling in high dimensions (Fred added some)
 	\item The length scale in high dimensions
-	\item Active subspaces, more detail needed, how do we do it (Mac will write it)
-	\item Do we make our reproducing kernel  dependent on $(t - x)^T \Sigma (t-x)$, where $\Sigma$ is not necessarily diagaonal
+	\item Active subspaces, more detail needed, how do we do it (Fred will write and Mac will rewrite)
+	\item Do we make our reproducing kernel  dependent on $(t - x)^T \Sigma (t-x)$, where $\Sigma$ is not necessarily diagonal
 	\item Alternative approaches not referenced
 	\begin{itemize}
 		\item Tensor trains?
@@ -506,7 +506,7 @@ Because the primary cost in our problems is acquiring the sample data, we are no
     \item Uniform
     \item LD
     \item Chebyshev
-    \item Opportunitistic
+    \item Opportunitistic 
     \item Prior
 \end{itemize}
 }
@@ -516,7 +516,9 @@ The goal of the initial samples is to explore the space of feasible POIs, $\Omeg
 We will compare the effectiveness of low discrepancy samples mimicking uniform and arcsine (Chebyshev) distributions.
 The arcsine distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
 
-Another approach for an exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $\sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
+Another approach for an exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
+
+\FJHNote{Mac please add about opportunistic and prior} 
 
 
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
