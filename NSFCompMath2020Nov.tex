@@ -454,7 +454,7 @@ The surrogate models for $f$ lead to bounds on the uncertainty in the $\APP$ mod
 \end{equation}
 again either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$. Our proposed research will demonstrate these error bounds to be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$. The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
-\FJHNote{\Upara{The Candidate Set, $\calc$} 
+\Upara{The Candidate Set, $\calc$} 
 For error bound \eqref{eq:errbd}  to be possible, any two functions in $\calc$ that share the same data must have similar $\QOI$, specifically, 
 \begin{equation} \label{eq:Csmall}
 	\bignorm[\calg]{\QOI(f) - \QOI(g)} \le 2 \ERR(n,\mX,\by) \qquad \forall f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by.
@@ -463,20 +463,19 @@ This follows from the triangle inequality and the fact that $f$ and $g$ share th
 
 We take $\calc$ to be a subset of $\calf$ an infinite dimensional vector space of $d$-variate functions. We cannot choose $\calc = \calf$ because then there would be some $g \in \calc$ with $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  E.g., $g$ might be quite peaky.
 
-Bounds on the norm of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  Some might choose $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$, but we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm.  So again, $\calc$ must rule out peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect. \ref{sec:varmodel}.
+Bounds on the norm of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  Some might choose $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$, but we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm, that must be bounded from data.  Again, $\calc$ must rule out peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect. \ref{sec:varmodel}.
 
-Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  The way to avoid this curse is for functions in $\calc$ to lie in some subspace of $\calf$ with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Sect.\ \ref{sec:selectCoord}). 
+Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  To avoid this curse we choose $\calc$ to only include functions with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Sect.\ \ref{sec:selectCoord}). 
 
-Sticking with an $\calf$ with a fixed norm does not allow enough flexibility, since we may not know which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$.  A research problem will be choosing the $\calf_\btheta$ to allow sufficient flexibility, while ensuring that an appropriate vector parameter $\btheta$ can be inferred from a reasonable amount of function data (see Sect. \ref{sec:selectCoord}).
+Choosing  to $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow sufficient flexibility, while ensuring that an appropriate vector parameter $\btheta$ can be inferred from a reasonable amount of function data (see Sect. \ref{sec:selectCoord}).
 
-}
 
 \Upara{Summary} 
 Our goals are to create better surrogate models and data-driven surrogate uncertainty measures for high-dimensional problems with relatively few samples. We will develop, analyze, and implement flexible data-driven models and correspondingly economical adaptive sampling schemes. We propose to create
 \begin{itemize}
-\item A methodology to combine the data-driven Bayesian bootstrap analysis for the trend model with RKHS variational modeling to quantify the overall uncertainty in the surrogate model for the $\APP$,
+\item A methodology to combine the data-driven Bayesian bootstrap analysis for the trend model with RKHS variational modeling to quantify the overall uncertainty in the surrogate model for the $\APP$ (Sect.\ \ref{sec:SurrMod}, \ref{sec:ourtrend},  \ref{sec:kerinferdata}),
 \item Better adaptive sampling acquisition functions, $\VAL$ that depend on both the past sample locations, $\mX$, and the output data, $\by$, 
-\item Effective methods to tune the hyperparameters, $\btheta$, defining our RKHS, and
+\item Effective methods to tune the hyperparameters, $\btheta$, defining our RKHS and important coordinate directions, and
 \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for precisely defined candidate sets of output maps, $\calc$, which will turn out to be cones.
 \end{itemize}
 We will demonstrate the success of our algorithms on practical large-scale simulation applications and compare our results with those obtained by other available software libraries for surrogate modeling. In the course of our research, we will mentor students and early-career scholars. 
@@ -501,24 +500,14 @@ Because the primary cost in our problems is acquiring the sample data, we are no
 \subsection{The Initial Exploration Stage: Space-Filling Sampling} \label{sec:Explore}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\phantom{a}
-\FJHNote{\begin{itemize}
-    \item Uniform
-    \item LD
-    \item Chebyshev
-    \item Opportunitistic 
-    \item Prior
-\end{itemize}
-}
-
-The goal of the initial samples is to explore the space of feasible POIs, $\Omega$, when little, or nothing, is known about the response QOIs. We use space-filling designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} or other low discrepancy space-filling data sites \cite{DicPil10a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
+The goal of the initial samples is to explore the space of feasible POIs, $\Omega$, when little, or nothing, is known about the response QOIs. We use space-filling designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
 
 We will compare the effectiveness of low discrepancy samples mimicking uniform and arcsine (Chebyshev) distributions.
 The arcsine distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
 
-Another approach for an exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
+Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
 
-\FJHNote{Mac please add about opportunistic and prior} 
+In some applications one may be able to obtain cheap data from certain sites.  There may be also prior data collected from earlier experiments.  Our initial exploration stage will include this data as well.
 
 
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
@@ -760,37 +749,36 @@ Another weakness in the adaptive scheme outlined above is that the cone $\calc$ 
 \subsection{Selecting Important Coordinate Directions to Avoid the Curse of Dimensionality} \label{sec:selectCoord}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\FJHNote{I can try to unify this and add more.}
-
-Approximating optimizing a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands is infeasible if $f$ is fully $d$ dimensional. For example, even a multilinear function,
-\begin{equation*}
-f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d, \qquad \bx \in [-1,1]^d,
-\end{equation*}
-requires at least $n = 2^d$ samples to approximate or optimize well. Needing exponential growth in the $n$ for a reasonable solution as $d$ increases is called the \emph{curse of dimensionality}. There are several ways to overcome this curse, all of which involve restricting oneself to a $\calc$ of functions that have an essentially low-dimensional structure. We highlight a couple of ways that we will explore.
+Approximating optimizing a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands is infeasible if $f$ is fully $d$ dimensional. For example, even a multilinear function, $f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d$,
+requires at least $n = 2^d$ samples to approximate well. Needing exponential growth in the $n$ for a reasonable solution as $d$ increases is called the \emph{curse of dimensionality}. The strategies to overcome this curse involve restricting oneself to a candidate set, $\calc$, of functions that have an essentially low-dimensional structure.   For example, there is hope in approximating the multilinear function well if some of the coefficients are quite small, which corresponds to only some variables significantly affecting the output.  We highlight some ways for identifying low-dimensional structure.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Coordinate Ordering and Weights}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$. If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if i) the POIs do not all contribute equally to the function being approximated, ii) the importance of each POI is known, and iii) the importance of the POIs arranged in decreasing order decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
+The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$. If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if the POIs can be arranged in in order of importance, and that importance  decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
 
-
-As an example of how this might occur in kriging is to modify the Mat\'ern kernel in \eqref{eq:MatKer} as follows:
-\begin{equation*}% \label{eq:ProdMatKer}
-K(\bt,\bx) = \prod_{\ell = 1}^d (1 + \theta_\ell \abs{t_\ell-x_\ell}) \exp(-\theta_\ell \abs{t_\ell-x_\ell}).
-\end{equation*}
-If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI. It was shown in \cite{FasHicWoz12b, FasHicWoz12a} for a different kernel that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$.
+As an example of how this might occur in kriging is to modify the squared exponential kernel in \eqref{eq:sqExp} as follows:
+\begin{equation} \label{eq:multisqExpD}
+K(\bt,\bx) = \exp(-\norm[2]{\mD(\bt-\bx)}), \quad \text{where } \mD = \diag(\theta_1, \ldots, \theta_d).
+\end{equation}
+If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI. It was shown by \FH and collaborators that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$ \cite{FasHicWoz12b, FasHicWoz12a}.
 
 For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case. Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}. This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Active Subspaces}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-An alternative to permuting and weighting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach described as identifying active subspaces and is championed in \cite{constantine2015active}. We will also \emph{explore whether active subspaces can help us avoid the curse of dimensionality}.
+An alternative to permuting and weighting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach described as identifying active subspaces and is championed in \cite{constantine2015active}. One way to think of it is to generalize \eqref{eq:multisqExpD} to become 
+\begin{equation} \label{eq:multisqExpD}
+	K(\bt,\bx) = \exp(-\norm[2]{\mD \mR(\bt-\bx)}), 
+\end{equation}
+where $\mR$ is rotation matrix composed of $d-1$ Givens rotations.  Thus, the selection of an optimal $\mR$ again possibly via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) would add $d$ additional elements to $\btheta$.  
+We will also \emph{explore whether active subspaces can help us avoid the curse of dimensionality}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Nonhomogeneous Distance for MLS}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weight assigned to the $i^{\text{th}}$ data is traditionally defined in terms of the Euclidean distance to that data site from to the location being approximated, i.e., $\norm[2]{\bx - \bx_i}$. To avoid the curse of dimensionality, we may \emph{employ some non-isotropic concept of distance} involving coordinate weights or identification of active subspaces.
+For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weight assigned to the $i^{\text{th}}$ data is traditionally defined in terms of the Euclidean distance to that data site from to the location being approximated, i.e., $\norm[2]{\bx - \bx_i}$. To avoid the curse of dimensionality, we may \emph{employ some non-isotropic concept of distance} involving coordinate weights or identification of active subspaces.  For example, we may replace $\norm[2]{\bx - \bx_i}$ by $\norm[2]{\mD(\bx-\bx_i)}$ or $\norm[2]{\mD \mR(\bx - \bx_i)}$.  If the MLS basis set $\calp$, is comprised of linear polynomials, then the rescaling and rotating of the coordinates leaves this set unchanged in terms of the new variables $\bx' =  \mD \mR \bx$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
