@@ -683,9 +683,9 @@ Some existing adaptive sampling methods use a jackknife and leave-one-out cross-
 
 There are some approaches to multivariate approximation that we are unlikely to pursue.  
 \begin{description}
-\item[Multivariate polynomials] are too inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curse of dimensionality.
-\item[Smolyak Algorithms \cite{BunGrie04a}] based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
-\item[Continuous Tensor Trains \cite{GorKarMar19a}] are used by Chebfun \cite{DriHalTre14a} fr low dimensional multivariate function approximation, but do not scale well to high dimensions.
+\item[Multivariate polynomials] They are inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curse of dimensionality.
+\item[Smolyak Algorithms \cite{BunGrie04a}] Because they are based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
+\item[Continuous Tensor Trains \cite{GorKarMar19a}] Chebfun \cite{DriHalTre14a} employs this method for low dimensional multivariate function approximation, but it does not scale well to high dimensions.
 \end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -704,6 +704,8 @@ Another shortcoming of the existing MLS quasi-interpolants is that they treat ev
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\FJHNote{I am going to re-write this based on our numerical experiments.}
 
 To illustrate some of the weaknesses of the typical RKHS/kriging approach in Sect.\ \ref{sec:varmodel} we consider the following univariate function, which has a mean value near zero:
 \begin{equation} \label{eq:univarfun}
