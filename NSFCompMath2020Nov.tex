@@ -684,11 +684,9 @@ Some existing adaptive sampling methods use a jackknife and leave-one-out cross-
 There are some approaches to multivariate approximation that we are unlikely to pursue.  
 \begin{description}
 \item[Multivariate polynomials] are too inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curse of dimensionality.
-\item[Smolyak Algorithms ] based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
-\item[Tensor Trains] Maximin designs maximize this criterion \cite{jin2002sequential}.
-\item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
+\item[Smolyak Algorithms \cite{BunGrie04a}] based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
+\item[Continuous Tensor Trains \cite{GorKarMar19a}] are used by Chebfun \cite{DriHalTre14a} fr low dimensional multivariate function approximation, but do not scale well to high dimensions.
 \end{description}
-Multivariate polynomials are too inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curese of dimensionality.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Surrogate Trend Models} \label{sec:ourtrend}
