@@ -557,11 +557,11 @@ Figure \ref{MLS} illustrates the flexibility of an MLS with a local linear basis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging} \label{sec:varmodel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general trend of the output map $f$, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$ using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the following member of the Mat\'ern family:
-\begin{equation} \label{eq:MatKer}
-K(\bt,\bx) = (1 + \theta \norm[2]{\bt-\bx}) \exp(-\theta\norm[2]{\bt-\bx}),
+The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general trend of the output map $f$, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$ using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the squared exponential (or Gaussian) kernel:
+\begin{equation} \label{eq:GaussKer}
+K(\bt,\bx) =  \exp(-\norm[2]{\btheta \odot (\bt-\bx)}^2),
 \end{equation}
-where $\theta$ is a parameter to be set or inferred. See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs. The minimum norm interpolant of $f_{\VAR}$ in this $\calf$ using the residual data, $
+where $\odot$ denotes the term-by-term (Hadamard) product, and $\btheta \in (0, \infty)^d$ is a parameter to be set or inferred. See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs. The minimum norm interpolant of $f_{\VAR}$ in this $\calf$ using the residual data, $
 \by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl(\STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$,
 is the surrogate variation model
 \begin{equation} \label{appxExOne}
@@ -577,7 +577,7 @@ This has a known pointwise error bound of
 & \qquad \qquad \text{where } \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
 \end{align}
 
-To make the error bound for the surrogate model data-driven, let $\calc$ be the cone of functions whose norms are approximated modestly well by the norms of their surrogates: 
+To make the error bound for the surrogate model data-driven, we introduce the cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
 \begin{align} \label{RKHScone}
 \calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
 \nonumber
@@ -594,7 +594,7 @@ where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because 
 
 The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
 
-There are some weaknesses with the common RKHS/kriging approach. The typically used reproducing/covariance kernels, $K$ do not sufficiently adapt to the observed functional data. We will address this is in Sect.\ \ref{sec:kerinferdata}. In high dimensions, a kernel based on Euclidean distance, as in \eqref{eq:MatKer}, may be a victim to the curse of dimensionality. We will address this is in Sect.\ \ref{sec:selectCoord}.
+There are some weaknesses with the common RKHS/kriging approach. The typically used reproducing/covariance kernels, $K$ do not sufficiently adapt to the observed functional data. We will address this is in Sect.\ \ref{sec:kerinferdata}. In high dimensions, a kernel based on Euclidean distance, as in \eqref{eq:GaussKer}, may be a victim to the curse of dimensionality. We will address this is in Sect.\ \ref{sec:selectCoord}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -665,14 +665,16 @@ These error bounds should be valid for $\calc$, precisely defined sets of well-b
 \subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We summarize the existing literature on adaptive sampling \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}. A number of popular adaptive design criteria are constructed based on an acquisition function that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$. Such adaptive designs fill in wholes in the existing design according to particular criteria, including those below. 
+We summarize the existing literature on adaptive sampling \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}. A number of popular adaptive design criteria are constructed based on an acquisition function that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$. Such adaptive designs fill in holes in the existing design according to particular criteria, including those below. 
 \begin{description}
-\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (usually uniform) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
-\item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$. Minimax designs minimize this criterion.
-\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.
+\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (uniform, arcsine, etc.) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
+\item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$. Minimax designs minimize this criterion.  These do not scale well to higher dimensions unless the distance measure is non-isotropic.
+\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.  These also do not scale well to higher dimensions unless the distance measure is non-isotropic.
 \item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
 \end{description}
-Orthogonal arrays and Latin hypercube sampling are further examples of space-filling designs, although they are not usually constructed sequentially. We will use space-filling designs for our exploration stage. 
+Space-filling designs will be candidates for our exploration stage, but not our exploitation stage, because they do not take advantage of function data.  We will explore which ones work best for our test cases and application problems.
+
+Orthogonal arrays and Latin hypercube sampling are further examples of space-filling designs, although they are not usually constructed sequentially. Grids do not fill space, are not sequential, and are not efficient in high dimensions.  Sparse grids \cite{BunGrie04a} are an improvement, but the number of points required can still be impractical in high dimensions.  
 %Using this approach alone to fill the domain with samples is less efficient than the exploitation stage because it does not use the output data in a meaningful way. 
 
 Some existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}. However, these approaches often tend to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful. A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
@@ -704,14 +706,14 @@ f_{\VAR} \colon x \mapsto \exp(-6x) \sin(8x+0.1) - 0.1.
 \end{equation}
 
 
-This $f_{\VAR}$ is displayed in Fig.\ \ref{fig:sampleFun} along with its surrogate model $\SVAR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:MatKer} with $\theta =1$. 
+This $f_{\VAR}$ is displayed in Fig.\ \ref{fig:sampleFun} along with its surrogate model $\SVAR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:GaussKer} with $\theta =1$. 
 Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there. If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4, 0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the exploration stage highlighted in Sect.\ \ref{sec:Explore}. 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
 \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
-\caption{The left plot shows $f_V$ in \eqref{eq:univarfun} and its surrogate variation model \eqref{appxExOne} using $10$ and $4$ data sites and the Mat\'ern kernel \eqref{eq:MatKer} with $\theta = 1$. Too few date sites yields a poor approximation. The right plot includes the surrogate variation uncertainty, $\SVARERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest uncertainty, $x_{11}$. The largest true error occurs away from $x_{11}$.}
+\caption{The left plot shows $f_V$ in \eqref{eq:univarfun} and its surrogate variation model \eqref{appxExOne} using $10$ and $4$ data sites and the Mat\'ern kernel \eqref{eq:GaussKer} with $\theta = 1$. Too few date sites yields a poor approximation. The right plot includes the surrogate variation uncertainty, $\SVARERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest uncertainty, $x_{11}$. The largest true error occurs away from $x_{11}$.}
 \label{fig:sampleFun}
 \end{figure}
 
@@ -723,7 +725,7 @@ For function approximation we should choose the next data site where the uncerta
 
 The surrogate variance model and its uncertainty are not satisfactory since the form of the kernel, $K$, is not influenced by the output data, $\by$, and the pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$. Consequently, the surrogate variation uncertainty is tight on the left, but quite loose on the right. 
 
-One improvement is to infer the value of $\theta$ inherent in the definition of $K$ in \eqref{eq:MatKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
+One improvement is to infer the value of $\theta$ inherent in the definition of $K$ in \eqref{eq:GaussKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
 \theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
 \end{equation}
@@ -733,17 +735,17 @@ For the example $f_{\VAR}$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$,
 \centering
 \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
 \includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
-\caption{The left plot shows the surrogate variation model with its uncertainty for the example $f_{\VAR}$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$. The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the uncertainty is much larger. The right plot shows the surrogate variation model with its uncertainty now for the modified Mat\`ern kernel in \eqref{modMatKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$. The surrogate variation model is much improved, especially for smaller $x$, and the uncertainty is much smaller. The next data site is in a location that makes intuitive sense.}
+\caption{The left plot shows the surrogate variation model with its uncertainty for the example $f_{\VAR}$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$. The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the uncertainty is much larger. The right plot shows the surrogate variation model with its uncertainty now for the modified Mat\`ern kernel in \eqref{modGaussKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$. The surrogate variation model is much improved, especially for smaller $x$, and the uncertainty is much smaller. The next data site is in a location that makes intuitive sense.}
 \label{fig:InferKernel}
 \end{figure}
 
 A more helpful approach is to generalize the Mat\'ern kernel as follows to allow for the variation of the functions to be greater in one part of the domain than the other:
-\begin{equation} \label{modMatKer}
+\begin{equation} \label{modGaussKer}
 K(t,x) = \exp(S(t+x))(1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}).
 \end{equation}
 Here we have considered the case $d=1$. This new kernel maintains its properties of being symmetric and positive definite because we have simply multiplied the original kernel by $g(t)g(x)$ for some function $g$. Here $S$ is a parameter to be inferred.
 
-The right plot in Fig.\ \ref{fig:InferKernel} shows the surrogate variation model and its uncertainty for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modMatKer}, with both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}. Now, $\SVAR(10,\mX,\by)$ fits $f_{\VAR}$ much better and the uncertainty fits better. The next data site, $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$, is in a region where $f_{\VAR}$ varies greatly. 
+The right plot in Fig.\ \ref{fig:InferKernel} shows the surrogate variation model and its uncertainty for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modGaussKer}, with both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}. Now, $\SVAR(10,\mX,\by)$ fits $f_{\VAR}$ much better and the uncertainty fits better. The next data site, $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$, is in a region where $f_{\VAR}$ varies greatly. 
 
 This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.} Some of the challenges are to ensure that our modified kernels are not over-parameterized and specifying a mathematically precise set of functions for which this approach is successful.
 
