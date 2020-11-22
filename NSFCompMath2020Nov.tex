@@ -397,6 +397,7 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 
 \vspace{-6ex}
 
+\section{The Problem Definition and Key Issues} \label{sec:defineProb}
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high performance computation. Simulation output can be viewed as a real-valued\footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$. The quantities of interest (QOIs) might be 
 an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other QOIs include the location of the optimum output and (parametric) integrals.} 
 \begin{equation} \label{eq:ourQOIs}
@@ -417,7 +418,7 @@ Limited computer resources and the curse of dimensionality prevent acquiring a d
 \end{equation}
 Here, $\VAL(\bx,n,\mX, \by)$ represents the value added to $\APP(n+1,\cdot,\cdot)$ in observing $f(\bx)$ based on the output data already observed, $\by$, at the sites $\mX$. 
 
-\Upara{Explore-Exploit with Surrogate Models} We use an \emph{explore-exploit} sampling process that relies on surrogate models (metamodels, emulators, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, and their data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$. 
+\subsection{Explore-Exploit with Surrogate Models} We use an \emph{explore-exploit} sampling process that relies on surrogate models (metamodels, emulators, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, and their data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$. 
 
 In the \emph{exploration} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on function data. We sample $f$ on a relatively sparse space-filling set of $n_0$ data sites over $\Omega$, the region of feasible POIs, perhaps according to a non-uniform sampling distribution, such as the arcsine (Chebyshev) distribution that pushes points toward the boundaries. The sample in the exploration stage must be small enough to be economical, but large enough to detect the essential features of $f$ that influence $\QOI(f)$.  See Sect.\ \ref{sec:Explore} for remarks about our exploration sampling.
 
@@ -439,7 +440,7 @@ We assess the uncertainty in our surrogate models, $\SURRERR(n,\mX,\by)$, using 
 \end{equation} 
 either absolutely or with high probability. Our measure of uncertainty combines the uncertainty in both the trend and variation models (see Sects.\ \ref{sec:varmodel} and \ref{sec:BayesianBootUncertainty}). Identifying the appropriate sets $\calc$, which will turn out to be cones, is one of our research problems.
 
-\Upara{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
+\subsection{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
 For example, if the QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
 \begin{equation} \label{eq:QOIhat}
 \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \text{or}\qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
@@ -454,29 +455,29 @@ The surrogate models for $f$ lead to bounds on the uncertainty in the $\APP$ mod
 \end{equation}
 again either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$. Our proposed research will demonstrate these error bounds to be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The error bounds in \eqref{eq:errbd} allow the user to decide whether additional data is needed to improve the accuracy of $\APP(n,\mX,\by)$. The exploit stage repeats until the time budget is exhausted or the uncertainty tolerance is met.
 
-\Upara{The Candidate Set, $\calc$} 
+\subsection{The Candidate Set, $\calc$} 
 For error bound \eqref{eq:errbd}  to be possible, any two functions in $\calc$ that share the same data must have similar $\QOI$, specifically, 
 \begin{equation} \label{eq:Csmall}
 	\bignorm[\calg]{\QOI(f) - \QOI(g)} \le 2 \ERR(n,\mX,\by) \qquad \forall f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by.
 \end{equation}
 This follows from the triangle inequality and the fact that $f$ and $g$ share the same approximation $\APP(n,\mX,\by)$. So, $\calc$ must be \emph{small} enough, and the adaptive sampling procedure must be clever enough, to keep $\ERR(n,\mX,\by)$ reasonably small (with respect to the size of the function data, $\by$).  However, $\calc$ should be \emph{large} enough to contain the $f$ met in practice.
 
-We take $\calc$ to be a subset of $\calf$ an infinite dimensional vector space of $d$-variate functions. We cannot choose $\calc = \calf$ because then there would be some $g \in \calc$ with $\QOI(g)$ arbitrarily far away from $\QOI(f)$.  E.g., $g$ might be quite peaky.
+We take $\calc$ to be a subset of $\calf$ an infinite dimensional vector space of $d$-variate functions. We cannot choose $\calc = \calf$ because then there would be some peaky $g \in \calc$ with $\QOI(g)$ arbitrarily far away from $\QOI(f)$. 
 
-Bounds on the norm of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  Some might choose $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$, but we find this artificial, and will choose $\calc$ to include functions with arbitrarily large $\calf$-norm, that must be bounded from data.  Again, $\calc$ must rule out peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect. \ref{sec:varmodel}.
+Bounds on the norms of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  A popular choice is for $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$.  We find this artificial and will choose $\calc$ to include functions with arbitrarily large $\calf$-norms, which must be bounded from data.  Again, this will require us to rule rule out peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect. \ref{sec:varmodel}.
 
-Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  To avoid this curse we choose $\calc$ to only include functions with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (see Sect.\ \ref{sec:selectCoord}). 
+Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  To avoid this curse we choose our candidate set $\calc$ to only include functions with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (Sect.\ \ref{sec:selectCoord}). 
 
-Choosing  to $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow sufficient flexibility, while ensuring that an appropriate vector parameter $\btheta$ can be inferred from a reasonable amount of function data (see Sect. \ref{sec:selectCoord}).
+Choosing  $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know beforehand which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow flexibility, while ensuring that an appropriate $\btheta$ can be inferred from a reasonable amount of function data (Sect. \ref{sec:selectCoord}).
 
 
-\Upara{Summary} 
-Our goals are to create better surrogate models and data-driven surrogate uncertainty measures for high-dimensional problems with relatively few samples. We will develop, analyze, and implement flexible data-driven models and correspondingly economical adaptive sampling schemes. We propose to create
+\subsection{Summary} 
+We will create better surrogate models and data-driven surrogate uncertainty measures for high-dimensional problems with relatively few samples. We will develop, analyze, and implement flexible data-driven models and correspondingly economical adaptive sampling schemes. We propose to create
 \begin{itemize}
 \item A methodology to combine the data-driven Bayesian bootstrap analysis for the trend model with RKHS variational modeling to quantify the overall uncertainty in the surrogate model for the $\APP$ (Sect.\ \ref{sec:SurrMod}, \ref{sec:ourtrend},  \ref{sec:kerinferdata}),
-\item Better adaptive sampling acquisition functions, $\VAL$ that depend on both the past sample locations, $\mX$, and the output data, $\by$, 
-\item Effective methods to tune the hyperparameters, $\btheta$, defining our RKHS and important coordinate directions, and
-\item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for precisely defined candidate sets of output maps, $\calc$, which will turn out to be cones.
+\item Better adaptive sampling acquisition functions, $\VAL$ that depend on both the past sample locations, $\mX$, and the output data, $\by$, (Sect.\ \ref{sec:acquire}),
+\item Effective methods to tune the hyperparameters, $\btheta$, defining our RKHS and important coordinate directions (Sect.\ \ref{sec:kerinferdata}), and
+\item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for precisely defined candidate sets of output maps, $\calc$, which will turn out to be cones (Sect.\ ).
 \end{itemize}
 We will demonstrate the success of our algorithms on practical large-scale simulation applications and compare our results with those obtained by other available software libraries for surrogate modeling. In the course of our research, we will mentor students and early-career scholars. 
 
