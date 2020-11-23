@@ -357,6 +357,7 @@
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
 
+\iffalse 
 {\color{red}
 Issues raised by the NSF Panelists for the 2019 proposal:
 \begin{itemize}
@@ -383,6 +384,7 @@ Other issues for us
 	
 \end{itemize}
 }
+\fi
 
 \begin{center}
 \Large \textbf{
@@ -397,7 +399,7 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 
 \vspace{-6ex}
 
-\section{The Problem Definition and Key Issues} \label{sec:defineProb}
+\section{Problem Definition and Key Issues} \label{sec:defineProb}
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high performance computation. Simulation output can be viewed as a real-valued\footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$. The quantities of interest (QOIs) might be 
 an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other QOIs include the location of the optimum output and (parametric) integrals.} 
 \begin{equation} \label{eq:ourQOIs}
@@ -412,7 +414,7 @@ The QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where
 \end{itemize} 
 The $n$-dependence of $\mX$ and $\by$ is implicit. 
 
-Limited computer resources and the curse of dimensionality prevent acquiring a dense sample in the input space, $\Omega$. To economize on simulation time, it is important to choose the data sites judiciously. Adaptive sampling uses past data to guide the choice of future data sites by maximizing the acquisition function, $\VAL(\cdot,n,\mX, \by)$: 
+Limited computer resources and the curse of dimensionality prevent dense sampling in the input space, $\Omega$. To economize, the data sites must be chosen judiciously. Adaptive sampling uses past data to guide the choice of future data sites by maximizing the acquisition function, $\VAL(\cdot,n,\mX, \by)$: 
 \begin{equation} \label{eq:nextsample}
 \bx_{n+1} = \argmax_{\bx \in \Omega} \VAL(\bx,n,\mX, \by)~.
 \end{equation}
@@ -420,25 +422,25 @@ Here, $\VAL(\bx,n,\mX, \by)$ represents the value added to $\APP(n+1,\cdot,\cdot
 
 \subsection{Explore-Exploit with Surrogate Models} We use an \emph{explore-exploit} sampling process that relies on surrogate models (metamodels, emulators, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, and their data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$. 
 
-In the \emph{exploration} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on function data. We sample $f$ on a relatively sparse space-filling set of $n_0$ data sites over $\Omega$, the region of feasible POIs, perhaps according to a non-uniform sampling distribution, such as the arcsine (Chebyshev) distribution that pushes points toward the boundaries. The sample in the exploration stage must be small enough to be economical, but large enough to detect the essential features of $f$ that influence $\QOI(f)$.  See Sect.\ \ref{sec:Explore} for remarks about our exploration sampling.
+In the \emph{exploration} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on function data. We sample $f$ on a relatively sparse space-filling set of $n_0$ data sites over $\Omega$, the region of feasible POIs, perhaps according to a non-uniform sampling distribution, such as the arcsine (Chebyshev) distribution that pushes points toward the boundaries. The sample in the exploration stage must be economical, but large enough to detect the essential features of $f$ that influence $\QOI(f)$.  See Sect.\ \ref{sec:Explore} for remarks about our exploration sampling.
 
 The \emph{exploitation} stage uses all existing samples to construct surrogate models, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, so that we may detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$. The uncertainties in the surrogate models inform the acquisition functions, which determine the next sample location.
 
 We express our surrogate models as $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$, the sum of a trend model and a variation model. 
-The trend model, $\STREND(n,\mX,\by)$, captures the underlying mean field of the simulation output $f$, and $\SVAR(n,\mX,\by)$ models the variation from this trend. 
+The trend model, $\STREND(n,\mX,\by)$, captures the underlying mean field of the simulation output, $f$, and $\SVAR(n,\mX,\by)$ models the variation from this trend. 
 It is common to model the trend as a global multivariate polynomial in low dimensions $(d<5)$. 
 However, the number of terms in multivariate polynomials may grow exponentially as $d$ increases. We use 
 a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, limovingpartII1996, salehi2013generalized, mederos2003moving} for our trend model to help tame this curse of dimensionality and provide flexibility (see Sect.\ \ref{sec:trend}). Linear nonparametric \MLS methods are flexible in capturing nonpolynomial shapes in a response surface. They do not necessarily suffer from the curse of dimensionality. 
-See Sect.\ \ref{sec:ourtrend} for details on our implementation. 
+See Sects.\ \ref{sec:trend} and \ref{sec:ourtrend}  for details. 
 
 \MLS methods are quasi-interpolants since they do not exactly fit the data. 
-The residuals or lack of fit to the data, $\by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, are then  fit by $\SVAR(n,\mX,\by_{\VAR})$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant (see Sect.\ \ref{sec:varmodel}). The Gaussian process and RKHS perspectives yield essentially equivalent outcomes. For the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical to obtain better accuracy under a stringent sample budget (see Sect.\ \ref{sec:kerinferdata}). 
+The residuals or lack of fit to the data, $\by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, are then  fit by $\SVAR(n,\mX,\by_{\VAR})$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant (see Sect.\ \ref{sec:varmodel}). The Gaussian process and RKHS perspectives yield essentially equivalent outcomes. For the sake of flexibility, we assume a more general form of the covariance/reproducing kernel than is typical to obtain better accuracy under a stringent sample budget (Sect.\ \ref{sec:kerinferdata}). 
 
 We assess the uncertainty in our surrogate models, $\SURRERR(n,\mX,\by)$, using data-based measures for the output maps in \emph{candidate sets} $\calc$ such that 
 \begin{equation} \label{eq:surrUncert}
 \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,\ \bx \in \Omega,
 \end{equation} 
-either absolutely or with high probability. Our measure of uncertainty combines the uncertainty in both the trend and variation models (see Sects.\ \ref{sec:varmodel} and \ref{sec:BayesianBootUncertainty}). Identifying the appropriate sets $\calc$, which will turn out to be cones, is one of our research problems.
+either absolutely or with high probability. Our measure of uncertainty combines the uncertainty in both the trend and variation models (Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}). Identifying the appropriate sets $\calc$, which will turn out to be cones, is one of our research problems.
 
 \subsection{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
 For example, if the QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
@@ -503,13 +505,6 @@ Because the primary cost in our problems is acquiring the sample data, we are no
 
 The goal of the initial samples is to explore the space of feasible POIs, $\Omega$, when little, or nothing, is known about the response QOIs. We use space-filling designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
 
-We will compare the effectiveness of low discrepancy samples mimicking uniform and arcsine (Chebyshev) distributions.
-The arcsine distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
-
-Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
-
-In some applications one may be able to obtain cheap data from certain sites.  There may be also prior data collected from earlier experiments.  Our initial exploration stage will include this data as well.
-
 
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
 \centering
@@ -520,6 +515,13 @@ In some applications one may be able to obtain cheap data from certain sites.  T
 We will use low discrepancy space-filling sampling in our exploration stage.
 \label{PtsFig}}
 \end{wrapfigure}
+
+We will compare the effectiveness of low discrepancy samples mimicking uniform and arcsine (Chebyshev) distributions.
+The arcsine distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
+
+Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
+
+In some applications one may be able to obtain cheap data from certain sites.  There may be also prior data collected from earlier experiments.  Our initial exploration stage will include this data as well.
 
 
 This exploratory set of $n_0$ samples sites does not depend on $f$ or the QOIs and must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
@@ -578,54 +580,10 @@ This has a known pointwise error bound of
 & \qquad \qquad \text{where } \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
 \end{align}
 
-To make the error bound for the surrogate model data-driven, we introduce the cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
-\begin{align} \label{RKHScone}
-\calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
-\nonumber
-& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by)}^2 \Bigr \},
-\end{align}
-where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
-\begin{subequations} \label{eq:DataErrBd}
-\begin{gather}
-\abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by_{\VAR})(\bx) \qquad \forall f \in \calc, \\
-\label{eq:DataErrBda} 
-\text{where } \SVARERR(n,\mX,\by_{\VAR})(\bx) : = A(\mX) \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by_{\VAR}^T \mK^{-1} \by_{\VAR}] }.
-\end{gather}
-\end{subequations}
-
-The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
 
 There are some weaknesses with the common RKHS/kriging approach. The typically used reproducing/covariance kernels, $K$ do not sufficiently adapt to the observed functional data. We will address this is in Sect.\ \ref{sec:kerinferdata}. In high dimensions, a kernel based on Euclidean distance, as in \eqref{eq:GaussKer}, may be a victim to the curse of dimensionality. We will address this is in Sect.\ \ref{sec:selectCoord}.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Bayesian Bootstrapping to Determine Surrogate Model Uncertainty} \label{sec:BayesianBootUncertainty}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty. However, given the small number of data used to construct our models and the relatively large number of POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness. 
-
-In classical bootstrapping, new sets of samples are generated by randomly selecting the existing samples, with replacement. 
-In small sample situations, removing even a few samples from the least squares fit can create significant variations in the trend model. In the weighted Bayesian bootstrap algorithm, all of the samples are used for each trend model, and the $i^{\text{th}}$ sample is randomly weighted by the factor $v_i \in [0,1]$. By using all the samples, the weighted Bayesian bootstrap method provides a more robust estimate for uncertainty quantification in small samples than the classical bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer}. 
-
-In our weighted Bayesian bootstrap algorithm, we generate an ensemble of $B$ trend models by extending \eqref{eq:MLS}:
-\begin{equation}
-\STREND^b(n,\mX,\by)(\bx) = f^b_{\LS,\bx}(\bx), \qquad \text{where } f^b_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2,
-\end{equation}
-where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functions, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$. We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
-
-For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$. These lead to our final surrogate model and its uncertainty.
-The surrogate model for each Bayesian bootstrap model can be expressed as 
-\begin{equation*}
-\SURR^b(n,\mX,\by) = \STREND^b(n,\mX,\by) + \SVAR^b(n,\mX,\by - \by^b_{\TREND}).
-\end{equation*}
-These can be averaged to define the mean surrogate model
-\begin{equation} \label{eq:SMBoot}
-\SURR(n,\mX,\by) = \frac 1B \sum_{b=1}^B \SURR^b(n,\mX,\by), 
-\end{equation}
-and the surrogate uncertainty model is defined by the estimate
-\begin{equation} \label{eq:SUBoot}
-\SURRERR(n,\mX,\by) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B \Bigl\{ \bigl[ \SURR^b(n,\mX,\by) - \SURR(n,\mX,\by) \bigr]^2 + [\SVARERR^b(n,\mX,\by)]^2 \Bigr\} } .
-\end{equation}
-We are not certain if this simple estimate is the best measure of uncertainty. We will explore alternatives to identify possible better approaches to combine the ensemble of uncertainty estimates.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Acquisition via the Surrogate Model} \label{sec:acquire}
@@ -701,6 +659,57 @@ This heuristic approach usually identifies a good balance between the relative w
 
 Another shortcoming of the existing MLS quasi-interpolants is that they treat every coordinate direction the same. 
 \emph{We will extend the MLS to use the full covariance matrix in the multivariate Gaussian kernel based on the relative variation in underlying active dimensional analysis}. We will describe some of these ideas in section \ref{sec:selectCoord}. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Bayesian Bootstrapping to Determine Surrogate TrendModel Uncertainty} \label{sec:BayesianBootUncertainty}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty. However, given the small number of data used to construct our models and the relatively large number of POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness. 
+
+In classical bootstrapping, new sets of samples are generated by randomly selecting the existing samples, with replacement. 
+In small sample situations, removing even a few samples from the least squares fit can create significant variations in the trend model. In the weighted Bayesian bootstrap algorithm, all of the samples are used for each trend model, and the $i^{\text{th}}$ sample is randomly weighted by the factor $v_i \in [0,1]$. By using all the samples, the weighted Bayesian bootstrap method provides a more robust estimate for uncertainty quantification in small samples than the classical bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer}. 
+
+In our weighted Bayesian bootstrap algorithm, we generate an ensemble of $B$ trend models by extending \eqref{eq:MLS}:
+\begin{equation}
+	\STREND^b(n,\mX,\by)(\bx) = f^b_{\LS,\bx}(\bx), \qquad \text{where } f^b_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2,
+\end{equation}
+where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functions, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$. We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
+
+For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$. These lead to our final surrogate model and its uncertainty.
+The surrogate model for each Bayesian bootstrap model can be expressed as 
+\begin{equation*}
+	\SURR^b(n,\mX,\by) = \STREND^b(n,\mX,\by) + \SVAR^b(n,\mX,\by - \by^b_{\TREND}).
+\end{equation*}
+These can be averaged to define the mean surrogate model
+\begin{equation} \label{eq:SMBoot}
+	\SURR(n,\mX,\by) = \frac 1B \sum_{b=1}^B \SURR^b(n,\mX,\by), 
+\end{equation}
+and the surrogate uncertainty model is defined by the estimate
+\begin{equation} \label{eq:SUBoot}
+	\SURRERR(n,\mX,\by) = \sqrt{\frac{1}{B-1} \sum_{b=1}^B \Bigl\{ \bigl[ \SURR^b(n,\mX,\by) - \SURR(n,\mX,\by) \bigr]^2 + [\SVARERR^b(n,\mX,\by)]^2 \Bigr\} } .
+\end{equation}
+We are not certain if this simple estimate is the best measure of uncertainty. We will explore alternatives to identify possible better approaches to combine the ensemble of uncertainty estimates.
+
+
+\subsection{Uncertainty in the Variation Model} \label{sec:uncertVar}
+To make the error bound for the surrogate model data-driven, we introduce the cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
+\begin{align} \label{RKHScone}
+	\calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
+	\nonumber
+	& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by)}^2 \Bigr \},
+\end{align}
+where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
+\begin{subequations} \label{eq:DataErrBd}
+	\begin{gather}
+		\abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by_{\VAR})(\bx) \qquad \forall f \in \calc, \\
+		\label{eq:DataErrBda} 
+		\text{where } \SVARERR(n,\mX,\by_{\VAR})(\bx) : = A(\mX) \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by_{\VAR}^T \mK^{-1} \by_{\VAR}] }.
+	\end{gather}
+\end{subequations}
+
+The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
