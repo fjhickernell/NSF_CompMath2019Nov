@@ -259,7 +259,7 @@
 \newcommand{\cc}{\mathcal{C}}
 \newcommand{\cb}{\mathcal{B}}
 \newcommand{\cl}{L}
-\newcommand{\ct}{\mathfrak{T}}
+\newcommand{\ct}{\mathcal{T}}
 \newcommand{\cx}{{\Omega}}
 \newcommand{\cala}{{\mathcal{A}}}
 \newcommand{\calc}{{\mathcal{C}}}
@@ -282,6 +282,7 @@
 \newcommand{\fC}{\mathfrak{C}}
 \newcommand{\fF}{\mathfrak{F}}
 \newcommand{\fL}{\mathfrak{L}}
+\newcommand{\fT}{\mathfrak{T}}
 \newcommand{\fU}{\mathfrak{U}}
 \newcommand{\hS}{\widehat{S}}
 
@@ -492,9 +493,9 @@ A key feature of the exploitation stage is the surrogate model. We construct our
 \begin{equation*}
 \SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by). 
 \end{equation*} 
-The trend, $\STREND(n,\mX,\by)$ is relatively simple deterministic function that roughly fits the data. Rather than using a low degree global polynomial, we use the more flexible moving least squares (MLS) quasi-interpolant for the trend model (Sect.\ \ref{sec:trend}). We use a reproducing/covariance kernels to construct the variation model, $\SVAR(n,\mX,\by)$, for the difference between the trend model and the samples (Sect.\ \ref{sec:varmodel}). 
+The trend, $\STREND(n,\mX,\by)$ is relatively simple deterministic function that roughly fits the data. Rather than using a low degree global polynomial, we use the more flexible moving least squares (MLS) quasi-interpolant for the trend model (Sect.\ \ref{sec:trend}). We use a reproducing/covariance kernels to construct the variation model, $\SVAR(n,\mX,\by)$, for what is not captured by the trend (Sect.\ \ref{sec:varmodel}). 
 
-The surrogate model for $f$ requires a measure of uncertainty, which we construct using uncertainty measures for $\SVAR(n,\mX,\by)$ in Sect.\ \ref{sec:varmodel} combined with a Bayesian bootstrap resampling in Sect.\ \ref{sec:BayesianBootUncertainty}. We then exploit the surrogate model and its uncertainty to define the acquisition function, $\VAL(\cdot, n,\mX,\by)$, which guides as to where to sample next. This is addressed in Sect.\ \ref{sec:acquire}. In lieu of an exact maximization we evaluate $\VAL(\cdot, n,\mX,\by)$ over a relatively dense array, $\ct = \{\bt_1, \ldots, \bt_N\}$ of  space-filling points with $N \gg n$, i.e., \eqref{eq:nextsample} becomes in practice $\bx_{n+1} = \argmax_{\bt \in \ct} \VAL(\bt, n,\mX,\by)$.
+The surrogate model for $f$ requires a measure of uncertainty, which we construct using uncertainty measures for $\SVAR(n,\mX,\by)$ in Sect.\ \ref{sec:uncertVar} combined with a Bayesian bootstrap resampling in Sect.\ \ref{sec:BayesianBootUncertainty}. We then exploit the surrogate model and its uncertainty to define the acquisition function, $\VAL(\cdot, n,\mX,\by)$, which guides as to where to sample next. This is addressed in Sect.\ \ref{sec:acquire}. 
 
 Because the primary cost in our problems is acquiring the sample data, we are not overly concerned about the time required to generate surrogate models and to assess their uncertainties.
 
@@ -519,12 +520,12 @@ We will use low discrepancy space-filling sampling in our exploration stage.
 We will compare the effectiveness of low discrepancy samples mimicking uniform and arcsine (Chebyshev) distributions.
 The arcsine distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
 
-Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$.  However, preliminary results indicate that this may push too many data sites towards the boundary.
+Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, as introduced in Sect.\ \ref{sec:varmodel}, and sequentially choose points to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$. 
 
 In some applications one may be able to obtain cheap data from certain sites.  There may be also prior data collected from earlier experiments.  Our initial exploration stage will include this data as well.
 
 
-This exploratory set of $n_0$ samples sites does not depend on $f$ or the QOIs and must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
+This exploratory set of $n_0$  sites does not depend on $f$ or the QOIs.  It must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The Exploitation Stage: Surrogate Model and Acquisition} \label{sec:SurrMod}
@@ -552,7 +553,7 @@ Every time the MLS interpolant is evaluated, we solve a least squares system tha
 this additional computation is minimal compared to the expense of obtaining the sample values. Note that the trend model exactly reproduces any $f \in \calp$.
 
 If $\calp$ consists of all polynomials of total degree up to $k$, then $\dim(\calp)$ grows as ${k + d \choose k}$ and will far exceed $n$ for even modest $k$ and high $d$. 
-We will typically choose $\calp$ to be quadratic polynomials for low dimensional problems $d<10$, and linear basis functions for high-dimensional problems. 
+We will typically choose $\calp$ to be quadratic polynomials for low dimensional problems $d<10$, and linear polynomials for high-dimensional problems. 
 Global low-degree polynomial approximants are `stiff' and cannot bend to follow odd surfaces. The flexibility in MLS approximants using local low-degree polynomials is similar to the way splines fit data in one dimension. 
 Figure \ref{MLS} illustrates the flexibility of an MLS with a local linear basis function fitting scattered data in two dimensions. 
 
@@ -560,7 +561,7 @@ Figure \ref{MLS} illustrates the flexibility of an MLS with a local linear basis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging} \label{sec:varmodel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general trend of the output map $f$, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$ using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the squared exponential (or Gaussian) kernel:
+The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general trend of the output map $f$, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$, using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the squared exponential (or Gaussian) kernel:
 \begin{equation} \label{eq:GaussKer}
 K(\bt,\bx) =  \exp(-\norm[2]{\btheta \odot (\bt-\bx)}^2),
 \end{equation}
@@ -579,9 +580,7 @@ This has a known pointwise error bound of
 \nonumber
 & \qquad \qquad \text{where } \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
 \end{align}
-
-
-There are some weaknesses with the common RKHS/kriging approach. The typically used reproducing/covariance kernels, $K$ do not sufficiently adapt to the observed functional data. We will address this is in Sect.\ \ref{sec:kerinferdata}. In high dimensions, a kernel based on Euclidean distance, as in \eqref{eq:GaussKer}, may be a victim to the curse of dimensionality. We will address this is in Sect.\ \ref{sec:selectCoord}.
+The choice of the kernel and the parameter $\btheta$ is addressed in Sect.\ \ref{sec:selectCoord}.
 
 
 
@@ -589,18 +588,20 @@ There are some weaknesses with the common RKHS/kriging approach. The typically u
 \subsubsection{Acquisition via the Surrogate Model} \label{sec:acquire}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Given the surrogate model in \eqref{eq:SMBoot} and its uncertainty in \eqref{eq:SUBoot}, we may then define the acquisition functions for function and approximation respectively:
+Along with the surrogate model, $\SURR(n,\mX,\by)$, we must construct a data-based pointwise error bound or measure of uncertainty, $\SURRERR(n,\mX,\by)$, introduced in \eqref{eq:surrUncert}.  That requires translating the error bound in \eqref{RKHSErrBd} into a quantity that does not require a priori the knowledge of $\norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})}$.  Our approach is discussed in Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}.
+
+Given the surrogate model and its uncertainty, we may then define the acquisition functions for function and approximation respectively:
 \begin{subequations} \label{eq:QOIval}
 \begin{align}
 \label{eq:idval}
 \IDVAL(\bx,n,\mX,\by) &= \SURRERR(n,\mX,\by)(\bx), \\
 \label{eq:minval}
-\MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [f(\bx) - \SURRERR(n,\mX,\by)(\bx)].
+\MINVAL(\bx,n,\mX,\by) &= \APPMIN(n,\mX,\by) - [\SURR(n,\mX,\by)(\bx) - \SURRERR(n,\mX,\by)(\bx)].
 \end{align}
 \end{subequations}
 The next data site, $\bx_{n+1}$ maximizes the acquisition function (see \eqref{eq:nextsample}). For function approximation we sample next where the surrogate model uncertainty is greatest. For optimization we sample next where the output might be smallest.
 
-To maximize the acquisition functions, we first evaluate them on a candidate set, $\mX^c := (\bx^c_1, \ldots,\linebreak \bx^c_n)^T$, where $n_c \gg n$. We then identify the candidate samples that are potential maximums. These samples can also be considered as indicators for regions near the true maximum. That is, we might be able to identify a better maximum by generating additional candidate samples in a neighborhood of the current best candidate samples. Alternatively, we could use the current best candidate as our starting location and use a numerical optimization algorithm to find the local maximum of the acquisition function. We will consider both of these approaches. 
+To maximize the acquisition functions, we first evaluate them over a relatively dense set, $\ct = \{\bt_1, \ldots, \bt_N\}$ with $N \gg n$. We may then choose $\bx_{n+1} = \argmax_{\bt \in \ct} \VAL(\bt, n,\mX,\by)$.  Alternatively, we may use the elements of $\ct $ that give the largest values of $\VAL(\cdot, n,\mX,\by)$ as starting values for a numerical optimization algorithm to find the maximum of the acquisition function. We will consider both of these approaches. 
 
 The acquisition functions are related to the error bounds that we expect to derive for our algorithms:
 \begin{subequations} \label{eq:QOIerr}
@@ -608,12 +609,12 @@ The acquisition functions are related to the error bounds that we expect to deri
 \label{eq:iderr}
 \bignorm[\infty]{f - \APPID(n,\mX,\by)} &\le \norm[\infty]{\SURRERR(n,\mX,\by)} =: \IDERR(n,\mX,\by), \\
 \label{eq:minerr}
-\bigabs{\MIN(f) - \APPMIN(n,\mX,\by)} & \le \max_{\bx \in \Omega} \Bigl\{ \APPMIN(n,\mX,\by) - [f(\bx)- \SURRERR(n,\mX,\by)](\bx) \Bigr\} \\
+\bigabs{\MIN(f) - \APPMIN(n,\mX,\by)} & \le \max_{\bx \in \Omega} \Bigl\{ \APPMIN(n,\mX,\by) - [\SURR(n,\mX,\by)(\bx) - \SURRERR(n,\mX,\by)](\bx) \Bigr\} \\
 \nonumber
 & =: \MINERR(n,\mX,\by).
 \end{align}
 \end{subequations}
-These error bounds should be valid for $\calc$, precisely defined sets of well-behaved simulation output maps, $f$. The identification of these $\calc$ is part of our research. Hints appear in Sect.\ \ref{sec:varmodel}. 
+These error bounds should be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The identification of these $\calc$ is part of our research. Hints appear in Sect.\ \ref{sec:uncertVar}. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -662,7 +663,7 @@ Another shortcoming of the existing MLS quasi-interpolants is that they treat ev
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Bayesian Bootstrapping to Determine Surrogate TrendModel Uncertainty} \label{sec:BayesianBootUncertainty}
+\subsection{Bayesian Bootstrapping to Determine Surrogate Trend Model Uncertainty} \label{sec:BayesianBootUncertainty}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty. However, given the small number of data used to construct our models and the relatively large number of POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness. 
 
