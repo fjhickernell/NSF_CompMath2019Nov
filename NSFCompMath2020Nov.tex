@@ -622,7 +622,7 @@ The algorithm that we will develop and analyze will have the following form.
 \begin{algorithm}[H]
 	\caption*{Adaptive Algorithm to Approximate $\QOI(f)$ \label{alg:algframe}}
 	\begin{algorithmic}
-%		\PARAM the RKHS, $\calf$; the factor, $A(\cdot)$, which defines  the candidate cone, $\cc$, in \eqref{eq:RKHScone};  a sequence of data sites, $\{\bx_1, \bx_2, \ldots \}$; an initial sample size, $n_0$
+		\PARAM a candidate set (cone) of input functions, $\cc$, he RKHS, $\calf$; the factor, $A(\cdot)$, which defines  the candidate cone, $\cc$, in \eqref{eq:RKHScone};  a sequence of data sites, $\{\bx_1, \bx_2, \ldots \}$; an initial sample size, $n_0$
 		\INPUT a black-box function, $f \in \cc$; an absolute error tolerance, $\varepsilon>0$
 		
 		\Ensure Error criterion $\bignorm[\infty]{\QOI(f) - \APP(n,\mX,\by)} \le \varepsilon$  for $f \in \cc$
@@ -649,7 +649,7 @@ The algorithm that we will develop and analyze will have the following form.
 		
 		\EndIf
 				
-		\State Choose the next data site $\bx_{n+1}$ according to \eqref{eq:nextsample}, where the acquisition function, $\VAL(\mX,\by)$ is defined in \eqref{eq:QOIval}
+		\State Choose the next data site $\bx_{n+1}$ according to \eqref{eq:nextsample}, where the acquisition function, $\VAL(\mX,\by)$, is defined in \eqref{eq:QOIval}
 		
 		\State Let $n \leftarrow n + 1$
 
@@ -657,20 +657,22 @@ The algorithm that we will develop and analyze will have the following form.
 				
 	\end{algorithmic}
 \end{algorithm}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Intellectual Merit of the Proposed Research} \label{sec:Proposed}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Some of these ideas have been described earlier in this section.  The more novel ones are described in the next section.
+
+\subsection{Alternative Approaches}
+Before fleshing out the algorithm above, we review some alternative  approaches.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
+\subsubsection{Existing Adaptive Sampling Schemes and Their Shortcomings} \label{sec:shortExist}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We summarize the existing literature on adaptive sampling \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}. A number of popular adaptive design criteria are constructed based on an acquisition function that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$. Such adaptive designs fill in holes in the existing design according to particular criteria, including those below. 
 \begin{description}
-\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (uniform, arcsine, etc.) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
-\item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$. Minimax designs minimize this criterion.  These do not scale well to higher dimensions unless the distance measure is non-isotropic.
-\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.  These also do not scale well to higher dimensions unless the distance measure is non-isotropic.
-\item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
+	\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (uniform, arcsine, etc.) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
+	\item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$. Minimax designs minimize this criterion.  These do not scale well to higher dimensions unless the distance measure is non-isotropic.
+	\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.  These also do not scale well to higher dimensions unless the distance measure is non-isotropic.
+	\item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
 \end{description}
 Space-filling designs will be candidates for our exploration stage, but not our exploitation stage, because they do not take advantage of function data.  We will explore which ones work best for our test cases and application problems.
 
@@ -679,14 +681,20 @@ Orthogonal arrays and Latin hypercube sampling are further examples of space-fil
 
 Some existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}. However, these approaches often tend to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful. A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
 
-\subsection{Alternative Function Approximation Algorithms and Their Shortcomings} \label{sec:shortAlgo}
+\subsubsection{Alternative Function Approximation Algorithms and Their Shortcomings} \label{sec:shortAlgo}
 
 There are some approaches to multivariate approximation that we are unlikely to pursue.  
 \begin{description}
-\item[Multivariate polynomials] They are inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curse of dimensionality.
-\item[Smolyak Algorithms \cite{BunGrie04a}] Because they are based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
-\item[Continuous Tensor Trains \cite{GorKarMar19a}] Chebfun \cite{DriHalTre14a} employs this method for low dimensional multivariate function approximation, but it does not scale well to high dimensions.
+	\item[Multivariate polynomials] They are inflexible because they limit the approximation to a finite dimensional space, and they must be of low degree in high dimensions to avoid the curse of dimensionality.
+	\item[Smolyak Algorithms \cite{BunGrie04a}] Because they are based on sparse grids have the weaknesses mentioned above for sparse grids.  Moreover, any algorithm based on a grid will have challenges if we want to rotate the coordinate system to identify a low dimensional structure.
+	\item[Continuous Tensor Trains \cite{GorKarMar19a}] Chebfun \cite{DriHalTre14a} employs this method for low dimensional multivariate function approximation, but it does not scale well to high dimensions.
 \end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Intellectual Merit of the Proposed Research} \label{sec:Proposed}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Surrogate Trend Models} \label{sec:ourtrend}
