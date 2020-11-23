@@ -493,7 +493,7 @@ A key feature of the exploitation stage is the surrogate model. We construct our
 \begin{equation*}
 \SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by). 
 \end{equation*} 
-The trend, $\STREND(n,\mX,\by)$ is relatively simple deterministic function that roughly fits the data. Rather than using a low degree global polynomial, we use the more flexible moving least squares (MLS) quasi-interpolant for the trend model (Sect.\ \ref{sec:trend}). We use a reproducing/covariance kernels to construct the variation model, $\SVAR(n,\mX,\by)$, for what is not captured by the trend (Sect.\ \ref{sec:varmodel}). 
+The trend, $\STREND(n,\mX,\by)$, is relatively simple deterministic function that roughly fits the data. Rather than using a low degree global polynomial, we use the more flexible moving least squares (MLS) quasi-interpolant for the trend model (Sect.\ \ref{sec:trend}). We use a reproducing/covariance kernels to construct the variation model, $\SVAR(n,\mX,\by)$, for what is not captured by the trend (Sect.\ \ref{sec:varmodel}). 
 
 The surrogate model for $f$ requires a measure of uncertainty, which we construct using uncertainty measures for $\SVAR(n,\mX,\by)$ in Sect.\ \ref{sec:uncertVar} combined with a Bayesian bootstrap resampling in Sect.\ \ref{sec:BayesianBootUncertainty}. We then exploit the surrogate model and its uncertainty to define the acquisition function, $\VAL(\cdot, n,\mX,\by)$, which guides as to where to sample next. This is addressed in Sect.\ \ref{sec:acquire}. 
 
