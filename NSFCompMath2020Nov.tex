@@ -588,7 +588,7 @@ The choice of the kernel and the parameter $\btheta$ is addressed in Sect.\ \ref
 \subsubsection{Acquisition via the Surrogate Model} \label{sec:acquire}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Along with the surrogate model, $\SURR(n,\mX,\by)$, we must construct a data-based pointwise error bound or measure of uncertainty, $\SURRERR(n,\mX,\by)$, introduced in \eqref{eq:surrUncert}.  That requires translating the error bound in \eqref{RKHSErrBd} into a quantity that does not require a priori the knowledge of $\norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})}$.  Our approach is discussed in Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}.
+Along with the surrogate model, $\SURR(n,\mX,\by)$, we must construct a data-based pointwise error bound or measure of its uncertainty, $\SURRERR(n,\mX,\by)$ (see \eqref{eq:surrUncert}).  That requires translating the error bound in \eqref{RKHSErrBd} into a quantity that does not require a priori the knowledge of $\norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})}$.  Our approach is discussed in Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}.
 
 Given the surrogate model and its uncertainty, we may then define the acquisition functions for function and approximation respectively:
 \begin{subequations} \label{eq:QOIval}
@@ -616,7 +616,47 @@ The acquisition functions are related to the error bounds that we expect to deri
 \end{subequations}
 These error bounds should be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The identification of these $\calc$ is part of our research. Hints appear in Sect.\ \ref{sec:uncertVar}. 
 
+\subsection{Algorithmic Framework}
+The algorithm that we will develop and analyze will have the following form.
 
+\begin{algorithm}[H]
+	\caption*{Adaptive Algorithm to Approximate $\QOI(f)$ \label{alg:algframe}}
+	\begin{algorithmic}
+%		\PARAM the RKHS, $\calf$; the factor, $A(\cdot)$, which defines  the candidate cone, $\cc$, in \eqref{eq:RKHScone};  a sequence of data sites, $\{\bx_1, \bx_2, \ldots \}$; an initial sample size, $n_0$
+		\INPUT a black-box function, $f \in \cc$; an absolute error tolerance, $\varepsilon>0$
+		
+		\Ensure Error criterion $\bignorm[\infty]{\QOI(f) - \APP(n,\mX,\by)} \le \varepsilon$  for $f \in \cc$
+		
+		\State Let $n \leftarrow n_0$
+		
+		\State Construct data sites $\mX$ according to Sect.\ref{sec:Explore}  \Comment{ \textbf{Explore}}
+		
+		\Repeat \Comment{ \textbf{Exploit}}
+		
+		\State Update $\by = f(\mX)$
+		
+		\State Compute the  trend, $\STREND(n,\mX,\by)$, by moving least squares according to Sects.\ \ref{sec:trend} and \ref{sec:ourtrend}
+		
+		\State Compute the variation, $\SVAR(n,\mX,\by)$, as a minimum norm RKHS interpolant according to Sects.\ \ref{sec:var} and \ref{sec:??}
+		
+		\State Compute the  uncertainty in the surrogate model, $\SURRERR(n,\mX,\by)$, according to Sects.\ 
+		
+		\State Construct error bound $\ERR(n,\mX,\by)$ for approximation $\APP(n,\mX,\by)$ via \eqref{eq:QOIerr} using the surrogate model, $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$, and its uncertainty, $\SURRERR(n,\mX,\by)$.
+		
+		\If{$\ERR(n,\mX,\by) \le \varepsilon$}
+		
+		\RETURN $\APP(n,\mX,\by)$ as computed in \eqref{eq:QOIhat}
+		
+		\EndIf
+				
+		\State Choose the next data site $\bx_{n+1}$ according to \eqref{eq:nextsample}, where the acquisition function, $\VAL(\mX,\by)$ is defined in \eqref{eq:QOIval}
+		
+		\State Let $n \leftarrow n + 1$
+
+		\Until $n > n_{\max}$
+				
+	\end{algorithmic}
+\end{algorithm}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intellectual Merit of the Proposed Research} \label{sec:Proposed}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
