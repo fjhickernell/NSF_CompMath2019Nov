@@ -715,7 +715,7 @@ Another shortcoming of the existing MLS quasi-interpolants is that they treat ev
 
 
 \subsection{Uncertainty in the Variation Model} \label{sec:uncertVar}
-To construct a data-driven error bound for the variation, $f_V$, in terms of the theoretical error bound in \eqref{eq:RKHSErrBd}, we must bound the norm of $f_V$ in terms of function data.  To do this we introduce a cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
+To construct a data-driven error bound for the variation, $f_{\VAR}$, in terms of the theoretical error bound in \eqref{eq:RKHSErrBd}, we must bound the norm of $f_{\VAR}$ in terms of function data.  To do this we introduce a cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
 \begin{align} \label{RKHScone}
 	\calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
 	\nonumber
@@ -747,11 +747,11 @@ This criterion also has a purely geometric interpretation.  Cross-validation is 
 
 As proof of concept we consider the function
 \begin{equation} \label{eq:cos_sum}
-	f_V(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(j)}, j = 1, \ldots, d,
+	f_{\VAR}(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(j)}, j = 1, \ldots, d,
 \end{equation}
 where $\pi_d$ is a permutation of the integers $1, \ldots, d$.  The reason that we choose some coordinates as less important than others is to illustrate a low essential dimension.  The reason for the permutation is to illustrate how our process does not require a priori knowledge of the relative importance of the coordinates.
 
-Table  \ref{tab:cos_sum} is the output of applying a stripped-down version of our algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to For $A(\mX)$ we use
+Table  \ref{tab:cos_sum} is the output of applying a stripped-down version of our adaptive algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to For $A(\mX)$ we use
 \begin{equation*} \label{eq:an}
 	A(\mX): = \begin{cases} \displaystyle
 		\frac{0.2}{0.2 - B(\mX)}, & B(\mX) < 0.2, \\
@@ -763,26 +763,27 @@ B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}
 As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
 The exploratory design is $n_0 = 10$ lattice points.    
 
+The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by) = \SVARERR(n,\mX,\by_{\VAR})$ 
+
 \FJHNote{I am going to re-write this based on our numerical experiments.}
 
 \begin{table}
 	\caption{Adaptive algorithm successfully applied to \eqref{eq:cos_sum} for different error tolerances.} \label{tab:cos_sum}
-\[ 
-\begin{array}{rcccccccccc} 
+ \[ 
+\begin{array}{rccccccc} 
+	\text{Coordinate, } j& 9 & 3 & 2 & 8 & 11 & 12 \\
+	\alpha_j & 5.0\text{E}{-}1 & 2.5\text{E}{-}1 & 1.3\text{E}{-}1  & 6.3\text{E}{-}2 &3.1\text{E}{-}2& 1.6\text{E}{-}2 \\
+	\theta_j & 3.9\text{E}{-}1 & 1.7\text{E}{-}1 & 1.1\text{E}{-}1  & 6.5\text{E}{-}2 &3.8\text{E}{-}2&  2.1\text{E}{-}2 \\
 	\hline
-	\text{Coordinate index}, j & 2 & 12 & 4 & 1 & 3 & 9 & 6 & \\
-	\alpha_j & 0.5 & 0.25 & 0.13 & 0.063 & 0.031 & 0.016 & 0.0078\\
-	\text{Final } \theta_j  & 0.41 & 0.18 & 0.094 & 0.061 & 0.038 & 0.020 & 0.012
-\\ \hline
-	\text{Coordinate index}, j & 5 & 10 & 8 & 7 & 11  \\
-\alpha_j & 0.0039 & 0.0020 & 0.00098 & 0.00049 & 0.00024\\
-\text{Final } \theta_j  & 0.0069 & 0.0037 & 0.0020 & 0.0031 & 0.00088 
-\\ \hline
-	n & 111 & 119 & 125 & 131 & 138 & 143 \\ \hline 
-	\varepsilon & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
-	\ERR(n,\mX,\by) & 4.7\text{E}{-}2 & 1.7\text{E}{-}2 & 9.2\text{E}{-}3 & 4.6\text{E}{-}3 & 1.8\text{E}{-}3 & 9.7\text{E}{-}4 \\ \hline 
-	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f - \APP(n,\mX,\by)} & 6.4\text{E}{-}3 & 3.4\text{E}{-}3 & 1.5\text{E}{-}3 & 6.1\text{E}{-}4 & 2.5\text{E}{-}4 & 1.4\text{E}{-}4 \\ \hline 
-	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
+	\text{Coordinate, } j & 4 & 10 & 7 & 1 & 6 & 5 \\
+	\alpha_j & 7.8\text{E}{-}3 & 3.9\text{E}{-}3 & 2.0\text{E}{-}3 & 9.8\text{E}{-}4 & 4.9\text{E}{-}4 & 2.4\text{E}{-}4\\
+	\theta_j & 1.2\text{E}{-}2 & 8.3\text{E}{-}3 &  5.7\text{E}{-}3 &  2.9\text{E}{-}3 & 2.0\text{E}{-}3&  1.7\text{E}{-}3\\
+	\hline
+	n & 105 & 111 & 120 & 126 & 132 & 140 & 146 \\ \hline 
+	\varepsilon & 1.0\text{E}{-}1 & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
+	\SVARERR(n,\mX,\by_{\VAR})  & 9.5\text{E}{-}2 & 4.8\text{E}{-}2 & 1.9\text{E}{-}2 & 9.5\text{E}{-}3 & 4.8\text{E}{-}3 & 1.8\text{E}{-}3 & 9.6\text{E}{-}4 \\ \hline 
+	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f_{\VAR} - \APPID(n,\mX,\by_{\VAR})} & 2.1\text{E}{-}2 & 9.6\text{E}{-}3 & 3.7\text{E}{-}3 & 1.9\text{E}{-}3 & 8.0\text{E}{-}4 & 3.7\text{E}{-}4 & 1.8\text{E}{-}4 \\ \hline 
+	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
 \end{array} 
 \]
 \end{table}
