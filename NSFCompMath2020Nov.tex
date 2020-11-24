@@ -719,7 +719,7 @@ To construct a data-driven error bound for the variation, $f_{\VAR}$, in terms o
 \begin{align} \label{RKHScone}
 	\calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
 	\nonumber
-	& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by)}^2 \Bigr \},
+	& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})}^2 \Bigr \},
 \end{align}
 where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{eq:RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
 \begin{subequations} \label{eq:DataErrBd}
@@ -737,9 +737,9 @@ This idea of data-driven error bounds for numerical problems has been used by \F
 \subsection{Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-While  \eqref{eq:DataErrBd} may provide a data-driven error bound for the surrogate variation, there still remains the question of which kernel to choose.  For example, the squared exponential kernel in \eqref{eq:GaussKer} has the parameter $\btheta$ that must be specified.
+While  \eqref{eq:DataErrBd}  provides a data-driven error bound for the surrogate variation, there still remains the question of which kernel to choose.  For example, the squared exponential kernel in \eqref{eq:GaussKer} has the parameter $\btheta$ that must be specified.
 
-We propose to experiment with the empirical Bayes perspective, which leads to the following choice \cite{Hic17a}: 
+We will experiment with the empirical Bayes perspective, which leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
 	\theta_{\textup{EB}} = \argmin_\btheta \left[\frac 1n \log \bigl( \det(\mK_\btheta) \bigr) + \log \bigl ( \by^T \mK_\btheta^{-1} \by \bigr)\right].
 \end{equation}
@@ -747,11 +747,11 @@ This criterion also has a purely geometric interpretation.  Cross-validation is 
 
 As proof of concept we consider the function
 \begin{equation} \label{eq:cos_sum}
-	f_{\VAR}(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(j)}, j = 1, \ldots, d,
+	f_V(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(\ell)}, \ell = 1, \ldots, d,
 \end{equation}
-where $\pi_d$ is a permutation of the integers $1, \ldots, d$.  The reason that we choose some coordinates as less important than others is to illustrate a low essential dimension.  The reason for the permutation is to illustrate how our process does not require a priori knowledge of the relative importance of the coordinates.
+where $\pi_d$ is a permutation of the integers $1, \ldots, d$.  The reason that we choose some coordinates as less important than others is to provide a low essential dimension.  The reason for the permutation of coordinate indices is to illustrate how our process does not require a priori knowledge of the relative importance of the coordinates.
 
-Table  \ref{tab:cos_sum} is the output of applying a stripped-down version of our adaptive algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to For $A(\mX)$ we use
+Table  \ref{tab:cos_sum} is the output of a stripped-down version of our algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to be the uncertainty in the surrogate model.  For $A(\mX)$ we use
 \begin{equation*} \label{eq:an}
 	A(\mX): = \begin{cases} \displaystyle
 		\frac{0.2}{0.2 - B(\mX)}, & B(\mX) < 0.2, \\
@@ -761,7 +761,7 @@ Table  \ref{tab:cos_sum} is the output of applying a stripped-down version of ou
 B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}
 \end{equation*}
 As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
-The exploratory design is $n_0 = 10$ lattice points.    
+The exploratory design is $n_0 = 10$ uniform lattice points.    
 
 The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by) = \SVARERR(n,\mX,\by_{\VAR})$ 
 
