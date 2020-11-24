@@ -699,9 +699,9 @@ There are some approaches to multivariate approximation that we are unlikely to 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Surrogate Trend Models} \label{sec:ourtrend}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Global parametric surrogate models can capture the trend of a multivariate response surface only if the data are fit well by the parametric model over all the domain. For example, in one-dimensional problems, global low-degree polynomials can capture simple trends in the data, but fail to accurately represent nonpolynomial shapes, such as Gaussians or step functions. Piecewise polynomial interpolants, such as splines, can effectively represent these surfaces, but don't generalize easily to very high dimensions with scattered data. 
+Global parametric surrogate models can capture the trend of a multivariate response surface only if the data are fit well by the parametric model over all the domain. For example, in one-dimensional problems, global low-degree polynomials can capture simple trends in the data, but fail to accurately represent nonpolynomial shapes, such as Gaussians or step functions. Piecewise polynomial interpolants, such as tensor splines, can effectively represent these surfaces, but don't generalize easily to very high dimensions with scattered data. 
 
-The MLS quasi-interpolants are an effective alternative to piecewise polynomials in high dimensions. The MLS also local low-degree polynomials to capture global nonpolynomial behavior. The additional computational cost to solve for the local MLS coefficients is small compared to the cost of generating new samples. 
+The MLS quasi-interpolants are an effective alternative to piecewise polynomials in high dimensions. The MLS uses local low-degree polynomials to capture global nonpolynomial behavior. The additional computational cost to solve for the local MLS coefficients is small compared to the cost of generating new function data. 
 
 One of the challenges in MLS is to identify a robust methodology for picking the appropriate length scale, $\sigma(\bx)$, for the MLS kernel. Our current approach is to define this length scale as the mean distance to the nearest $K_n$ neighbors of $\bx$, where $K_n$ is greater than $\dim(\calp)$, the dimension of the space of local approximants.
 This heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well-conditioned. If the least squares problem is ill-conditioned, then the length scale is increased. \emph{We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.}  We will also investigate the local scaling approach of \cite{ZelPer05a}.
@@ -737,6 +737,23 @@ The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \FJHNote{I am going to re-write this based on our numerical experiments.}
+
+\[ 
+\begin{array}{rccccccc} 
+	\multicolumn{7}{l}{A_\infty = 1.00\qquad B_0 = 0.2\qquad \mT = (0.33, 0.83,\ldots, 0.48)\qquad n_0 = 10} \\ \hline
+	\multicolumn{7}{l}{\text{Final } \theta = (6.1\text{E}{-}2, 4.1\text{E}{-}1, 3.8\text{E}{-}2, 9.4\text{E}{-}2, 6.9\text{E}{-}3, 1.2\text{E}{-}2,}
+	\\ 
+	\multicolumn{7}{l}{3.1\text{E}{-}3, 2.0\text{E}{-}3, 2.0\text{E}{-}2, 3.7\text{E}{-}3, 8.8\text{E}{-}4, 1.8\text{E}{-}1)} 
+	\\ \hline
+	\multicolumn{7}{l}{ \alpha = (6.3\text{E}{-}2, 5.0\text{E}{-}1, 3.1\text{E}{-}2, 1.3\text{E}{-}1, 3.9\text{E}{-}3, 7.8\text{E}{-}3, 4.9\text{E}{-}4,}\\
+	\multicolumn{7}{l}{9.8\text{E}{-}4, 1.6\text{E}{-}2, 2.0\text{E}{-}3, 2.4\text{E}{-}4, 2.5\text{E}{-}1)} \\ \hline 
+	n & 111 & 119 & 125 & 131 & 138 & 143 \\ \hline 
+	\varepsilon & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
+	\errBd & 4.7\text{E}{-}2 & 1.7\text{E}{-}2 & 9.2\text{E}{-}3 & 4.6\text{E}{-}3 & 1.8\text{E}{-}3 & 9.7\text{E}{-}4 \\ \hline 
+	\norm[\infty]{f - \APP(\mX,\by)} & 6.4\text{E}{-}3 & 3.4\text{E}{-}3 & 1.5\text{E}{-}3 & 6.1\text{E}{-}4 & 2.5\text{E}{-}4 & 1.4\text{E}{-}4 \\ \hline 
+	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
+\end{array} 
+\]
 
 To illustrate some of the weaknesses of the typical RKHS/kriging approach in Sect.\ \ref{sec:varmodel} we consider the following univariate function, which has a mean value near zero:
 \begin{equation} \label{eq:univarfun}
