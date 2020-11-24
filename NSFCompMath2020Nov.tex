@@ -573,7 +573,7 @@ is the surrogate variation model
 \end{equation}
 This has a known pointwise error bound of
 \begin{align}
-\label{RKHSErrBd}
+\label{eq:RKHSErrBd}
 \abs{f(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \\
 \nonumber
 & \le \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)} \, \norm[\calf]{f_{\VAR}} \qquad \forall f_{\VAR} \in \calf, \ \bx \in \Omega, \\
@@ -582,13 +582,15 @@ This has a known pointwise error bound of
 \end{align}
 The choice of the kernel and the parameter $\btheta$ is addressed in Sect.\ \ref{sec:selectCoord}.
 
+The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Acquisition via the Surrogate Model} \label{sec:acquire}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Along with the surrogate model, $\SURR(n,\mX,\by)$, we must construct a data-based pointwise error bound or measure of its uncertainty, $\SURRERR(n,\mX,\by)$ (see \eqref{eq:surrUncert}).  That requires translating the error bound in \eqref{RKHSErrBd} into a quantity that does not require a priori the knowledge of $\norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})}$.  Our approach is discussed in Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}.
+Along with the surrogate model, $\SURR(n,\mX,\by)$, we must construct a data-based pointwise error bound or measure of its uncertainty, $\SURRERR(n,\mX,\by)$ (see \eqref{eq:surrUncert}).  That requires translating the error bound in \eqref{eq:RKHSErrBd} into a quantity that does not require a priori the knowledge of $\norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})}$.  Our approach is discussed in Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}.
 
 Given the surrogate model and its uncertainty, we may then define the acquisition functions for function and approximation respectively:
 \begin{subequations} \label{eq:QOIval}
@@ -616,7 +618,7 @@ The acquisition functions are related to the error bounds that we expect to deri
 \end{subequations}
 These error bounds should be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The identification of these $\calc$ is part of our research. Hints appear in Sect.\ \ref{sec:uncertVar}. 
 
-\subsection{Algorithmic Framework}
+\subsection{Algorithmic Framework} \label{sec:algo}
 The algorithm that we will develop and analyze will have the following form.
 
 \begin{algorithm}[H]
@@ -713,13 +715,13 @@ Another shortcoming of the existing MLS quasi-interpolants is that they treat ev
 
 
 \subsection{Uncertainty in the Variation Model} \label{sec:uncertVar}
-To make the error bound for the surrogate model data-driven, we introduce the cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
+To construct a data-driven error bound for the variation, $f_V$, in terms of the theoretical error bound in \eqref{eq:RKHSErrBd}, we must bound the norm of $f_V$ in terms of function data.  To do this we introduce a cone $\calc$ of candidate functions whose norms are approximated modestly well by the norms of their surrogates: 
 \begin{align} \label{RKHScone}
 	\calc &:= \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR} - \SVAR(n,\mX,\by_{\VAR})} \le A(\mX) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} \Bigr \} \\
 	\nonumber
 	& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by)}^2 \Bigr \},
 \end{align}
-where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
+where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$ error bound \eqref{eq:RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
 \begin{subequations} \label{eq:DataErrBd}
 	\begin{gather}
 		\abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by_{\VAR})(\bx) \qquad \forall f \in \calc, \\
@@ -727,82 +729,67 @@ where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because 
 		\text{where } \SVARERR(n,\mX,\by_{\VAR})(\bx) : = A(\mX) \sqrt{[K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)] \, [\by_{\VAR}^T \mK^{-1} \by_{\VAR}] }.
 	\end{gather}
 \end{subequations}
-
-The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
+This idea of data-driven error bounds for numerical problems has been used by \FH, \YD, and their collaborators in \cite{HicEtal14a, HicEtal14b, HicJim16a, JimHic16a, HicEtal17a, ChoEtal17a}.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Data-Based Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
+\subsection{Inferred Kernels for Surrogate Variation Models} \label{sec:kerinferdata}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+While  \eqref{eq:DataErrBd} may provide a data-driven error bound for the surrogate variation, there still remains the question of which kernel to choose.  For example, the squared exponential kernel in \eqref{eq:GaussKer} has the parameter $\btheta$ that must be specified.
+
+We propose to experiment with the empirical Bayes perspective, which leads to the following choice \cite{Hic17a}: 
+\begin{equation} \label{eq:thetEB}
+	\theta_{\textup{EB}} = \argmin_\btheta \left[\frac 1n \log \bigl( \det(\mK_\btheta) \bigr) + \log \bigl ( \by^T \mK_\btheta^{-1} \by \bigr)\right].
+\end{equation}
+This criterion also has a purely geometric interpretation.  Cross-validation is another possibility.  
+
+As proof of concept we consider the function
+\begin{equation} \label{eq:cos_sum}
+	f_V(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(j)}, j = 1, \ldots, d,
+\end{equation}
+where $\pi_d$ is a permutation of the integers $1, \ldots, d$.  The reason that we choose some coordinates as less important than others is to illustrate a low essential dimension.  The reason for the permutation is to illustrate how our process does not require a priori knowledge of the relative importance of the coordinates.
+
+Table  \ref{tab:cos_sum} is the output of applying a stripped-down version of our algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to For $A(\mX)$ we use
+\begin{equation*} \label{eq:an}
+	A(\mX): = \begin{cases} \displaystyle
+		\frac{0.2}{0.2 - B(\mX)}, & B(\mX) < 0.2, \\
+		\infty, & B(\mX) \ge 0.2, 
+	\end{cases}
+\qquad 
+B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}
+\end{equation*}
+As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
+The exploratory design is $n_0 = 10$ lattice points.    
 
 \FJHNote{I am going to re-write this based on our numerical experiments.}
 
+\begin{table}
+	\caption{Adaptive algorithm successfully applied to \eqref{eq:cos_sum} for different error tolerances.} \label{tab:cos_sum}
 \[ 
-\begin{array}{rccccccc} 
-	\multicolumn{7}{l}{A_\infty = 1.00\qquad B_0 = 0.2\qquad \mT = (0.33, 0.83,\ldots, 0.48)\qquad n_0 = 10} \\ \hline
-	\multicolumn{7}{l}{\text{Final } \theta = (6.1\text{E}{-}2, 4.1\text{E}{-}1, 3.8\text{E}{-}2, 9.4\text{E}{-}2, 6.9\text{E}{-}3, 1.2\text{E}{-}2,}
-	\\ 
-	\multicolumn{7}{l}{3.1\text{E}{-}3, 2.0\text{E}{-}3, 2.0\text{E}{-}2, 3.7\text{E}{-}3, 8.8\text{E}{-}4, 1.8\text{E}{-}1)} 
-	\\ \hline
-	\multicolumn{7}{l}{ \alpha = (6.3\text{E}{-}2, 5.0\text{E}{-}1, 3.1\text{E}{-}2, 1.3\text{E}{-}1, 3.9\text{E}{-}3, 7.8\text{E}{-}3, 4.9\text{E}{-}4,}\\
-	\multicolumn{7}{l}{9.8\text{E}{-}4, 1.6\text{E}{-}2, 2.0\text{E}{-}3, 2.4\text{E}{-}4, 2.5\text{E}{-}1)} \\ \hline 
+\begin{array}{rcccccccccc} 
+	\hline
+	\text{Coordinate index}, j & 2 & 12 & 4 & 1 & 3 & 9 & 6 & \\
+	\alpha_j & 0.5 & 0.25 & 0.13 & 0.063 & 0.031 & 0.016 & 0.0078\\
+	\text{Final } \theta_j  & 0.41 & 0.18 & 0.094 & 0.061 & 0.038 & 0.020 & 0.012
+\\ \hline
+	\text{Coordinate index}, j & 5 & 10 & 8 & 7 & 11  \\
+\alpha_j & 0.0039 & 0.0020 & 0.00098 & 0.00049 & 0.00024\\
+\text{Final } \theta_j  & 0.0069 & 0.0037 & 0.0020 & 0.0031 & 0.00088 
+\\ \hline
 	n & 111 & 119 & 125 & 131 & 138 & 143 \\ \hline 
 	\varepsilon & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
-	\errBd & 4.7\text{E}{-}2 & 1.7\text{E}{-}2 & 9.2\text{E}{-}3 & 4.6\text{E}{-}3 & 1.8\text{E}{-}3 & 9.7\text{E}{-}4 \\ \hline 
-	\norm[\infty]{f - \APP(\mX,\by)} & 6.4\text{E}{-}3 & 3.4\text{E}{-}3 & 1.5\text{E}{-}3 & 6.1\text{E}{-}4 & 2.5\text{E}{-}4 & 1.4\text{E}{-}4 \\ \hline 
+	\ERR(n,\mX,\by) & 4.7\text{E}{-}2 & 1.7\text{E}{-}2 & 9.2\text{E}{-}3 & 4.6\text{E}{-}3 & 1.8\text{E}{-}3 & 9.7\text{E}{-}4 \\ \hline 
+	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f - \APP(n,\mX,\by)} & 6.4\text{E}{-}3 & 3.4\text{E}{-}3 & 1.5\text{E}{-}3 & 6.1\text{E}{-}4 & 2.5\text{E}{-}4 & 1.4\text{E}{-}4 \\ \hline 
 	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
 \end{array} 
 \]
-
-To illustrate some of the weaknesses of the typical RKHS/kriging approach in Sect.\ \ref{sec:varmodel} we consider the following univariate function, which has a mean value near zero:
-\begin{equation} \label{eq:univarfun}
-f_{\VAR} \colon x \mapsto \exp(-6x) \sin(8x+0.1) - 0.1.
-\end{equation}
+\end{table}
 
 
-This $f_{\VAR}$ is displayed in Fig.\ \ref{fig:sampleFun} along with its surrogate model $\SVAR(10,\mX,\by)$ based on the $n=10$ point design $\mX = (0, 0.1, \ldots, 0.6, 0.8, 0.9, 1)^T$ and the Mat\'ern kernel in \eqref{eq:GaussKer} with $\theta =1$. 
-Although not highly accurate, $\SURR(10,\mX,\by)$ captures the peak on the left because the data sites are dense enough there. If the design consists only of the $n=4$ sparse data sites, $\mX = (0, 0.4, 0.6, 1)^T$, then $\SURR(4,\mX,\by)$ misses the peak, as shown in Fig.\ \ref{fig:sampleFun}. This demonstrates the need for the sufficient samples in the exploration stage highlighted in Sect.\ \ref{sec:Explore}. 
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxSmall.eps} \qquad \qquad
-\includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPE.eps}
-\caption{The left plot shows $f_V$ in \eqref{eq:univarfun} and its surrogate variation model \eqref{appxExOne} using $10$ and $4$ data sites and the Mat\'ern kernel \eqref{eq:GaussKer} with $\theta = 1$. Too few date sites yields a poor approximation. The right plot includes the surrogate variation uncertainty, $\SVARERR(10,\mX,\by)$ from \eqref{eq:DataErrBda} with $A_{10} =1$, and the location of the largest uncertainty, $x_{11}$. The largest true error occurs away from $x_{11}$.}
-\label{fig:sampleFun}
-\end{figure}
 
-\iffalse
-There is a substantial literature on $d$-dimensional space-filling designs \cite{FangEtal19a, Jos16a, SanWilNot03}. The number of data sites required for the initial design depends on i) how many sites one can afford, ii) how narrow a peak one is willing to miss, and iii) the number of independent variables, $d$.
-\fi
-
-For function approximation we should choose the next data site where the uncertainty in $f_{\VAR}$ is largest, which would be $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$ as depicted in Fig.\ \ref{fig:sampleFun}. However, $f_{\VAR}(x_{11}) \approx \SVAR(11,\mX,\by)(x_{11})$, so sampling at $x_{11}$ does not help much.
-
-The surrogate variance model and its uncertainty are not satisfactory since the form of the kernel, $K$, is not influenced by the output data, $\by$, and the pointwise surrogate error bound in \eqref{eq:DataErrBd} depends weakly on the output data $\by$. Consequently, the surrogate variation uncertainty is tight on the left, but quite loose on the right. 
-
-One improvement is to infer the value of $\theta$ inherent in the definition of $K$ in \eqref{eq:GaussKer} rather than to set it arbitrarily. The empirical Bayes perspective leads to the following choice \cite{Hic17a}: 
-\begin{equation} \label{eq:thetEB}
-\theta_{\textup{EB}} = \argmin_\theta \left[\frac 1n \log \bigl( \det(\mK_\theta) \bigr) + \log \bigl ( \by^T \mK_\theta^{-1} \by \bigr)\right].
-\end{equation}
-For the example $f_{\VAR}$ in \eqref{eq:univarfun}, $\theta_{\textup{EB}} = 11$, and the resulting approximation and approximate error bound are given on the left of Fig.\ \ref{fig:InferKernel}. Unfortunately, this new surrogate model has similar deficiencies to the original one, and the suggested next data site is at a place where the function approximation is already quite good.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpt.eps} \qquad \qquad
-\includegraphics[width = 7cm]{ProgramsImages/fandDataAndAppxAndRMSPEOpty.eps}
-\caption{The left plot shows the surrogate variation model with its uncertainty for the example $f_{\VAR}$ in \eqref{eq:univarfun} but with $\theta = \theta_{\textup{EB}} = 11$ rather than $\theta =1$. The approximation is slightly better than in Fig.\ \ref{fig:sampleFun}, but the uncertainty is much larger. The right plot shows the surrogate variation model with its uncertainty now for the modified Mat\`ern kernel in \eqref{modGaussKer}, and now with $\theta = \theta_{\textup{EB}} = 5.3$ and $S = S_{\textup{EB}} = -6.0$. The surrogate variation model is much improved, especially for smaller $x$, and the uncertainty is much smaller. The next data site is in a location that makes intuitive sense.}
-\label{fig:InferKernel}
-\end{figure}
-
-A more helpful approach is to generalize the Mat\'ern kernel as follows to allow for the variation of the functions to be greater in one part of the domain than the other:
-\begin{equation} \label{modGaussKer}
-K(t,x) = \exp(S(t+x))(1 + \theta \abs{t-x}) \exp(-\theta\abs{t-x}).
-\end{equation}
-Here we have considered the case $d=1$. This new kernel maintains its properties of being symmetric and positive definite because we have simply multiplied the original kernel by $g(t)g(x)$ for some function $g$. Here $S$ is a parameter to be inferred.
-
-The right plot in Fig.\ \ref{fig:InferKernel} shows the surrogate variation model and its uncertainty for the example in \eqref{eq:univarfun}, but for this modified Mat\'ern kernel in \eqref{modGaussKer}, with both parameters $\theta$ and $S$ being determined by empirical Bayes as in \eqref{eq:thetEB}. Now, $\SVAR(10,\mX,\by)$ fits $f_{\VAR}$ much better and the uncertainty fits better. The next data site, $x_{11} = \argmax_x \SVARERR(10,\mX,\by)(x)$, is in a region where $f_{\VAR}$ varies greatly. 
-
-This example of modifying a well-known kernel so that data-based inference of the parameters produce a better approximation and a better adaptive sampling scheme is proof of concept. \emph{ We plan to extend this idea to a more general multivariate setting.} Some of the challenges are to ensure that our modified kernels are not over-parameterized and specifying a mathematically precise set of functions for which this approach is successful.
 
 Another weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$. \emph{We will consider the research question of how to improve the definition of $\calc$ so that it depends only on a modest quality measure of the design}, such as the $\bx_i$ filling $\Omega$ relatively well. 
 
