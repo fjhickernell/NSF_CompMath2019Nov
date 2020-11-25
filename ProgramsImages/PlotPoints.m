@@ -53,6 +53,7 @@ axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc SSobolPoints.eps
 
+figure
 xChebSSobol = (1+sin(pi*(-1/2 + xSSobol)))/2;
 figure
 plot(xChebSSobol(:,1),xChebSSobol(:,2),'.','color',MATLABPurple)
@@ -77,6 +78,18 @@ title('Uniform Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc ShiftedLatticePoints.eps
+
+figure
+xChebLat = (1+sin(pi*(-1/2 + xlattice)))/2;
+figure
+plot(xChebLat(:,1),xChebLat(:,2),'.','color',MATLABPurple)
+xlabel('\(x_{i1}\)')
+ylabel('\(x_{i2}\)')
+title('Arcsine Lattice Data Sites')
+axis square
+set(gca,'xtick',tick,'ytick',tick)
+print -depsc ChebLatticePoints.eps
+
 
 %% Kernel Space Filling Designs
 d = 4;

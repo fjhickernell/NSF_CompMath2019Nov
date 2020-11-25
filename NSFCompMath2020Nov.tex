@@ -22,6 +22,19 @@
 %\algnewcommand\STATE{\item}
 \algnewcommand\RETURN{\State \textbf{Return }}
 
+
+\voffset 0.2in
+\textheight 9in
+\textwidth6.5in
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+%\thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
+\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
+
+\headsep-0.6in
+
+
+
 %\usepackage{showlabels}
 \newcommand{\Upara}[1]{\noindent\underline{\upshape #1}:}
 
@@ -42,16 +55,7 @@
 % This package prints the labels in the margin
 %\usepackage[notref,notcite]{showkeys}
 
-%\numberwithin{page} %add section before page
-\pagestyle{plain}
-%\setcounter{page}{1}
-%\renewcommand{\thepage}{C-\arabic{page}}
 
-%\thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
-%\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
-
-\headsep-0.6in
-%\headsep-0.45in
 
 \newcommand{\FH}{\hyperlink{FHlink}{FH}\xspace}
 \newcommand{\MH}{\hyperlink{MHlink}{MH}\xspace}
@@ -469,9 +473,9 @@ We take $\calc$ to be a subset of $\calf$ an infinite dimensional vector space o
 
 Bounds on the norms of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  A popular choice is for $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$.  We find this artificial and will choose $\calc$ to include functions with arbitrarily large $\calf$-norms, which must be bounded from data.  Again, this will require us to rule rule out peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect. \ref{sec:varmodel}.
 
-Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  To avoid this curse we choose our candidate set $\calc$ to only include functions with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (Sect.\ \ref{sec:selectCoord}). 
+Our problems of interest are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  This  is disastrous for large $d$.  To avoid this curse we choose our candidate set $\calc$ to only include functions with low effective dimension, $d'$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d'})$.  This can be done via coordinate weights or active subspaces (Sect.\ \ref{sec:kerinferdata}). 
 
-Choosing  $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know beforehand which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow flexibility, while ensuring that an appropriate $\btheta$ can be inferred from a reasonable amount of function data (Sect. \ref{sec:selectCoord}).
+Choosing  $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know beforehand which normed space best fits our input function, $f$.  Thus, our $\calc$ will actually be a subset of  a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow flexibility, while ensuring that an appropriate $\btheta$ can be inferred from a reasonable amount of function data (Sect. \ref{sec:kerinferdata}).
 
 
 \subsection{Summary} 
@@ -510,8 +514,8 @@ The goal of the initial samples is to explore the space of feasible POIs, $\Omeg
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
 \centering
 \includegraphics[width = 0.20\textwidth]{ProgramsImages/IIDPoints.eps} \ 
-\includegraphics[width = 0.20\textwidth]{ProgramsImages/SSobolPoints.eps} \ 
-\includegraphics[width = 0.20\textwidth]{ProgramsImages/ChebSSobolPoints.eps} 
+\includegraphics[width = 0.20\textwidth]{ProgramsImages/ShiftedLatticePoints.eps} \ 
+\includegraphics[width = 0.20\textwidth]{ProgramsImages/ChebLatticePoints.eps} 
 \caption{Uniform IID data sites contrasted with space filling designs mimicking the uniform  and arcsine distributions.
 We will use low discrepancy space-filling sampling in our exploration stage.
 \label{PtsFig}}
@@ -580,7 +584,7 @@ This has a known pointwise error bound of
 \nonumber
 & \qquad \qquad \text{where } \bk(\bx) = \bigl(K(\bx,\bx_i) \bigr)_{i=1}^n.
 \end{align}
-The choice of the kernel and the parameter $\btheta$ is addressed in Sect.\ \ref{sec:selectCoord}.
+The choice of the kernel and the parameter $\btheta$ is addressed in Sect.\ \ref{sec:kerinferdata}.
 
 The deterministic framework using RKHSs for $f_{\VAR}$ has a parallel Bayesian interpretation or probabilistic numerics promoted by Diaconis \cite{Dia88a} and other scientists \cite{BriEtal18a, OHa91a, OwhEtal19a, RasWil06a, Rit00a}. It assumes that $f_{\VAR}$ is an instance of $\GP(0,K)$, a Gaussian process with mean zero and covariance kernel, $K$. In this case the posterior mean of $f_{\VAR}(x)$ given the data $(\mX,\by)$ is called a kriging model and has the same expression as $\SVAR(n,\mX,\by)$ as in \eqref{appxExOne}, and the width of the pointwise credible interval for the surrogate variation model is the same as $\SVARERR(n,\mX,\by)$ in \eqref{eq:DataErrBd}, with $A(\mX)$ determined by empirical Bayes and dependent only on $n$. We will adopt both deterministic and Bayesian approachs, depending on which better suits our needs.
 
@@ -639,9 +643,9 @@ The algorithm that we will develop and analyze will have the following form.
 		
 		\State Compute the  trend, $\STREND(n,\mX,\by)$, by moving least squares according to Sects.\ \ref{sec:trend} and \ref{sec:ourtrend}
 		
-		\State Compute the variation, $\SVAR(n,\mX,\by)$, as a minimum norm RKHS interpolant according to Sects.\ \ref{sec:var} and \ref{sec:??}
+		\State Compute the variation, $\SVAR(n,\mX,\by)$, as a minimum norm RKHS interpolant according to Sects.\ \ref{sec:varmodel}, \ref{sec:uncertVar} and \ref{sec:kerinferdata}
 		
-		\State Compute the  uncertainty in the surrogate model, $\SURRERR(n,\mX,\by)$, according to Sects.\ 
+		\State Compute the  uncertainty in the surrogate model, $\SURRERR(n,\mX,\by)$, according to Sects.\ \ref{sec:uncertVar} and \ref{sec:BayesianBootUncertainty}
 		
 		\State Construct error bound $\ERR(n,\mX,\by)$ for approximation $\APP(n,\mX,\by)$ via \eqref{eq:QOIerr} using the surrogate model, $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$, and its uncertainty, $\SURRERR(n,\mX,\by)$.
 		
@@ -709,7 +713,7 @@ One of the challenges in MLS is to identify a robust methodology for picking the
 This heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well-conditioned. If the least squares problem is ill-conditioned, then the length scale is increased. \emph{We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.}  We will also investigate the local scaling approach of \cite{ZelPer05a}.
 
 Another shortcoming of the existing MLS quasi-interpolants is that they treat every coordinate direction the same. 
-\emph{We will extend the MLS to use the full covariance matrix in the multivariate Gaussian kernel based on the relative variation in underlying active dimensional analysis}. We will describe some of these ideas in section \ref{sec:selectCoord}. 
+\emph{We will extend the MLS to use the full covariance matrix in the multivariate Gaussian kernel based on the relative variation in underlying active dimensional analysis}. We will describe some of these ideas in section \ref{sec:kerinferdata}. 
 
 
 
@@ -741,94 +745,71 @@ While  \eqref{eq:DataErrBd}  provides a data-driven error bound for the surrogat
 
 We will experiment with the empirical Bayes perspective, which leads to the following choice \cite{Hic17a}: 
 \begin{equation} \label{eq:thetEB}
-	\theta_{\textup{EB}} = \argmin_\btheta \left[\frac 1n \log \bigl( \det(\mK_\btheta) \bigr) + \log \bigl ( \by^T \mK_\btheta^{-1} \by \bigr)\right].
+	\btheta_{\textup{EB}} = \argmin_\btheta \left[\frac 1n \log \bigl( \det(\mK_\btheta) \bigr) + \log \bigl ( \by^T \mK_\btheta^{-1} \by \bigr)\right].
 \end{equation}
 This criterion also has a purely geometric interpretation.  Cross-validation is another possibility.  
 
 As proof of concept we consider the function
 \begin{equation} \label{eq:cos_sum}
-	f_V(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \qquad \alpha_j = 2^{-\pi_d(\ell)}, \ell = 1, \ldots, d,
+	f_V(\bx) =  \cos( \alpha_1 x_1 + \cdots + \alpha_d x_d), \quad \bx \in [0,1]^d, \qquad \alpha_\ell = 2^{-\pi_d(\ell)}, \ell = 1, \ldots, d,
 \end{equation}
 where $\pi_d$ is a permutation of the integers $1, \ldots, d$.  The reason that we choose some coordinates as less important than others is to provide a low essential dimension.  The reason for the permutation of coordinate indices is to illustrate how our process does not require a priori knowledge of the relative importance of the coordinates.
 
-Table  \ref{tab:cos_sum} is the output of a stripped-down version of our algorithm in Sect.\ \ref{sec:algo} without the trend. We take $\SVARERR(n,\mX,\by_{\VAR})$ to be the uncertainty in the surrogate model.  For $A(\mX)$ we use
+Table  \ref{tab:cos_sum} is the output of a stripped-down version of our algorithm in Sect.\ \ref{sec:algo} without the trend applied to \eqref{eq:cos_sum} with $d=12$. We take $\SVARERR(n,\mX,\by_{\VAR})$ to be the pointwise uncertainty in the surrogate model.  For $A(\mX)$ we use
 \begin{equation*} \label{eq:an}
 	A(\mX): = \begin{cases} \displaystyle
 		\frac{0.2}{0.2 - B(\mX)}, & B(\mX) < 0.2, \\
 		\infty, & B(\mX) \ge 0.2, 
 	\end{cases}
 \qquad 
-B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}
+B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}.
 \end{equation*}
 As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
-The exploratory design is $n_0 = 10$ uniform lattice points.    
+The exploratory design is $n_0 = 10$ uniform lattice points.  For performing the sup-norm calculations, we use $\ct$ consisting of $2^{16}$ uniform lattice points on 
 
-The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by) = \SVARERR(n,\mX,\by_{\VAR})$ 
+The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by) = \norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}$.  Moreover, the pointwise data-driven error bound in  \eqref{eq:DataErrBd} is successful $100\%$ of the points in $\ct$.
 
-\FJHNote{I am going to re-write this based on our numerical experiments.}
 
 \begin{table}
 	\caption{Adaptive algorithm successfully applied to \eqref{eq:cos_sum} for different error tolerances.} \label{tab:cos_sum}
- \[ 
+
+\[ 
 \begin{array}{rccccccc} 
-	\text{Coordinate, } j& 9 & 3 & 2 & 8 & 11 & 12 \\
-	\alpha_j & 5.0\text{E}{-}1 & 2.5\text{E}{-}1 & 1.3\text{E}{-}1  & 6.3\text{E}{-}2 &3.1\text{E}{-}2& 1.6\text{E}{-}2 \\
-	\theta_j & 3.9\text{E}{-}1 & 1.7\text{E}{-}1 & 1.1\text{E}{-}1  & 6.5\text{E}{-}2 &3.8\text{E}{-}2&  2.1\text{E}{-}2 \\
+\hline 
+	\text{Coordinate}, \ell & 10 & 1  & 7 & 5 & 9 & 8 \\
+	\alpha_\ell & 5.0\text{E}{-}1 & 2.5\text{E}{-}1 & 1.3\text{E}{-}1  & 6.3\text{E}{-}2 &3.1\text{E}{-}2& 1.6\text{E}{-}2 \\
+	\theta_\ell & 2.2\text{E}{-}1  & 1.2\text{E}{-}1 & 6.3\text{E}{-}2 & 3.1\text{E}{-}2 & 1.4\text{E}{-}2& 9.2\text{E}{-}3, \\
 	\hline
-	\text{Coordinate, } j & 4 & 10 & 7 & 1 & 6 & 5 \\
-	\alpha_j & 7.8\text{E}{-}3 & 3.9\text{E}{-}3 & 2.0\text{E}{-}3 & 9.8\text{E}{-}4 & 4.9\text{E}{-}4 & 2.4\text{E}{-}4\\
-	\theta_j & 1.2\text{E}{-}2 & 8.3\text{E}{-}3 &  5.7\text{E}{-}3 &  2.9\text{E}{-}3 & 2.0\text{E}{-}3&  1.7\text{E}{-}3\\
+	\text{Coordinate},\ell & 12 & 4 & 6 & 3 & 2 & 11 \\
+	\alpha_\ell & 7.8\text{E}{-}3 & 3.9\text{E}{-}3 & 2.0\text{E}{-}3 & 9.8\text{E}{-}4 & 4.9\text{E}{-}4 & 2.4\text{E}{-}4\\
+	\theta_\ell & 4.5\text{E}{-}3 & 2.1\text{E}{-}3&  1.2\text{E}{-}3 & 8.9\text{E}{-}4& 5.4\text{E}{-}8& 7.1\text{E}{-}5\\
 	\hline
-	n & 105 & 111 & 120 & 126 & 132 & 140 & 146 \\ \hline 
+	n &  18 &  22 &  29 &  36 &  48 &  65 &  87 \\ \hline 
 	\varepsilon & 1.0\text{E}{-}1 & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
-	\SVARERR(n,\mX,\by_{\VAR})  & 9.5\text{E}{-}2 & 4.8\text{E}{-}2 & 1.9\text{E}{-}2 & 9.5\text{E}{-}3 & 4.8\text{E}{-}3 & 1.8\text{E}{-}3 & 9.6\text{E}{-}4 \\ \hline 
-	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f_{\VAR} - \APPID(n,\mX,\by_{\VAR})} & 2.1\text{E}{-}2 & 9.6\text{E}{-}3 & 3.7\text{E}{-}3 & 1.9\text{E}{-}3 & 8.0\text{E}{-}4 & 3.7\text{E}{-}4 & 1.8\text{E}{-}4 \\ \hline 
+	\norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}  & 8.2\text{E}{-}2 & 4.3\text{E}{-}2 & 2.0\text{E}{-}2 & 9.4\text{E}{-}3 & 4.7\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
+	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f - \APPID(n,\mX,\by)}  & 2.5\text{E}{-}2 & 1.0\text{E}{-}2 & 6.8\text{E}{-}3 & 4.4\text{E}{-}3 & 1.1\text{E}{-}3 & 1.8\text{E}{-}3 & 4.5\text{E}{-}4 \\ \hline 
 	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
 \end{array} 
 \]
 \end{table}
 
+Choosing different $\theta_\ell$ in the definition of the reproducing kernel has been studied by \FH and his collaborators \cite{FasHicWoz12a, FasHicWoz12b}.  It is an example of \emph{coordinate weights}, which arise in the tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein).  Small $\theta_\ell$ means that the $x_\ell$ does not influence the function $f$ much.  If many of the $\theta_\ell$ are small then the effective dimension of the function is much smaller than the nominal dimension, $d$, and the problem is tractable.
 
-
-
-
-Another weakness in the adaptive scheme outlined above is that the cone $\calc$ of reasonable functions defined in \eqref{RKHScone} depends strongly on the specific design chosen, $\mX$. \emph{We will consider the research question of how to improve the definition of $\calc$ so that it depends only on a modest quality measure of the design}, such as the $\bx_i$ filling $\Omega$ relatively well. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Selecting Important Coordinate Directions to Avoid the Curse of Dimensionality} \label{sec:selectCoord}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Approximating optimizing a $d$-variate function, $f$, using $n$ output data, where $d$ is in the dozens, and $n$ is restricted to the thousands is infeasible if $f$ is fully $d$ dimensional. For example, even a multilinear function, $f(\bx) = a_0 + a_1 x_1 + a_2 x_2 + \cdots + a_{1,2} x_1 x_2 + \cdots + a_{1,\ldots, d}x_1 \cdots x_d$,
-requires at least $n = 2^d$ samples to approximate well. Needing exponential growth in the $n$ for a reasonable solution as $d$ increases is called the \emph{curse of dimensionality}. The strategies to overcome this curse involve restricting oneself to a candidate set, $\calc$, of functions that have an essentially low-dimensional structure.   For example, there is hope in approximating the multilinear function well if some of the coefficients are quite small, which corresponds to only some variables significantly affecting the output.  We highlight some ways for identifying low-dimensional structure.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Upara{Coordinate Ordering and Weights}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein), has studied the growth in the sample size, $n$, required to solve a function approximation problem involving $d$ POIs to an error of $\varepsilon$. If all coordinates have the same importance, then typically $n$ grows exponentially in $d$. However, if the POIs can be arranged in in order of importance, and that importance  decays sufficiently fast, then the sample size required can be reduced from exponential to merely polynomial growth in $d$, or even a constant with respect to $d$.
-
-As an example of how this might occur in kriging is to modify the squared exponential kernel in \eqref{eq:sqExp} as follows:
-\begin{equation} \label{eq:multisqExpD}
-K(\bt,\bx) = \exp(-\norm[2]{\mD(\bt-\bx)}), \quad \text{where } \mD = \diag(\theta_1, \ldots, \theta_d).
-\end{equation}
-If $\theta_\ell$ is small, then $K$ depends weakly on the $\ell^{\text{th}}$ POI, and the functions $f$ in the RKHS defined by this kernel depend weakly on the $\ell^{\text{th}}$ POI. It was shown by \FH and collaborators that function approximation avoids the curse of dimensionality if the $\theta_\ell$ decay quickly enough as $\ell \to \infty$ \cite{FasHicWoz12b, FasHicWoz12a}.
-
-For some problems, one can guess the order of importance of the coordinates, but in our intended applications, this is not the case. Therefore, we will \emph{explore how to infer the coordinate weights from our exploratory sample}. This might be via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) or some other means such as that suggested in \cite{DinHic20a}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Upara{Active Subspaces}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-An alternative to permuting and weighting the original POIs in order of importance is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach described as identifying active subspaces and is championed in \cite{constantine2015active}. One way to think of it is to generalize \eqref{eq:multisqExpD} to become 
+An extension of this idea of coordinate weights is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach is described as identifying \emph{active subspaces} and is championed in \cite{constantine2015active}. We may incorporate this idea by generalizing \eqref{eq:GaussKer} to become 
 \begin{equation} \label{eq:multisqExpD}
 	K(\bt,\bx) = \exp(-\norm[2]{\mD \mR(\bt-\bx)}), 
 \end{equation}
-where $\mR$ is rotation matrix composed of $d-1$ Givens rotations.  Thus, the selection of an optimal $\mR$ again possibly via empirical Bayes (Sect.\ \ref{sec:kerinferdata}) would add $d$ additional elements to $\btheta$.  
-We will also \emph{explore whether active subspaces can help us avoid the curse of dimensionality}.
+where $\mD$ is a diagonal matrix containing the coordinate weights, and $\mR$ is rotation matrix composed of $d-1$ Givens rotations.  Thus, the selection of an optimal $\mD$ and $\mR$ via \eqref{eq:thetEB} would involve $2d-1$  elements of $\btheta$.  We will \emph{explore whether active subspaces can help us avoid the curse of dimensionality}.
 
+The Gaussian kernel, may be a good choice, but there is a whole family of Mat\'ern kernels of order $\nu >0$ of which the Gaussian kernel is the $\nu \to \infty$ limit.  We will explore including $\nu$ as an element of $\btheta$ to be optimized.  We may also investigate other parameterized families of reproducing kernels.
+
+
+\iffalse
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Nonhomogeneous Distance for MLS}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weight assigned to the $i^{\text{th}}$ data is traditionally defined in terms of the Euclidean distance to that data site from to the location being approximated, i.e., $\norm[2]{\bx - \bx_i}$. To avoid the curse of dimensionality, we may \emph{employ some non-isotropic concept of distance} involving coordinate weights or identification of active subspaces.  For example, we may replace $\norm[2]{\bx - \bx_i}$ by $\norm[2]{\mD(\bx-\bx_i)}$ or $\norm[2]{\mD \mR(\bx - \bx_i)}$.  If the MLS basis set $\calp$, is comprised of linear polynomials, then the rescaling and rotating of the coordinates leaves this set unchanged in terms of the new variables $\bx' =  \mD \mR \bx$.
-
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bayesian Bootstrapping to Determine Surrogate Trend Model Uncertainty} \label{sec:BayesianBootUncertainty}
@@ -927,7 +908,7 @@ Our algorithms will be implemented in libraries on open source repositories for 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Broader Impact of our Proposed Research and Development Plan}
+\section{Broader Impacts}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The PIs will collaborate with junior scholars, including students at the high school through PhD level. Because this project spans theory, algorithms, applications, and software, we will be able to mentor our junior scholars in the areas that they have particular interest or ability, while helping them to understand the spectrum of expertise required to solve these kinds of problems. The PIs will also engage in giving tutorials and teaching courses that will include our new results.
@@ -938,9 +919,9 @@ The PIs will collaborate with junior scholars, including students at the high sc
 \FH and MH lead regular research group meetings at their respective institutions comprised of long-term and short-term student collaborators, visitors, the curious, and special guests. Ongoing work in early or polished stages is shared. Papers of other authors are presented. Mentoring takes place during these meetings, as well as individually.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Upara{Providing Research Experiences for Undergraduate and High School Students} 
+\begin{sloppypar}\Upara{Providing Research Experiences for Undergraduate and High School Students} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Our project will support two summer undergraduate students per year at Illinois Tech, or possibly at LANL. As in the past, the NSF funds will be a catalyst for seeking additional funds to support summer students. In choosing summer students, we will make a deliberate effort to diverse research environment by targeting female and underrepresented minority students as well as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also welcome well-prepared high school students to join our research group.
+Our project will support two summer undergraduate students per year at Illinois Tech, or possibly at LANL. As in the past, the NSF funds will be a catalyst for seeking additional funds to support summer students. In choosing summer students, we will make a deliberate effort to diverse research environment by targeting female and underrepresented minority students as well as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also welcome well-prepared high school students to join our research group.\end{sloppypar}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Preparing Students for Academic Careers} 
@@ -999,9 +980,9 @@ by speaking their conferences and departmental colloquia.
 The idea of adaptive algorithms where the sampling scheme and the norm of the input function adapt to the output data is uncommon in the computational mathematics literature. The derivation of theory for adaptive algorithms based on cones is also new. These ideas have potential applications to other numerical problems beyond those studied in the proposed research. We will continue to promote these ideas among numerical analysts and computational complexity theorists. The recent work by Kunsch, Novak, and Rudolf \cite{KunEtal19a} shows that the idea of cones is catching on.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Upara{Creating Software and Collaborating with Software Developers}
+\begin{sloppypar}\Upara{Creating Software and Collaborating with Software Developers}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Our algorithms will be implemented in freely available software on public repositories. We will discuss with software developers whose packages have complementary capabilities how we might collaborate. We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG. The \MATLAB \GAIL library \citep{ChoEtal19a}, developed by \FH, \YD, and collaborators, contains univariate function approximation and minimization algorithms, as well as multivariate integration algorithms. A project to a community-based quasi-Monte Carlo Python library QMCPy, is underway with corporate sponsorship. 
+Our algorithms will be implemented in freely available software on public repositories. We will discuss with software developers whose packages have complementary capabilities how we might collaborate. We expect our new algorithms to be incorporated into widely used numerical packages, as was done for our algorithm in \cite{HonHic00a} by \MATLAB and \NAG. The \MATLAB \GAIL library \citep{ChoEtal19a}, developed by \FH, \YD, and collaborators, contains univariate function approximation and minimization algorithms, as well as multivariate integration algorithms. A project to a community-based quasi-Monte Carlo Python library QMCPy, is underway with corporate sponsorship. \end{sloppypar}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Management and Collaboration}
