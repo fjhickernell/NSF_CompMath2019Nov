@@ -405,8 +405,10 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 \vspace{-6ex}
 
 \section{Problem Definition and Key Issues} \label{sec:defineProb}
-Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high performance computation. Simulation output can be viewed as a real-valued\footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$. The quantities of interest (QOIs) might be 
-an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other QOIs include the location of the optimum output and (parametric) integrals.} 
+Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued
+\footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  
+function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$. 
+The quantities of interest (QOIs) might be an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other QOIs include the location of the optimum output and (parametric) integrals.} 
 \begin{equation} \label{eq:ourQOIs}
 \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
@@ -765,7 +767,7 @@ Table  \ref{tab:cos_sum} is the output of a stripped-down version of our algorit
 B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}.
 \end{equation*}
 As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
-The exploratory design is $n_0 = 10$ uniform lattice points.  For performing the sup-norm calculations, we use $\ct$ consisting of $2^{16}$ uniform lattice points on 
+The exploratory design is $n_0 = 32$ uniform lattice points.  For performing the sup-norm calculations, we use $\ct$ consisting of $2^{16}$ uniform lattice points on 
 
 The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by) = \norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}$.  Moreover, the pointwise data-driven error bound in  \eqref{eq:DataErrBd} is successful $100\%$ of the points in $\ct$.
 
@@ -778,16 +780,16 @@ The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\b
 \hline 
 	\text{Coordinate}, \ell & 10 & 1  & 7 & 5 & 9 & 8 \\
 	\alpha_\ell & 5.0\text{E}{-}1 & 2.5\text{E}{-}1 & 1.3\text{E}{-}1  & 6.3\text{E}{-}2 &3.1\text{E}{-}2& 1.6\text{E}{-}2 \\
-	\theta_\ell & 2.2\text{E}{-}1  & 1.2\text{E}{-}1 & 6.3\text{E}{-}2 & 3.1\text{E}{-}2 & 1.4\text{E}{-}2& 9.2\text{E}{-}3, \\
+	\theta_\ell & 2.3\text{E}{-}1  & 1.1\text{E}{-}1 & 5.9\text{E}{-}2 & 3.0\text{E}{-}2 & 1.8\text{E}{-}2 & 9.1\text{E}{-}3 \\
 	\hline
 	\text{Coordinate},\ell & 12 & 4 & 6 & 3 & 2 & 11 \\
 	\alpha_\ell & 7.8\text{E}{-}3 & 3.9\text{E}{-}3 & 2.0\text{E}{-}3 & 9.8\text{E}{-}4 & 4.9\text{E}{-}4 & 2.4\text{E}{-}4\\
-	\theta_\ell & 4.5\text{E}{-}3 & 2.1\text{E}{-}3&  1.2\text{E}{-}3 & 8.9\text{E}{-}4& 5.4\text{E}{-}8& 7.1\text{E}{-}5\\
+	\theta_\ell &  4.5\text{E}{-}3 & 2.5\text{E}{-}3&  1.1\text{E}{-}3 &  6.1\text{E}{-}4& 9.4\text{E}{-}5& 5.3\text{E}{-}5\\
 	\hline
-	n &  18 &  22 &  29 &  36 &  48 &  65 &  87 \\ \hline 
+	n &  34 &  36 &  43 &  48 &  55 &  72 &  94 \\ \hline 
 	\varepsilon & 1.0\text{E}{-}1 & 5.0\text{E}{-}2 & 2.0\text{E}{-}2 & 1.0\text{E}{-}2 & 5.0\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
 	\norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}  & 8.2\text{E}{-}2 & 4.3\text{E}{-}2 & 2.0\text{E}{-}2 & 9.4\text{E}{-}3 & 4.7\text{E}{-}3 & 2.0\text{E}{-}3 & 1.0\text{E}{-}3 \\ \hline 
-	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f - \APPID(n,\mX,\by)}  & 2.5\text{E}{-}2 & 1.0\text{E}{-}2 & 6.8\text{E}{-}3 & 4.4\text{E}{-}3 & 1.1\text{E}{-}3 & 1.8\text{E}{-}3 & 4.5\text{E}{-}4 \\ \hline 
+	\rule[3ex]{0pt}{0pt} \bignorm[\infty]{f - \APPID(n,\mX,\by_{\VAR})}  & 2.5\text{E}{-}2 & 1.0\text{E}{-}2 & 6.8\text{E}{-}3 & 4.4\text{E}{-}3 & 1.1\text{E}{-}3 & 1.8\text{E}{-}3 & 4.5\text{E}{-}4 \\ \hline 
 	\text{Ptwise Error Bound} & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% & 100\% 
 \end{array} 
 \]
