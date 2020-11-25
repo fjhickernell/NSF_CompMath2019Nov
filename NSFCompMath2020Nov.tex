@@ -680,7 +680,7 @@ We summarize the existing literature on adaptive sampling \cite{aute2013cross,bu
 	\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.  These also do not scale well to higher dimensions unless the distance measure is non-isotropic.
 	\item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
 \end{description}
-Space-filling designs will be candidates for our exploration stage, but not our exploitation stage, because they do not take advantage of function data.  We will explore which ones work best for our test cases and application problems.
+Space-filling designs will be candidates for our exploration stage, but not our exploitation stage, because they do not take advantage of function data.  %We will explore which ones work best for our test cases and application problems.
 
 Orthogonal arrays and Latin hypercube sampling are further examples of space-filling designs, although they are not usually constructed sequentially. Grids do not fill space, are not sequential, and are not efficient in high dimensions.  Sparse grids \cite{BunGrie04a} are an improvement, but the number of points required can still be impractical in high dimensions.  
 %Using this approach alone to fill the domain with samples is less efficient than the exploitation stage because it does not use the output data in a meaningful way. 
