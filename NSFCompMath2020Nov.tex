@@ -78,6 +78,11 @@
 \newcommand{\AS}{\hyperlink{ASlink}{AS}\xspace}
 \newcommand{\CLT}{\hyperlink{CLTlink}{CLT}\xspace}
 \newcommand{\PN}{\hyperlink{PNlink}{PN}\xspace}
+\newcommand{\QOIs}{\hyperlink{QOIlink}{QOIs}\xspace}
+\newcommand{\POIs}{\hyperlink{POIlink}{POIs}\xspace}
+\DeclareMathOperator{\QOI}{QOI} %Quantity of Interest
+\DeclareMathOperator{\POI}{POI} %Parameter of Interest
+
 
 %%list of acronyms with links
 \newcommand{\QMCSoft}{QMCSoft\xspace}
@@ -125,8 +130,6 @@
 \DeclareMathOperator{\erf}{erf}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator{\QOI}{QOI} %Quantity of Interest
-\DeclareMathOperator{\POI}{POI} %Parameter of Interest
 \DeclareMathOperator{\Ans}{ANS}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\APP}{\widehat{\QOI}}
@@ -405,18 +408,18 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 \vspace{-6ex}
 
 \section{Problem Definition and Key Issues} \label{sec:defineProb}
-Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued
+Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued%
 \footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  
-function or map, $f$, defined on a $d$ dimensional set of input parameters of interest (POIs), $\Omega$. 
-The quantities of interest (QOIs) might be an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other QOIs include the location of the optimum output and (parametric) integrals.} 
+function or map, $f$, defined on a $d$ dimensional set of input \hypertarget{POIlink}{parameters of interest} (\POIs), $\Omega$. 
+The \hypertarget{QOIlink}{quantities of interest} (\QOIs) might be an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other \QOIs include the location of the optimum output and (parametric) integrals.} 
 \begin{equation} \label{eq:ourQOIs}
 \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
-We,  \hypertarget{YDlink}{Yuhan Ding} (\YD\footnote{Initials of personnel are hyperlinks to their full names.}, co-PI from Illinois Tech), \hypertarget{FHlink}{Fred Hickernell} (\FH, PI from Illinois Tech), \hypertarget{MHlink}{James ``Mac'' Hyman} (\MH, PI from Tulane U),  propose to \emph{develop, analyze, and implement better numerical algorithms based on adaptive sampling} to predict the output QOIs, when $d$ may be as large as $100$, over a wide range of input POIs and using a feasibly small number of simulation runs, $n$, say in the hundreds. We consider the situation where the primary computational cost is in obtaining the function data, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the data to determine future sample locations, numerical approximations, or error bounds. 
+We,  \hypertarget{YDlink}{Yuhan Ding} (\YD\footnote{Initials of personnel are hyperlinks to their full names.}, co-PI from Illinois Tech), \hypertarget{FHlink}{Fred Hickernell} (\FH, PI from Illinois Tech), \hypertarget{MHlink}{James ``Mac'' Hyman} (\MH, PI from Tulane U),  propose to \emph{develop, analyze, and implement better numerical algorithms based on adaptive sampling} to predict the output \QOIs, when $d$ may be as large as $100$, over a wide range of input \POIs and using a feasibly small number of simulation runs, $n$, say in the hundreds. We consider the situation where the primary computational cost is in obtaining the function data, $f(\bx_1), \ldots, f(\bx_n)$, not the cost of manipulating the data to determine future sample locations, numerical approximations, or error bounds. 
 
-The output QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where 
+The output \QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where 
 \begin{itemize}
-\item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of input POI vectors, also known as data sites or sampling locations, and
+\item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of input \hyperlink{POIlink}{POI\xspace} vectors, also known as data sites or sampling locations, and
 \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless\footnote{Noisy data is an important case for future study.}) \emph{output function data}.
 \end{itemize} 
 The $n$-dependence of $\mX$ and $\by$ is implicit. 
@@ -429,7 +432,7 @@ Here, $\VAL(\bx,n,\mX, \by)$ represents the value added to $\APP(n+1,\cdot,\cdot
 
 \subsection{Explore-Exploit with Surrogate Models} We use an \emph{explore-exploit} sampling process that relies on surrogate models (metamodels, emulators, function approximations) for $f$, denoted $\SURR(n,\mX,\by)$, and their data-based measures of uncertainty or error, denoted $\SURRERR(n,\mX,\by)$. 
 
-In the \emph{exploration} stage, little or nothing is known of the output QOIs, and the focus is on sampling that does not depend on function data. We sample $f$ on a relatively sparse space-filling set of $n_0$ data sites over $\Omega$, the region of feasible POIs, perhaps according to a non-uniform sampling distribution, such as the arcsine (Chebyshev) distribution that pushes points toward the boundaries. The sample in the exploration stage must be economical, but large enough to detect the essential features of $f$ that influence $\QOI(f)$.  See Sect.\ \ref{sec:Explore} for remarks about our exploration sampling.
+In the \emph{exploration} stage, little or nothing is known of the output \QOIs, and the focus is on sampling that does not depend on function data. We sample $f$ on a relatively sparse space-filling set of $n_0$ data sites over $\Omega$, the region of feasible \POIs, perhaps according to a non-uniform sampling distribution, such as the Chebyshev (arcsine) distribution that pushes points toward the boundaries. The sample in the exploration stage must be economical, but large enough to detect the essential features of $f$ that influence $\QOI(f)$.  See Sect.\ \ref{sec:Explore} for remarks about our exploration sampling.
 
 The \emph{exploitation} stage uses all existing samples to construct surrogate models, $\SURR(n,\mX,\by)$, together with their uncertainties, $\SURRERR(n,\mX,\by)$, so that we may detect regions where $f$ is poorly represented with respect to its influence on $\APP(n,\mX,\by)$. The uncertainties in the surrogate models inform the acquisition functions, which determine the next sample location.
 
@@ -450,7 +453,7 @@ We assess the uncertainty in our surrogate models, $\SURRERR(n,\mX,\by)$, using 
 either absolutely or with high probability. Our measure of uncertainty combines the uncertainty in both the trend and variation models (Sects.\ \ref{sec:BayesianBootUncertainty} and \ref{sec:uncertVar}). Identifying the appropriate sets $\calc$, which will turn out to be cones, is one of our research problems.
 
 \subsection{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
-For example, if the QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
+For example, if the \QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
 \begin{equation} \label{eq:QOIhat}
 \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \text{or}\qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation}
@@ -510,7 +513,7 @@ Because the primary cost in our problems is acquiring the sample data, we are no
 \subsection{The Initial Exploration Stage: Space-Filling Sampling} \label{sec:Explore}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The goal of the initial samples is to explore the space of feasible POIs, $\Omega$, when little, or nothing, is known about the response QOIs. We use space-filling designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
+The goal of the initial samples is to explore the space of feasible \POIs, $\Omega$, when little, or nothing, is known about the response \QOIs. We use space-filling designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
 
 
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
@@ -531,7 +534,7 @@ Another approach for a space-filling exploratory design is to pick a typical rep
 In some applications one may be able to obtain cheap data from certain sites.  There may be also prior data collected from earlier experiments.  Our initial exploration stage will include this data as well.
 
 
-This exploratory set of $n_0$  sites does not depend on $f$ or the QOIs.  It must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
+This exploratory set of $n_0$  sites does not depend on $f$ or the \QOIs.  It must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The Exploitation Stage: Surrogate Model and Acquisition} \label{sec:SurrMod}
@@ -797,7 +800,7 @@ The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\b
 
 Choosing different $\theta_\ell$ in the definition of the reproducing kernel has been studied by \FH and his collaborators \cite{FasHicWoz12a, FasHicWoz12b}.  It is an example of \emph{coordinate weights}, which arise in the tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein).  Small $\theta_\ell$ means that the $x_\ell$ does not influence the function $f$ much.  If many of the $\theta_\ell$ are small then the effective dimension of the function is much smaller than the nominal dimension, $d$, and the problem is tractable.
 
-An extension of this idea of coordinate weights is to rotate the original POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach is described as identifying \emph{active subspaces} and is championed in \cite{constantine2015active}. We may incorporate this idea by generalizing \eqref{eq:GaussKer} to become 
+An extension of this idea of coordinate weights is to rotate the original \POIs to obtain a new coordinate system whose variables are arranged in order of importance. This approach is described as identifying \emph{active subspaces} and is championed in \cite{constantine2015active}. We may incorporate this idea by generalizing \eqref{eq:GaussKer} to become 
 \begin{equation} \label{eq:multisqExpD}
 	K(\bt,\bx) = \exp(-\norm[2]{\mD \mR(\bt-\bx)}), 
 \end{equation}
@@ -816,7 +819,7 @@ For the MLS algorithm used to construct the surrogate trend, $\STREND$, the weig
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bayesian Bootstrapping to Determine Surrogate Trend Model Uncertainty} \label{sec:BayesianBootUncertainty}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty. However, given the small number of data used to construct our models and the relatively large number of POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness. 
+The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could serve as our surrogate model uncertainty. However, given the small number of data used to construct our models and the relatively large number of \POIs involved, we propose to overlay another measure of uncertainty on top for the sake of robustness. 
 
 In classical bootstrapping, new sets of samples are generated by randomly selecting the existing samples, with replacement. 
 In small sample situations, removing even a few samples from the least squares fit can create significant variations in the trend model. In the weighted Bayesian bootstrap algorithm, all of the samples are used for each trend model, and the $i^{\text{th}}$ sample is randomly weighted by the factor $v_i \in [0,1]$. By using all the samples, the weighted Bayesian bootstrap method provides a more robust estimate for uncertainty quantification in small samples than the classical bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer}. 
@@ -863,7 +866,7 @@ Our algorithms are comprised of several parts, and some of those parts have an u
 Our adaptive sampling algorithms will create computationally efficient algorithms with applications to 
 \renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}\textit{#1}.}
 \begin{description}
-\item[Function approximation] We will create surrogate models, with uncertainty estimates, that represent the output well over the entire feasible range of POIs using a minimal number of samples. This model can be used for global sensitivity analysis and dynamic (interactive) visualization of the response surface. 
+\item[Function approximation] We will create surrogate models, with uncertainty estimates, that represent the output well over the entire feasible range of \POIs using a minimal number of samples. This model can be used for global sensitivity analysis and dynamic (interactive) visualization of the response surface. 
 \item[Optimization] We will use our surrogate models to identify multiple local optima of the response function. The local minima can then be used to identify as starting locations for gradient descent algorithms.
 \end{description}
 \fi
@@ -896,7 +899,7 @@ We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide la
 For the past six years, MH has been collaborating with the Tulane School of 
 Public Health and Tropical Medicine to develop a stochastic Monte Carlo Markov Chain agent-based model for the transmission of sexually transmitted diseases (STDs) in New Orleans \cite{azizi2016multi,azizi2018using,chowell2016mathematical}. 
 The STIs spread through a dynamic heterosexual bipartite network of up to 200,000 nodes and includes treatment, contact tracing, condom use, and partner notification. The network changes each day as people change their short-term and long-term partnerships. 
-Since the partnership network and disease transmission is modeled as a stochastic process, multiple simulations with the same parameter values produce a multivariate distribution of QOIs. Each ensemble of runs can take hours on the Tulane Cypress 300+ TFlop supercomputer. 
+Since the partnership network and disease transmission is modeled as a stochastic process, multiple simulations with the same parameter values produce a multivariate distribution of \QOIs. Each ensemble of runs can take hours on the Tulane Cypress 300+ TFlop supercomputer. 
 \emph{We will use our adaptive sampling to optimize the simulations comparing mitigation strategies for slowing the spread of STIs.} 
 The mean-field MLS model will identify the underlying trends in the predictions, and the kriging Gaussian Process model will quantify the aleatory uncertainty created by the stochastic events.
 
