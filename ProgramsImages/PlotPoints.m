@@ -85,7 +85,7 @@ figure
 plot(xChebLat(:,1),xChebLat(:,2),'.','color',MATLABPurple)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Lattice Data Sites')
+title('Chebyshev Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 saveas(gcf,'ChebLatticePoints.eps','epsc')
