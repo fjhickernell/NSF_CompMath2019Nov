@@ -59,7 +59,7 @@ figure
 plot(xChebSSobol(:,1),xChebSSobol(:,2),'.','color',MATLABPurple)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Arcsine Sobol'' Data Sites')
+title('Chebyshev Sobol'' Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc ChebSSobolPoints.eps
@@ -85,7 +85,7 @@ figure
 plot(xChebLat(:,1),xChebLat(:,2),'.','color',MATLABPurple)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Arcsine Lattice Data Sites')
+title('Chebyshev Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
 print -depsc ChebLatticePoints.eps
