@@ -29,7 +29,7 @@ ylabel('\(x_{i2}\)')
 title('Uniform IID Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc IIDPoints.eps
+saveas(gcf,'IIDPoints.eps','epsc')
 
 %% Plot Unscramled Sobol Points
 xUSobol = net(sobolset(d),n);
@@ -40,7 +40,7 @@ ylabel('\(x_{i2}\)')
 title('Unscrambled Sobol'' Nodes')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc USobolPoints.eps
+saveas(gcf,'USobolPoints.eps','epsc')
 
 %% Plot Scramled Sobol Points
 xSSobol = net(scramble(sobolset(d),'MatousekAffineOwen'),n);
@@ -51,7 +51,7 @@ ylabel('\(x_{i2}\)')
 title('Uniform Sobol'' Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc SSobolPoints.eps
+saveas(gcf,'SSobolPoints.eps','epsc')
 
 figure
 xChebSSobol = (1+sin(pi*(-1/2 + xSSobol)))/2;
@@ -62,7 +62,7 @@ ylabel('\(x_{i2}\)')
 title('Chebyshev Sobol'' Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc ChebSSobolPoints.eps
+saveas(gcf,'ChebSSobolPoints.eps','epsc')
 
 
 %% Plot Lattice Points
@@ -77,7 +77,7 @@ ylabel('\(x_{i2}\)')
 title('Uniform Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc ShiftedLatticePoints.eps
+saveas(gcf,'ShiftedLatticePoints.eps','epsc')
 
 figure
 xChebLat = (1+sin(pi*(-1/2 + xlattice)))/2;
@@ -85,10 +85,10 @@ figure
 plot(xChebLat(:,1),xChebLat(:,2),'.','color',MATLABPurple)
 xlabel('\(x_{i1}\)')
 ylabel('\(x_{i2}\)')
-title('Chebyshev Lattice Data Sites')
+title('Lattice Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc ChebLatticePoints.eps
+saveas(gcf,'ChebLatticePoints.eps','epsc')
 
 
 %% Kernel Space Filling Designs
@@ -111,7 +111,7 @@ ylabel('\(x_{i2}\)')
 title('Kernel Based Data Sites')
 axis square
 set(gca,'xtick',tick,'ytick',tick)
-print -depsc KernelSpaceFillingPoints.eps
+saveas(gcf,'KernelSpaceFillingPoints.eps','epsc')
 
 
 
