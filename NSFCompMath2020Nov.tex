@@ -12,20 +12,20 @@
 \usepackage{cleveref}
 \usepackage{wrapfig}
 \usepackage[font=small,labelfont=bf]{caption}
-%\usepackage[sort&compress]{natbib}
+
 
 \usepackage{algpseudocode}
 \algnewcommand\algorithmicparam{\textbf{Parameters:}}
 \algnewcommand\PARAM{\item[\algorithmicparam]}
 \algnewcommand\algorithmicinput{\textbf{Input:}}
 \algnewcommand\INPUT{\item[\algorithmicinput]}
-%\algnewcommand\STATE{\item}
 \algnewcommand\RETURN{\State \textbf{Return }}
 
 %%%%%%%%%%%%%%% Margins and Page Numbers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\voffset 0.2in
-\textheight 9in
-\textwidth 6.5in
+\voffset 0.22in  %Made to satisfy Research.gov compliance
+\hoffset 0.01in
+\textheight 8.91in
+\textwidth 6.46in
 \setlength{\oddsidemargin}{0in}
 \setlength{\evensidemargin}{0in}
 \thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
@@ -103,12 +103,6 @@
 \newcommand{\Rlang}{R\xspace}
 \newcommand{\Julia}{Julia\xspace}
 
-
-\textwidth6.5in
-\setlength{\oddsidemargin}{0in}
-\setlength{\evensidemargin}{0in}
-\textheight9.0in
-%\textheight9.1in
 
 \newtheorem{theorem}{theorem}
 
@@ -408,11 +402,11 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 %Project Description
 }
 \end{center}
-%\vspace{-2ex}
+\vspace{-2ex}
 
-% \setcounter{tocdepth}{1}
-% \tableofcontents
-% \vspace{-6ex}
+ \setcounter{tocdepth}{1}
+ \tableofcontents
+ \vspace{-6ex}
 
 \section{Problem Definition and Key Issues} \label{sec:defineProb}
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued%
