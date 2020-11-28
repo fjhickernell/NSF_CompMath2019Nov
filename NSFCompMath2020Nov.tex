@@ -22,14 +22,19 @@
 %\algnewcommand\STATE{\item}
 \algnewcommand\RETURN{\State \textbf{Return }}
 
-
+%%%%%%%%%%%%%%% Margins and Page Numbers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \voffset 0.2in
 \textheight 9in
-\textwidth6.5in
+\textwidth 6.5in
 \setlength{\oddsidemargin}{0in}
 \setlength{\evensidemargin}{0in}
-%\thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
-\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
+\thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
+%\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
+%%%%%% Squeeze the space %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\renewcommand{\baselinestretch}{0.97}
+%%%%%%Squeeze the space %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%% Margins and Page Numbers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
 
 \headsep-0.6in
 
@@ -364,9 +369,6 @@
 \newcommand{\notes}[1]{\ifnotesw \textcolor{red}{  $\clubsuit$\ {\sf \bf \it  #1}\ $\clubsuit$  }\fi}
 %\noteswfalse   % comment this line out to turn on style notes 
 
-%%%%%%Squeeze the space
-%\renewcommand{\baselinestretch}{0.97}
-%%%%%%Squeeze the space
 
 \begin{document}
 %\setlength{\leftmargini}{2.5ex}
@@ -406,11 +408,11 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 %Project Description
 }
 \end{center}
-\vspace{-2ex}
+%\vspace{-2ex}
 
-\setcounter{tocdepth}{1}
-\tableofcontents
-\vspace{-6ex}
+% \setcounter{tocdepth}{1}
+% \tableofcontents
+% \vspace{-6ex}
 
 \section{Problem Definition and Key Issues} \label{sec:defineProb}
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued%
@@ -650,10 +652,10 @@ The acquisition functions are related to the error bounds that we expect to deri
 These error bounds should be valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. The identification of these $\calc$ is part of our research. Hints appear in Sect.\ \ref{sec:uncertVar}. 
 
 \subsection{Algorithmic Framework} \label{sec:algo}
-The algorithm that we will develop and analyze will have the following form.
+The algorithm that we will develop and analyze has the form given in Algorithm \ref{alg:algframe}.  Some of the ideas in this algorithm have been described earlier in this section.  The more novel ones are described in the next section.
 
-\begin{algorithm}[H]
-	\caption*{Adaptive Algorithm to Approximate $\QOI(f)$ \label{alg:algframe}}
+\begin{algorithm}
+	\caption{Adaptive Algorithm to Approximate $\QOI(f)$ \label{alg:algframe}}
 	\begin{algorithmic}
 		\PARAM a candidate set (cone) of input functions, $\cc$; the set of local basis functions for MLS approximation of the trend, $\cP$; the MLS weight function; the parameterized reproducing kernel  $K_{\btheta}$; an initial sample size, $n_0$
 		\INPUT a black-box function, $f \in \cc$; an absolute error tolerance, $\varepsilon>0$
@@ -691,7 +693,7 @@ The algorithm that we will develop and analyze will have the following form.
 	\end{algorithmic}
 \end{algorithm}
 
-Some of these ideas have been described earlier in this section.  The more novel ones are described in the next section.
+
 
 \subsection{Alternative Approaches}
 Before fleshing out the algorithm above, we review some alternative  approaches.
@@ -914,7 +916,7 @@ We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide la
 
 \Upara{Stochastic Model for the Spread of Sexually Transmitted Diseases} 
 
-\begin{wrapfigure}{r}{0.29\textwidth}
+\begin{wrapfigure}{r}{0.35\textwidth}
 \begin{center}
 \includegraphics[width = 0.35\textwidth]{ProgramsImages/sexualNetworkNOLA}
 \end{center}
