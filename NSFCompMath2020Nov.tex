@@ -412,7 +412,7 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued%
 \footnote{For simplicity we initially consider scalar outputs, but plan to extend our study to vector-valued outputs.}  
 function or map, $f$, defined on a $d$ dimensional set of input \hypertarget{POIlink}{parameters of interest} (\POIs), $\Omega$. 
-The output \hypertarget{QOIlink}{quantities of interest} (\QOIs) might be an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other \QOIs include the location of the optimum output and (parametric) integrals.} 
+The output \hypertarget{QOIlink}{quantities of interest} (\QOIs) might be an inexpensive representation of the simulation output (the identity) or the optimal output:\footnote{Other \QOIs include the location of the optimum output and (parametric) integrals (averages) of the output.} 
 \begin{equation} \label{eq:ourQOIs}
 \QOI(f) = \ID(f) := f \qquad \text{and} \qquad \QOI(f) = \MIN(f) := \min_{\bx \in \Omega} f(\bx).
 \end{equation}
