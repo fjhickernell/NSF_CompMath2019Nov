@@ -22,7 +22,7 @@
 \algnewcommand\RETURN{\State \textbf{Return }}
 
 %%%%%%%%%%%%%%% Margins and Page Numbers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\voffset 0.25in  %Made to satisfy Research.gov compliance
+\voffset 0.23in  %Made to satisfy Research.gov compliance
 \hoffset 0.01in
 \textheight 8.91in
 \textwidth 6.46in
@@ -31,7 +31,7 @@
 \thispagestyle{empty} \pagestyle{empty} %to eliminate page numbers for upload
 %\thispagestyle{plain} \pagestyle{plain} %to add back page numbers
 %%%%%% Squeeze the space %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\renewcommand{\baselinestretch}{0.98}
+%\renewcommand{\baselinestretch}{0.97}
 %%%%%%Squeeze the space %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%% Margins and Page Numbers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -402,11 +402,11 @@ Adaptive Multivariate Sampling to Accelerate Discovery\\
 %Project Description
 }
 \end{center}
-\vspace{-3ex}
+\vspace{-2ex}
 
- \setcounter{tocdepth}{1}
- \tableofcontents
- \vspace{-10ex}
+%  \setcounter{tocdepth}{1}
+%  \tableofcontents
+%  \vspace{-10ex}
 
 \section{Problem Definition and Key Issues} \label{sec:defineProb}
 Each run of a large-scale simulation for a grand-challenge problem, such as modeling global climate change, can require hours or even days of high-performance computation. Simulation output can be viewed as a real-valued%
@@ -423,10 +423,14 @@ We, \hypertarget{YDlink}{Yuhan Ding} (\YD\footnote{Initials of personnel are hyp
 In these cases, we may only have a modest number, $n$, of expensive function values, such as output from large-scale simulation runs or real-world experiments. 
 We consider cases where the number of the input POIs, $d$, can be as large as $100$, and we may only be able to afford a few hundred function values. 
 
-The output \QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where 
+The output \QOIs are numerically approximated by a model $\APP(n,\mX,\by)$, where
 \begin{itemize}
-\item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of input \hyperlink{POIlink}{POI\xspace} vectors, also known as data sites or sampling locations, and
+%\item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a well chosen \emph{design}, i.e., an array of input \hyperlink{POIlink}{POI\xspace} vectors, also known as data sites or sampling locations, and
+%\item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless\footnote{Noisy data is an important case for future study.}) \emph{output function data}.
+\item $\mX := (\bx_1, \ldots, \bx_n)^T \in \Omega^{n} \subseteq \reals^{n \times d}$ is a set of input \hyperlink{POIlink}{POI\xspace} vectors, also known as data sites or sampling location.  These can include model parameters and the initial conditions for a simulation.  The goal is to adaptively identify a well chosen \emph{experimental design} for the sampling locations. 
+\item $f$ is function, such as a large-scale computer simulation, that generates the information required for the \QOIs. 
 \item $\by := \bigl(f(\bx_1), \ldots, f(\bx_n) \bigr)^T \in \reals^n$ is a vector of (noiseless\footnote{Noisy data is an important case for future study.}) \emph{output function data}.
+
 \end{itemize} 
 The $n$-dependence of $\mX$ and $\by$ is implicit. 
 
@@ -444,31 +448,31 @@ The \emph{exploitation} stage uses all existing samples to construct surrogate m
 
 We express our surrogate models as $\SURR(n,\mX,\by) = \STREND(n,\mX,\by) + \SVAR(n,\mX,\by)$, the sum of a trend model and a variation model. 
 The trend model, $\STREND(n,\mX,\by)$, captures the underlying mean field of the simulation output, $f$, and $\SVAR(n,\mX,\by)$ models the variation from this trend. 
-The trend model can be based on a simple approximation for the QOIs, such as a reduced model or a global multivariate polynomial.
-%in low dimensions $(d<5)$. 
+The trend model can be based on a simple approximation for $f$, such as a reduced model or a global multivariate polynomial.
+%in low dimensions $(d<5)$.  
 The number of terms in complete multivariate polynomials grows exponentially as $d$ increases. 
-We use a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, limovingpartII1996, salehi2013generalized, mederos2003moving} to improve the flexibility of lower degree polynomials
+We use a variation of the moving least squares (\MLS) method \cite{liumovingpartI1997, limovingpartII1996, salehi2013generalized, mederos2003moving,cheng2008survey} to improve the flexibility of lower degree polynomials
 for our trend model and help tame this curse of dimensionality (see Sect.\ \ref{sec:trend}). Linear nonparametric \MLS methods are flexible in capturing nonpolynomial shapes in a response surface. They do not necessarily suffer from the curse of dimensionality. 
 See Sects.\ \ref{sec:trend} and \ref{sec:ourtrend}  for details. 
 
 \MLS methods are quasi-interpolants since they do not exactly fit the data. 
 The residuals or lack of fit to the data, $\by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl( \STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$, are then  fit by the variation model, $\SVAR(n,\mX,\by_{\VAR})$, a Gaussian process kriging model or reproducing kernel Hilbert space (RKHS) minimum norm interpolant (see Sect.\ \ref{sec:varmodel}). The Gaussian process and RKHS perspectives yield essentially equivalent outcomes. We infer the parameters in our covariance/reproducing kernel to obtain better accuracy under a stringent sample budget (Sect.\ \ref{sec:kerinferdata}). 
 
-We assess the uncertainty in our surrogate models, $\SURRERR(n,\mX,\by)$, using data-based measures for the output maps in \emph{candidate sets} $\calc$ such that 
+We assess the uncertainty in our surrogate models using \emph{data-based measures}, $\SURRERR(n,\mX,\by)$, for the output maps in \emph{candidate sets} $\calc$, such that 
 \begin{equation} \label{eq:surrUncert}
 \abs{f(\bx)-\SURR(n,\mX,\by)(\bx)} \le \SURRERR(n,\mX,\by)(\bx) \qquad \forall f \in \calc,\ \bx \in \Omega,
 \end{equation} 
 either absolutely or with high probability. Our measure of uncertainty combines the uncertainty in both the trend and variation models (Sects.\  \ref{sec:uncertVar} and \ref{sec:BayesianBootUncertainty}).
 
 \subsection{Surrogate Models and Uncertainties Drive Adaptive Sampling} 
-For example, if the \QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
+If the \QOIs in \eqref{eq:ourQOIs} correspond to the function itself or its minimum, then the corresponding approximations are
 \begin{equation} \label{eq:QOIhat}
 \APPID(n,\mX,\by) = \SURR(n,\mX,\by), \qquad \text{or}\qquad \APPMIN(n,\mX,\by) = \min_{1 \le i \le n} y_i.
 \end{equation}
 For $\APPID$ the surrogate model needs to represent $f$ well throughout its domain, $\Omega$, while for $\APPMIN$ the surrogate model only needs to represent $f$ well enough near potential minima.
 
 The acquisition function, $\VAL(\bx,n,\mX, \by)$, introduced in \eqref{eq:nextsample}, guides us in choosing the next data site, $\bx_{n+1}$.  
-This function, $\VAL$, corresponds to a pointwise error bound for the surrogate model and depends on both the surrogate and  uncertainty models.  For example, when minimizing a function, $\VAL$ corresponds to the expected improvement in the approximation to the minimum. The precise definitions are given in Sect.\ \ref{sec:acquire}.
+This function, $\VAL$, relies on a pointwise error bound for the surrogate model and depends on both the surrogate and  uncertainty models.  For example, when minimizing a function, $\VAL$ corresponds to the expected improvement in the approximation to the minimum. The precise definitions are given in Sect.\ \ref{sec:acquire}.
 
 The surrogate models for $f$ lead to \emph{error-driven bounds} on the uncertainty in the $\APP$ models:
 \begin{equation} \label{eq:errbd}
@@ -476,11 +480,11 @@ The surrogate models for $f$ lead to \emph{error-driven bounds} on the uncertain
 \end{equation}
 either absolutely or with high probability for some suitable norm $\norm[\calg]{\cdot}$. 
 Our proposed research will demonstrate that these error bounds are valid for $\calc$, precisely defined candidate sets of well-behaved simulation output maps, $f$. 
-The exploit stage repeats until the time budget is exhausted or until  the uncertainty, $\ERR(n,\mX,\by)$, is no greater than the tolerance, $\varepsilon$.
+The exploit stage repeats until the time budget is exhausted or until  the uncertainty in the QOI, $\ERR(n,\mX,\by)$, is no greater than the tolerance, $\varepsilon$.
 
 \subsection{The Candidate Set, $\calc$} 
 Identifying the appropriate $\calc$ for bounds  \eqref{eq:surrUncert} and \eqref{eq:errbd} to be valid is one of our research problems.
-For \eqref{eq:errbd}  to hold, any two functions in $\calc$ that share the same data must have similar $\QOI$.  For example, we will require that for all $f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by$, the difference between the QOIs satisfy a relationship such as 
+For \eqref{eq:errbd}  to hold, any two functions in $\calc$ that share the same data must have similar \QOIs.  We will require that for all $f, g \in \calc \text{ with } f(\mX) = g(\mX) = \by$, the difference between the \QOIs satisfy a relationship such as 
 \begin{equation} \label{eq:Csmall}
 	\bignorm[\calg]{\QOI(f) - \QOI(g)} \le 2 \ERR(n,\mX,\by) ~~~ .
 \end{equation}
@@ -491,8 +495,8 @@ We take $\calc$ to be a subset of $\calf$ an infinite dimensional vector space o
 Bounds on the $\calf$-norms of functions in  $\calc$ are needed to construct $\ERR(n,\mX,\by)$.  A popular choice is for $\calc$ to be a \emph{ball} of functions with $\calf$-norm no greater than $R$.  We find this artificial and will choose $\calc$ to include functions with arbitrarily large $\calf$-norms, which must be bounded from data.  Again, this will require us to exclude from $\calc$  peaky functions whose norms cannot be bounded in terms of a reasonable amount of data.  We discuss how to do this in Sect.\ \ref{sec:uncertVar}.
 
 Our problems are susceptible to the curse of dimensionality, meaning that the convergence rate of $\ERR(n,\mX,\by)$ could be $\Order(n^{-r/d})$ for some fixed $r$ depending on the smoothness of $f$.  
-This can be disastrous for large $d$.  
-To mitigate this curse we choose our candidate set $\calc$ to only include functions with \emph{low effective dimension}, $d_\eff < d$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d_\eff})$.  This can be done via coordinate weights or active subspaces (Sect.\ \ref{sec:kerinferdata}). 
+This is disastrous for large $d$.  
+To mitigate this curse we choose $\calc$ to only include functions with \emph{low effective dimension}, $d_\eff < d$, which our algorithm can identify and where $\ERR(n,\mX,\by) = \Order(n^{-r/d_\eff})$.  This can be done via coordinate weights or active subspaces (Sect.\ \ref{sec:kerinferdata}). 
 
 Choosing  $\calf$ to have a fixed norm does not allow enough flexibility, since we may not know beforehand which normed space best fits our input function, $f$.  Thus, our $\calc$ will  be a subset of $\cup_{\btheta \in \Theta} \calf_\btheta$, a \emph{union} of parameterized spaces, $\calf_\btheta$, each with its associated norm.  A research problem will be choosing $\{\calf_\btheta : \btheta \in \Theta\}$ large enough to allow flexibility, while ensuring that an appropriate $\btheta$ can be inferred from a reasonable amount of function data (Sect. \ref{sec:kerinferdata}).
 
@@ -500,11 +504,11 @@ Choosing  $\calf$ to have a fixed norm does not allow enough flexibility, since 
 We will create better surrogate models and data-driven surrogate uncertainty measures for high-dimensional problems with relatively few samples. We will develop, analyze, and implement flexible data-driven models and correspondingly economical adaptive sampling schemes. We propose to create
 \begin{itemize}
 \item A methodology to combine the data-driven Bayesian bootstrap analysis for the trend model with RKHS variational modeling to quantify the overall uncertainty in the surrogate model for the $\APP$ (Sect.\ \ref{sec:SurrMod}, \ref{sec:ourtrend},  \ref{sec:uncertVar}, \ref{sec:BayesianBootUncertainty}),
-\item Better adaptive sampling acquisition functions, $\VAL$ that depend on both the past sample locations, $\mX$, and the output data, $\by$, (Sect.\ \ref{sec:acquire}),
+\item Better adaptive sampling acquisition functions, $\VAL$, whic depend on both the past sample locations, $\mX$, and the output data, $\by$, (Sect.\ \ref{sec:acquire}),
 \item Effective methods to tune the hyperparameters, $\btheta$, defining our RKHS and important coordinate directions (Sect.\ \ref{sec:kerinferdata}), and
 \item Rigorous (not heuristic) data-driven error bounds, $\ERR$, which are valid for precisely defined candidate sets of output maps, $\calc$, which will turn out to be cones (Sect.\ \ref{sec:theory}).
 \end{itemize}
-We will demonstrate the success of our algorithms on practical large-scale simulation applications (Sect.\ \ref{sec:Applications}) and compare our results with those obtained by other available software libraries for surrogate modeling (Sect.\ \ref{sec:Software}). The PIs have a long history of mentoring students and collaborating with early-career scholars; these activities will be central to this research (Sect.\ \ref{sec:BroaderImpacts}). 
+We will demonstrate the success of our algorithms on practical large-scale simulation applications (Sect.\ \ref{sec:Applications}) and compare our results with those obtained by other available software libraries for surrogate modeling (Sect.\ \ref{sec:Software}). The PIs have a long history of mentoring students and collaborating with early-career scholars; these activities will be central to our research (Sect.\ \ref{sec:BroaderImpacts}). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Adaptive Sampling Overview} \label{sec:overview}
@@ -519,7 +523,7 @@ The trend, $\STREND(n,\mX,\by)$, is relatively simple deterministic function tha
 
 The surrogate model for $f$ requires a measure of uncertainty, which we construct using uncertainty measures for $\SVAR(n,\mX,\by)$ in Sect.\ \ref{sec:uncertVar} combined with a Bayesian bootstrap resampling in Sect.\ \ref{sec:BayesianBootUncertainty}. We then exploit the surrogate model and its uncertainty to define the acquisition function, $\VAL(\cdot, n,\mX,\by)$, which identifies where to sample next. This is addressed in Sect.\ \ref{sec:acquire}. 
 
-Although quantifying the uncertainty in our surrogate model can require a few seconds, or more, on a laptop computer, they are insignificant compare to the cost of acquiring the sample data when analyzing large-scale simulations.   
+Since quantifying the uncertainty in our surrogate model is only expected to require seconds on a laptop computer, this cost is insignificant compared to the cost of acquiring the sample data when analyzing large-scale simulations.   
 %we are not overly concerned about generating surrogate models and assessing their uncertainties.
 
 
@@ -527,30 +531,27 @@ Although quantifying the uncertainty in our surrogate model can require a few se
 \subsection{The Initial Exploration Stage: Space-Filling Sampling} \label{sec:Explore}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{wrapfigure}{r}{0.63\textwidth} % MATLAB Driver: PlotPoints.m
+\vskip -12pt
 \centering
 \includegraphics[height = 0.2\textwidth]{ProgramsImages/IIDPoints.eps} \ 
 \includegraphics[height = 0.2\textwidth]{ProgramsImages/SSobolPoints.eps} \ 
 \includegraphics[height = 0.2\textwidth]{ProgramsImages/ChebSSobolPoints.eps} 
-\caption{Uniform IID data sites (left plot) are  contrasted with space filling designs mimicking the uniform  and arcsine distributions. 
+\caption{Uniform IID data sites (left plot) are  contrasted with space filling designs mimicking the low discrepancy uniform  and Chebyshev distributions. Notice the difference between the clustering of points in the IID uniform sampling and regular distribution of points in the low discrepancy uniform sampling. 
 We will use low discrepancy space-filling sampling in our exploration stage.
 \label{PtsFig}}
 \end{wrapfigure}
 
-The goal of the initial samples is to explore the space of feasible \POIs, $\Omega$, when little, or nothing, is known about the response \QOIs. We use space-filling (low-discrepancy) designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} contrasts uniformly distributed Sobol' points with the IID data sites that do not fill the space as well.
+The goal of the initial samples is to explore the space of feasible \POIs, $\Omega$, when little, or nothing, is known about the response \QOIs. We use space-filling (low-discrepancy) designs such as Sobol' points \cite{DicPil10a} or integration lattices \cite{SloJoe94, DicEtal14a} in $\Omega$.  Fig.\ \ref{PtsFig} illustrates how IID uniform sampling is more likely to over-, or under-, sample some regions than a low discrepancy (Sobol) sample.
+
+Interpolating between sample locations is more reliable than extrapolating outside their convex hull.  The Chebyshev (arcsine) distribution pushes points towards the boundary of $\Omega$, and the convex hull of the resulting distribution of samples includes more of $\Omega$ than uniform sampling. We will compare the effectiveness of low discrepancy sampling for Chebyshev and uniform distributions to see which approach is the most effective in defining the surrogate model. 
+ The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
+For simplicity our initial studies will assume hyper-rectangular domains, $\Omega$, as pictured in Fig.\ \ref{PtsFig}.  
+
+%Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, described in Sect.\ \ref{sec:varmodel}, and sequentially choose samples to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$. 
 
 
-We will compare the effectiveness of low discrepancy sampling for uniform and Chebyshev (arcsine) distributions.
-The Chebyshev distribution pushes points towards the boundary of $\Omega$ so that there is sufficient data to interpolate $f$ there.  The advantage of doing so may depend on the smoothness of $f$ \cite{HicLi12a}.
-
-Another approach for a space-filling exploratory design is to pick a typical reproducing kernel, $K$, described in Sect.\ \ref{sec:varmodel}, and sequentially choose samples to minimize $K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)$, where the Gram matrix $\mK$ is defined below in $\eqref{appxExOne}$. 
-
-
-
-
-In some applications, one may have access to inexpensive function values or data collected from earlier experiments.  Our initial exploration stage will include this data as well.
-
-
-This exploratory set of $n_0$  sites does not depend on $f$ or the \QOIs.  It must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. The large-scale simulation is run for each of these POI vectors to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
+The exploratory set of $n_0$  sites does not depend on $f$ or the \QOIs.  It must be small enough to be economical, but large enough to detect important features of $f$ that influence $\QOI(f)$. In some applications, one may have access to inexpensive function values or data collected from earlier experiments.  Our initial exploration stage will include this data as well.
+The large-scale simulation is run for each POI vector to obtain $f(\bx_1), \ldots, f(\bx_{n_0})$, and then we begin the exploitation stage.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The Exploitation Stage: Surrogate Model and Acquisition} \label{sec:SurrMod}
@@ -565,9 +566,8 @@ We define our trend model as the MLS approximant
 \begin{equation} \label{eq:MLS}
 \STREND(n,\mX,\by)(\bx) = f_{\LS,\bx}(\bx), \qquad \text{where } f_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n w_i(\bx)(y_i - g(\bx_i))^2,
 \end{equation}
-and $\calp$ is a finite dimensional vector space, e.g., low degree polynomials. The weights $w_i(\bx)$ decrease with distance $\norm[2]{\bx - \bx_i}$. We will initially use a Gaussian kernel weight, $w_i(\bx) = \me^{-\norm[2]{\bx - \bx_i}^2/\sigma(\bx)^2}$, where $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors. The number of nearest neighbors will be greater than $\dim(\calp)$.
+and $\calp$ is a finite dimensional vector space, e.g., low degree polynomials. The weights $w_i(\bx)$ decrease with distance $\norm[2]{\bx - \bx_i}$. We will initially use a Gaussian kernel weight, $w_i(\bx) = \me^{-\norm[2]{\bx - \bx_i}^2/\sigma(\bx)^2}$, where $\sigma(\bx)$ is the mean distance from the evaluation point, $\bx$, to a set of $K_n$ nearest neighbors \cite{cheng2008survey}. The number of nearest neighbors will be greater than $\dim(\calp)$.
 
-Every time the MLS interpolant is evaluated, we solve a least squares system that weights the nearby points much more than the distant points. For the problems we are considering,
 \begin{wrapfigure}{r}{0.5\textwidth}
 \begin{center}
 \includegraphics[width = 0.5\textwidth]{ProgramsImages/bigsurT.pdf}
@@ -575,25 +575,30 @@ Every time the MLS interpolant is evaluated, we solve a least squares system tha
 \caption{The MLS quasi-interpolant with linear basis functions of scattered data {$\color{red}*$} of Big Sur sea bottom data \cite{franke1979critical}. The locally linear MLS trend model is able to fit very irregular surfaces.
 \label{MLS}}
 \end{wrapfigure}
-this additional computation is minimal compared to the expense of obtaining the sample values. Note that the trend model exactly reproduces any $f \in \calp$.
+Every time the MLS interpolant is evaluated, we solve a least squares system that weights the nearby points much more than the distant points. For our problems, this additional
+computation is minimal compared to the expense of obtaining the sample values. Note that the trend model exactly reproduces any $f \in \calp$.
 
 If $\calp$ consists of all polynomials of total degree up to $k$,  then $\dim(\calp)$ grows as 
 %${k + d \choose k}$ % \choose replaced by \binom
 $\binom{k + d }{k}$ 
 and will far exceed $n$ for even modest $k$ and high $d$. 
-We will typically choose $\calp$ to be quadratic polynomials for low dimensional problems $d<10$, and linear polynomials for high-dimensional problems. 
-Global low-degree polynomial approximants are `stiff' and cannot bend to follow odd surfaces. The flexibility in MLS approximants using local low-degree polynomials is similar to the way splines fit data in one dimension. 
+Global low-degree polynomial approximations are `stiff' and cannot bend to follow irregular surfaces.  
+
+The MLS approximations are based on local data; Even low-degree polynomials are flexible, similar to the way splines fit data in one dimension.
+We will use quadratic polynomials for $\calp$ for low dimensional problems $d<10$, and linear polynomials for high-dimensional problems. 
 Figure \ref{MLS} illustrates the flexibility of an MLS with a local linear basis function fitting scattered data in two dimensions. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{The Variation Model via RKHS/Kriging} \label{sec:varmodel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general trend of the output map $f$, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$, using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the squared exponential (or Gaussian) kernel:
+The trend model, $\STREND(n,\mX,\by)$, is a quasi-interpolant because it does not exactly fit the data. Having modeled the general, we now model its variation, $f_{\VAR} = f - \STREND(n,\mX,\by)$, using a minimum norm RKHS interpolant. Suppose that $f_{\VAR}$, belongs to an RKHS $\calf$. A commonly used reproducing kernel is the squared exponential (or Gaussian) kernel:
 \begin{equation} \label{eq:GaussKer}
 K(\bt,\bx) =  \exp(-\norm[2]{\btheta \odot (\bt-\bx)}^2),
 \end{equation}
-where $\odot$ denotes the term-by-term (Hadamard) product, and $\btheta \in (0, \infty)^d$ is a parameter to be set or inferred. See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs. The minimum norm interpolant of $f_{\VAR}$ in this $\calf$ using the residual data, $
+where $\odot$ denotes the term-by-term (Hadamard) product, and $\btheta \in (0, \infty)^d$ is a parameter to be set or inferred. See \cite{Buh00, Fas07a, FasMcC15a, ForFly15a, ForEtal09, SchWen06a, Wen05a} for an explanation of function approximation in RKHSs. 
+
+The minimum norm interpolant of $f_{\VAR}$ in this $\calf$ using the residual data, $
 \by_{\VAR} = \by - \by_{\TREND}$, where $\by_{\TREND} = \bigl(\STREND(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$,
 is the surrogate variation model
 \begin{equation} \label{appxExOne}
@@ -700,15 +705,20 @@ Before fleshing out the algorithm above, we review some alternative  approaches.
 
 We summarize the existing literature on adaptive sampling \cite{aute2013cross,burnaev2015adaptive,fu2017adaptive,gramacy2008adaptive,jin2002sequential,kleijnen2004application}. A number of popular adaptive design criteria are constructed based on an acquisition function that does not depend on the simulation output data, but only on the data sites, i.e., $\VAL(n,\mX,\by) = \VAL(n,\mX)$. Such adaptive designs fill in holes in the existing design according to particular criteria, including those below. 
 \begin{description}
-	\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (uniform, arcsine, etc.) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
+	\item[Discrepancy] This measures the difference between the empirical distribution of the design and the target (uniform, Chebyshev, etc.) distribution \cite{FangEtal19a}. Examples of low discrepancy designs are given in Fig.\ \ref{PtsFig}. 
 	\item[Covering radius or fill distance] This is the minimum radius needed for balls centered at each data site to cover the whole domain, $\Omega$. Minimax designs minimize this criterion.  These do not scale well to higher dimensions unless the distance measure is non-isotropic.
 	\item[Minimium distance between data sites] Maximin designs maximize this criterion \cite{jin2002sequential}.  These also do not scale well to higher dimensions unless the distance measure is non-isotropic.
 	\item[Entropy] Designs maximizing entropy seek to maximize the information when choosing the next data site \cite{jin2002sequential}. They also typically assume a known Gaussian process model.
 \end{description}
 
-Space-filling sampling does not take advantage of the available function data.  This is appropriate in the exploration stage when we have little, or no, information of $f$.
 %will be candidates for our exploration stage, but not our exploitation stage.  We will explore which ones work best for our test cases and application problems.
-Orthogonal arrays and Latin hypercube sampling are further examples of space-filling designs, although they are not usually constructed sequentially. Grids do not fill space, are not sequential, and are not efficient in high dimensions.  Sparse grids \cite{BunGrie04a} are an improvement, but the number of points required can still be impractical in high dimensions.  
+Although uniform grids fill space, they suffer from the curse of dimensionality to do so. 
+Sparse grids \cite{BunGrie04a} are an improvement, but the number of points required can still be impractical in high dimensions. 
+Orthogonal arrays and Latin hypercube sampling are other examples of space-filling designs, although they are not usually constructed sequentially. 
+A major disadvantage of space-filling sampling is that they do  not take advantage of the available function data.  This is appropriate in the exploration stage when we have little, or no, information of $f$.
+
+%Grids do not fill space, are not sequential, and are not efficient in high dimensions.  
+ 
 %Using this approach alone to fill the domain with samples is less efficient than the exploitation stage because it does not use the output data in a meaningful way. 
 
 Some existing adaptive sampling methods use a jackknife and leave-one-out cross-validation adaptive sampling to measure the variation in predictions based on leaving out one observation at a time \cite{aute2013cross,jin2002sequential, kleijnen2004application}. However, these approaches often tend to pick the next data site close to an existing one \cite{jin2002sequential}, which is wasteful. A fix has been proposed to include a penalty that discourages choosing the next data site close to an existing one \cite{aute2013cross,jin2002sequential}.
@@ -735,7 +745,7 @@ Global parametric surrogate models can capture the trend of a multivariate respo
 
 The MLS quasi-interpolants are an effective alternative to piecewise polynomials in high dimensions. MLS uses local low-degree polynomials to capture global nonpolynomial behavior. The additional computational cost to solve for the local MLS coefficients is small compared to the cost of generating new function data. 
 
-One of the challenges in MLS is to identify a robust methodology for picking the appropriate length scale, $\sigma(\bx)$, for the MLS kernel. Our current approach is to define this length scale as the mean distance to the nearest $K_n$ neighbors of $\bx$, where $K_n$ is greater than $\dim(\calp)$, the dimension of the space of local approximants.
+One of the challenges in MLS is to identify a robust methodology for picking the appropriate length scale, $\sigma(\bx)$, for the MLS kernel \cite{salehi2013generalized,mederos2003moving,cheng2008survey}. Our current approach is to define this length scale as the mean distance to the nearest $K_n$ neighbors of $\bx$, where $K_n$ is greater than $\dim(\calp)$, the dimension of the space of local approximants.
 This heuristic approach usually identifies a good balance between the relative weights of the nearby and distant points so that the Moore Penrose matrix for the least squares problem is well-conditioned. If the least squares problem is ill-conditioned, then the length scale is increased. \emph{We propose to analyze this heuristic approach and identify a procedure, along the lines of the adaptive Armijo rule in numerical optimization \cite{kelley1999iterative}, to select the local length scale based on a more mathematical foundation.}  We will also investigate the local scaling approach of \cite{zelnik2004self}.
 
 Another shortcoming of the existing MLS quasi-interpolants is that they treat every coordinate direction the same. 
@@ -751,7 +761,9 @@ To construct a data-driven error bound for the variation, $f_{\VAR}$, in terms o
 	\nonumber
 	& = \Bigl\{f_{\VAR} \in \calf : \norm[\calf]{f_{\VAR}}^2 \le (1 + A^2(\mX)) \bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})}^2 \Bigr \},
 \end{align}
-where $A(\mX)$ is positive and fixed in advance. This $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$, error bound \eqref{eq:RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
+where $A(\mX)$ is positive and fixed in advance. The region $\calc$ is a cone because if $f_{\VAR} \in \calc$, then $c f_{\VAR} \in \calc$ for any real $c$. The intuition in defining this cone is: \emph{what you have not seen is not much worse than what you can see}. 
+
+All adaptive algorithms are based on this philosophy. The definition of the cone in \eqref{RKHScone} is a way of formalizing this key idea. Noting that $\bignorm[\calf]{\SVAR(n,\mX,\by_{\VAR})} = \sqrt{\by_{\VAR} \mK^{-1} \by_{\VAR}}$, error bound \eqref{eq:RKHSErrBd} then implies an error bound that can be computed solely based on the output data: 
 \begin{subequations} \label{eq:DataErrBd}
 	\begin{gather}
 		\abs{f_{\VAR}(\bx) - \SVAR(n,\mX,\by_{\VAR})(\bx)} \le \SVARERR(n,\mX,\by_{\VAR})(\bx) \qquad \forall f \in \calc, \\
@@ -793,7 +805,7 @@ B(\mX) : = \sqrt{K(\bx,\bx) - \bk^T(\bx) \mK^{-1} \bk(\bx)}.
 As the design improves, the inflation factor, $A(\mX)$ becomes smaller. 
 The exploratory design is $n_0 = 16$ uniform lattice points.  For performing the sup-norm calculations, we use $\ct$ consisting of $2^{14}$ uniform lattice points.
 
-The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by_\VAR)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by_\VAR) = \norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}$.  Moreover, the pointwise data-driven error bound in  \eqref{eq:DataErrBd} is successful $100\%$ of the points in $\ct$.
+The adaptive algorithm successfully computes the approximation, $\APPID(n,\mX,\by_\VAR)$, which satisfies the sequence of error tolerances via adaptive sampling and an data-driven error bound, $\ERR(n,\mX,\by_\VAR) = \norm[\infty]{\SVARERR(n,\mX,\by_{\VAR})}$.  We observed that the pointwise data-driven error bound in  \eqref{eq:DataErrBd} was successful $100\%$ of the points in $\ct$.
 
 
 \begin{table}
@@ -817,7 +829,7 @@ n &  22 &  27 &  32 &  39 &  49 &  71 &  94 \\ \midrule
  \]
 \end{table}
 
-Choosing different $\theta_\ell$ in the definition of the reproducing kernel has been studied by \FH and his collaborators \cite{FasHicWoz12a, FasHicWoz12b}.  It is an example of \emph{coordinate weights}, which arise in the tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein).  Small $\theta_\ell$ means that the $x_\ell$ does not influence the function much.  If many of the $\theta_\ell$ are small, then the effective dimension of the function is much smaller than the nominal dimension, $d$, and the problem is tractable. 
+\FH and his collaborators have investigated choosing different $\theta_\ell$ in the definition of the reproducing kernel \cite{FasHicWoz12a, FasHicWoz12b}.  It is an example of \emph{coordinate weights}, which arise in the tractability literature for continuous numerical problems (see \cite{DicEtal14a,NovWoz08a, NovWoz10a, NovWoz12a} and the references therein).  Small $\theta_\ell$ means that the $x_\ell$ does not influence the function much.  If many of the $\theta_\ell$ are small, then the effective dimension of the function is much smaller than the nominal dimension, $d$, and the problem is tractable. 
 
 We also approximated the same function in \eqref{eq:cos_sum} with our same stripped down algorithm, but this time fixing $\btheta = (0.05, \ldots, 0.05)$. When $\btheta$ is not chosen adaptively, the algorithm does not even reach the largest error tolerance $\varepsilon = 0.1$ with $n = 200$. This illustrates the need to tune our kernel, $K_\btheta$, and the associated RKHS, $\calf_\btheta$, to best fit the function being approximated.
 
@@ -845,11 +857,11 @@ The uncertainty in our surrogate variation models, $\SVARERR(n,\mX,\by)$, could 
 In classical bootstrapping, new sets of samples are generated by randomly selecting the existing samples, with replacement. 
 In small sample situations, removing even a few samples from the least squares fit can create significant variations in the trend model. In the weighted Bayesian bootstrap algorithm, all of the samples are used for each trend model, and the $i^{\text{th}}$ sample is randomly weighted by the factor $v_i \in [0,1]$. By using all the samples, the weighted Bayesian bootstrap method provides a more robust estimate for uncertainty quantification in small samples than the classical bootstrap method \cite{rubin1981bayesian, efron1986bootstrap, efron2016computer}. 
 
-In our weighted Bayesian bootstrap algorithm, we generate an ensemble of $B$ trend models by extending \eqref{eq:MLS}:
+The weighted Bayesian bootstrap algorithm will start with an ensemble of $B$ trend models by extending \eqref{eq:MLS}:
 \begin{equation}
-	\STREND^b(n,\mX,\by)(\bx) = f^b_{\LS,\bx}(\bx), \qquad \text{where } f^b_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2,
+	\STREND^b(n,\mX,\by)(\bx) = f^b_{\LS,\bx}(\bx), \qquad \text{where } f^b_{\LS,\bx} = \argmin_{g \in \calp} \sum_{i=1}^n v_i^b w_i(\bx)(y_i - g(\bx_i))^2~~.
 \end{equation}
-where as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functions, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$. We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
+Here as in Sect.\ \ref{sec:trend}, the $w_i$ are the MLS weight functions, and now $\bv^b$ is an $n$-vector uniformly distributed over the unit simplex, $\cals^n : = \{\bv \in [0,1]^n : v_1 + \cdots + v_n = 1\}$. We then define the bootstrap trend data as $\by^b_{\TREND} = \bigl(\STREND^b(n,\mX,\by)(\bx_i) \bigr)_{i=1}^n$. 
 
 For each trend model, $\STREND^b(n,\mX,\by)$, we construct the an associated variation model, $\SVAR^b(n,\mX,\by - \by^b_{\TREND})$ and its uncertainty, $\SVARERR^b(n,\mX,\by - \by^b_{\TREND})$. These lead to our final surrogate model and its uncertainty.
 The surrogate model for each Bayesian bootstrap model can be expressed as 
@@ -884,7 +896,7 @@ Our adaptive sampling algorithms will create computationally efficient algorithm
 \renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}\textit{#1}.}
 \begin{description}
 \item[Function approximation] We will create surrogate models, with uncertainty estimates, that represent the output well over the entire feasible range of \POIs using a minimal number of samples. This model can be used for global sensitivity analysis and dynamic (interactive) visualization of the response surface. 
-\item[Optimization] We will use our surrogate models to identify multiple local optima of the response function. The local minima can then be used to identify as starting locations for gradient descent algorithms.
+\item[Optimization] We will use  surrogate models to identify multiple local optima of the response function. The local minima can then be used to identify as starting locations for gradient descent algorithms.
 \end{description}
 \fi
 
@@ -898,7 +910,7 @@ We will collaborate with Elizabeth Hunke (Los Alamos National Laboratory) to app
 This model incorporates the atmosphere and ocean's physical effects on the ice and accounts for the physical feedback mechanisms between the sea ice and the full Earth climate system models. Each CICE simulation can take hours to run, even on the world's fastest computers.
 
 %Under the influence of wind and ocean currents, the fresh ice moves on the ocean surface and melts. The melting creates a layer of fresher water that disrupts the ocean convection and vertical motion. This effect could modify the global ‚Äö√Ñ√∂‚àö√ë‚àö‚à´conveyor belt‚Äö√Ñ√∂‚àö√ë‚àöœÄ (Gulf Stream) of heat moving through the world‚Äö√Ñ√∂‚àö√ë‚àö¬•s oceans and disrupt the entire Earth's environment. 
-Hunke and her colleagues have conducted 150 CICE model simulations, selected to space-filling in the 39-dimensional space of feasible parameters. 
+Hunke first conducted 150 CICE model simulations, selected to space-filling in the 39-dimensional space of feasible parameters. 
 Of these, only about 100 of the runs were successful, due to parameter induced instabilities. They then added 400 low discrepancy Sobol' samples in regions where the simulation was stable. In these preliminary studies, they confirmed that the standard approaches \cite{bengio2006curse, o2010oxford} were not practical for their 39-dimensional sample space. We will use our two-part surrogate model to identify the active parameters \cite{constantine2014active} and predict the response between the sample points. 
 \emph{We will collaborate with Hunke to quantify the sensitivity of the model predictions for sea ice coverage with respect to the 39 model parameters.} We will then identify the parameters where the next runs are predicted to most reduce the uncertainty in the surrogate model.
 
@@ -906,15 +918,14 @@ Of these, only about 100 of the runs were successful, due to parameter induced i
 Large volcanic eruptions inject massive amounts of SO${}_2$ into the upper atmosphere, where it is converted into sulfate aerosols. These aerosols reflect short-wave radiation and cause changes in the surface and sea surface temperatures, upper atmospheric winds, and global precipitation patterns \cite{zanchettin2013background, legrande2015volcanic,zanchettin2016model}. 
 These large perturbations can lead to major changes in global climate patterns.
 
-We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide large-scale simulations using the Goddard Institute for Space Studies (GISS) large-scale climate model E2.1-R. \emph{Our goal will be to identify which new simulations will provide the most useful information to better understand the impact of volcanic eruptions on the climate.} \MH is mentoring Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies. Last summer, she worked at GISS with Tsigaridis and LeGrande as an undergraduate research intern. Weierbach will be collaborating with us to quantify the sensitivity of model predictions to the initial state of the North Atlantic Oscillation. 
+We will collaborate with Kostas Tsigaridis and Allegra LeGrande to help guide large-scale simulations using the Goddard Institute for Space Studies (GISS) large-scale climate model E2.1-R. \emph{Our goal will be to identify which new simulations will provide the most useful information to predict the impact of volcanic eruptions on the climate.} Last year, \MH mentored Helen Weierbach's undergraduate honor's thesis at Tulane using our surrogate model for some preliminary studies based on Weierbach's was undergraduate research internship at GISS with Tsigaridis and LeGrande. We will continue this research to quantify the sensitivity of GISS model predictions for climate change to the North Atlantic Oscillation. 
 %Other quantities of interest include the geopotential heights and upper atmosphere wind anomalies, and sea level pressure in the North Atlantic basin. 
-
 
 
 \Upara{Stochastic Model for the Spread of Sexually Transmitted Diseases} 
 Our climate models are deterministic.  
 That is, multiple simulations with the same parameter values will result in identical results. 
-For the past six years, \MH has been collaborating with the Tulane School of 
+For the past seven years, \MH has been collaborating with the Tulane School of 
 Public Health and Tropical Medicine to develop a stochastic Monte Carlo Markov Chain agent-based model for the transmission of sexually transmitted diseases (STDs) in New Orleans \cite{azizi2016multi,azizi2018using,chowell2016mathematical}. 
 
 
@@ -930,7 +941,7 @@ Public Health and Tropical Medicine to develop a stochastic Monte Carlo Markov C
 The STIs spread through a dynamic heterosexual bipartite network of up to 200,000 nodes and includes treatment, contact tracing, condom use, and partner notification. The network changes each day as people change their short-term and long-term partnerships. 
 Since the partnership network and disease transmission is modeled as a stochastic process, multiple simulations with the same parameter values produce a multivariate distribution of \QOIs. Each ensemble of runs can take hours on the Tulane Cypress 300+ TFlop supercomputer. 
 
-\emph{We will use our adaptive sampling to optimize the simulations comparing mitigation strategies for slowing the spread of STIs.} 
+\emph{We will use adaptive sampling to optimize the mitigation strategies for slowing the spread of STIs.} 
 The mean-field MLS model will identify the underlying trends in the predictions, and the kriging Gaussian Process model will quantify the aleatory uncertainty created by the stochastic events.
 
 
@@ -956,7 +967,7 @@ The PIs will collaborate with junior scholars, including students at the high sc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{sloppypar}\Upara{Providing Research Experiences for Undergraduate and High School Students} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Our project will support two summer undergraduate students per year at Illinois Tech, or possibly at LANL. As in the past, the NSF funds will be a catalyst for seeking additional funds to support summer students. In choosing summer students, we will make a deliberate effort to diverse research environment by targeting female and underrepresented minority students as well as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also welcome well-prepared high school students to join our research group.\end{sloppypar}
+Our project will support two summer undergraduate students per year at Illinois Tech, or at Los Alamos National Laboratory on the sea ice project. As in the past, the NSF funds will be a catalyst for seeking additional funds to support summer students. In choosing summer students, we will make a deliberate effort to diverse research environment by targeting female and underrepresented minority students as well as students from less research-focused institutions (see Sect.~\ref{prevBIsect}). We will also welcome well-prepared high school students to join our research group.\end{sloppypar}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Preparing Students for Academic Careers} 
@@ -977,8 +988,7 @@ graduates. For example, LlAJR and XZ are working in the financial services indus
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \Upara{Giving Tutorials and Invited Lectures}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We will continue providing lectures to students at various stages in their careers, ranging from high school to graduate school. These encourage students to enter STEM and encourage STEM students 
-to engage in research in general and this research area in particular.
+We will continue providing lectures to students at various stages in their careers, ranging from high school to graduate school. These encourage students to enter STEM and encourage STEM students to engage in research.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1023,7 +1033,7 @@ Our algorithms will be implemented in freely available software on public reposi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 This research will be conducted primarily at Illinois Tech, Tulane U, and Los Alamos National Laboratory (LANL), where \MH has a visiting scientist appointment. \FH will lead the effort at Illinois Tech, and \MH will lead the effort at Tulane. \FH and \YD will focus on the theoretical analysis of the algorithms, including error bounds for the surrogate models. They will also lead the exploration of the data-inferred reproducing/covariance kernels. \MH will focus on the design of our novel algorithms, including the weighted least squares and the Bayesian bootstrap. He will also lead the application of our new algorithms to the large-scale application problems. 
 
-The PhD student will be based at Illinois Tech during the academic year under the direct supervision of \FH and \YD. The PhD student will collaborate with us on algorithmic developments, its theoretical analysis, and its implementation in freely available software. During the summer, the PhD student will join \MH in Los Alamos and be involved with testing our algorithms on challenging application problems. The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting, bite-sized aspects of the algorithms and their performance.
+The PhD student will be based at Illinois Tech during the academic year under the supervision of \FH and \YD. The PhD student will collaborate with us on algorithmic developments, its theoretical analysis, and its implementation in freely available software. During the summer, the PhD student will join \MH in Los Alamos and be involved with testing our algorithms on challenging application problems. The undergraduate students will work either at Illinois Tech or at LANL during the summer exploring interesting, bite-sized aspects of the algorithms and their performance.
 
 Our research groups will meet regularly via video conference and in person a couple of times per year at one of our campuses or at conferences.
 
@@ -1108,14 +1118,11 @@ $\norm[\infty]{f''}$ for peaky functions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \phantom{a}
 
-\Upara{Publications, Conference Participation, Conference Organization, and Leadership} Publications by \GEF, \FH,  \SCTC, students, and collaborators are listed above.  The project personnel spoke at many academic conferences and gave colloquium/seminar talks to mathematics and
-statistics departments.  \FH co-organized the
-2016 Spring Research
-Conference.   \FH gave an invited tutorial
+\Upara{Publications, Conference Participation, Conference Organization, and Leadership} Publications by \GEF, \FH,  \SCTC, students, and collaborators are listed above.  
+The project personnel spoke at many academic conferences and gave colloquium/seminar talks to mathematics and statistics departments.  \FH co-organized the 2016 Spring Research Conference.   \FH gave an invited tutorial
 at MCQMC 2016
 \cite{Hic17a}, a biennial conference for which he serves on the steering committee.  \FH
-was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program.   \FH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity.  \FH was appointed the director of Illinois Tech's new Center for Interdisciplinary
-Scientific Computation in 2017.  In 2018, \FH was appointed Vice Provost for Research.
+was a program leader for the SAMSI 2017--18 Quasi-Monte Carlo (QMC) Program.   \FH received the 2016 Joseph F.\ Traub Prize for Achievement in Information-Based Complexity.  \FH was appointed the director of Illinois Tech's new Center for Interdisciplinary Scientific Computation in 2017.  In 2018, \FH was appointed Vice Provost for Research.
 
 \Upara{\GAIL Software} The algorithms from this research have been implemented in
 \GAIL, our open source \MATLAB library hosted on
@@ -1123,8 +1130,8 @@ Github with input parsing, input validation, unit tests, inline documentation, a
 demonstrations. \SCTC has been key in this effort.  \GAIL has been used in the yearly graduate course in Monte Carlo methods taught by \FH and \YD.
 %With the help of students, we are starting to port GAIL to Python and \Rlang.
 
-\Upara{Boosting the STEM Workforce} \GEF, \FH, and \SCTC mentored a number of
-research students associated with this project.  Female students include \YD, \LJ, \JL, \XT, and Xiaoyang Zhao (MS 2017).   Mentees include more than a dozen
+\Upara{Boosting the STEM Workforce} \GEF, \FH, and \SCTC mentored research students associated with 
+this project.  Female students include \YD, \LJ, \JL, \XT, and Xiaoyang Zhao (MS 2017).   Mentees include more than a dozen
 Brazilian Science Mobility Program students in the summers of 2015 and 2016, plus eight other students (two female) from Illinois Tech, Biola U, U Minnesota, Macalester U, NUS, Colorado School of Mines.  Seven of these eight have enrolled in graduate programs.  
 
 
@@ -1133,7 +1140,7 @@ Brazilian Science Mobility Program students in the summers of 2015 and 2016, plu
 } \label{sec:PriorMac}
 \MH was PI on this award. \textit{ Publications:} \cite{xue2016two,xue2018comparing,qu2018modeling,moran2016epidemic,chowell2016mathematical,margevicius2016biosurveillance}
 
-\Upara{Intellectual Merit} We created and analyzed a new class of mathematical models to forecast the spread of emerging mosquito-borne diseases.  The new model included behavior change in the human population and the impact of infecting wild mosquitoes with Wolbachia in mitigating these diseases.
+\Upara{Intellectual Merit} We analyzed a new class of mathematical models to forecast the spread of emerging mosquito-borne diseases.  The model included behavior change in the human population and the impact of infecting wild mosquitoes with Wolbachia in mitigating these diseases.
 
 \Upara{Broader Impact}   We mentored several undergraduate capstone projects, honor's thesis and graduate Master's dissertations and two PhD dissertations in mathematics and at the Tulane School for Public Health and Tropical Medicine on the modeling of mosquito-borne diseases. 
 
